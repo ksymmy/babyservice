@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.OrgInfoMapper">
-  <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.OrgInfo">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.OrgInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.OrgInfo">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="corpid" jdbcType="VARCHAR" property="corpid" />
     <result column="corp_logo_url" jdbcType="VARCHAR" property="corpLogoUrl" />
@@ -44,7 +44,7 @@
     delete from biz_org_info
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.OrgInfo">
     insert into biz_org_info (id, corpid, corp_logo_url,
       corp_name, credit_code, org_type_name,
       org_type, industry, industry_name,
@@ -65,7 +65,7 @@
       #{agentId,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.OrgInfo">
     insert into biz_org_info
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -216,7 +216,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.OrgInfo">
     update biz_org_info
     <set>
       <if test="corpid != null">
@@ -294,7 +294,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.OrgInfo">
     update biz_org_info
     set corpid = #{corpid,jdbcType=VARCHAR},
       corp_logo_url = #{corpLogoUrl,jdbcType=VARCHAR},

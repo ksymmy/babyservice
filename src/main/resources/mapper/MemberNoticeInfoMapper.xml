@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.MemberNoticeInfoMapper">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.MemberNoticeInfoMapper">
 
-    <select id="selectNoticeInfo"  resultType="com.jqsoft.nposervice.entity.biz.NoticeInfo">
+    <select id="selectNoticeInfo" resultType="com.jqsoft.babyservice.entity.biz.NoticeInfo">
         SELECT
         bni.*,
         ( CASE WHEN ISNULL( biru.id ) THEN 0 ELSE 1 END ) AS readState
@@ -28,11 +28,12 @@
 
     </select>
 
-    <select id="selectNoticeFileInfoByNoticeId" parameterType="String" resultType="com.jqsoft.nposervice.entity.system.FileEntity">
+    <select id="selectNoticeFileInfoByNoticeId" parameterType="String"
+            resultType="com.jqsoft.babyservice.entity.system.FileEntity">
         SELECT * FROM t_file where record_id = #{noticeId}
     </select>
 
-    <insert id="updateReceiverState" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+    <insert id="updateReceiverState" parameterType="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
         insert into biz_info_readed_user (id,info_id,user_id,user_name)
               SELECT #{id},#{infoId},#{userId},#{userName}
               from DUAL

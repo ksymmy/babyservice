@@ -2,11 +2,11 @@ net:
   jqsoft:
     constants: #系统属性配置
       init-password: 123456 #默认用户初始密码
-      upload-path: D:/upload/nposervice #上传文件存放路径
+      upload-path: D:/upload/babyservice #上传文件存放路径
     datasource: #数据源配置（这里是正式库的地址）
       driver-class-name: com.mysql.jdbc.Driver
-#      url: jdbc:mysql://192.168.44.113:3306/nposervice?useUnicode=true&characterEncoding=utf8
-      url: jdbc:mysql://10.1.55.3:3306/nposervice?useUnicode=true&characterEncoding=utf8
+      #      url: jdbc:mysql://192.168.44.113:3306/babyservice?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://10.1.55.3:3306/babyservice?useUnicode=true&characterEncoding=utf8
       username: root
       password: root
       validationQuery: SELECT 1 FROM DUAL
@@ -14,7 +14,7 @@ net:
       dialect: mysql #分页方言  oracle/mysql
       id-type: 3   #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
       mapper-locations: classpath:mapper/*.xml #映射地址
-      type-aliases-package: com.jqsoft.nposervice.entity #实体包
+      type-aliases-package: com.jqsoft.babyservice.entity #实体包
       # 以下 开发环境使用，线上不推荐，上线时将refresh-mapper和trace置为false,或删除配置项
       refresh-mapper: true #刷新mapper 调试神器
       trace: true #执行性能分析和SQL格式化打印
@@ -22,7 +22,7 @@ net:
 
 #----------------------     日志配置        -----------------------
 logging:
-  path: D:/logs/nposervice #日志文件目录
+  path: D:/logs/babyservice #日志文件目录
 
 spring:
   # 缓存配置
@@ -52,7 +52,7 @@ spring:
     default-encoding: UTF-8
     host: smtp.163.com
     protocol: smtp
-    username: nposervice@163.com
+    username: babyservice@163.com
     password: nposervice2019
     nick: 社管通
     smtp:

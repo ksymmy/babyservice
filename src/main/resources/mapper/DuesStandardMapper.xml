@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.DuesStandardMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.DuesStandard">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.DuesStandardMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.DuesStandard">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
         <result column="type" jdbcType="TINYINT" property="type"/>
@@ -23,7 +23,7 @@
     delete from biz_dues_standard
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.DuesStandard">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.DuesStandard">
     insert into biz_dues_standard (id, org_id, type,job,
       money, create_time, update_time
       )
@@ -31,7 +31,7 @@
       #{money,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.DuesStandard">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.DuesStandard">
         insert into biz_dues_standard
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -80,7 +80,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.DuesStandard">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.DuesStandard">
         update biz_dues_standard
         <set>
             <if test="orgId != null">
@@ -104,7 +104,7 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.DuesStandard">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.DuesStandard">
     update biz_dues_standard
     set org_id = #{orgId,jdbcType=VARCHAR},
       type = #{type,jdbcType=TINYINT},

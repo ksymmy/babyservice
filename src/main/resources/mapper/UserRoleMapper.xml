@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.jqsoft.nposervice.mapper.system.UserRoleMapper">
-    <resultMap id="UserRoleMapper" type="com.jqsoft.nposervice.entity.system.UserRole">
+<mapper namespace="com.jqsoft.babyservice.mapper.system.UserRoleMapper">
+    <resultMap id="UserRoleMapper" type="com.jqsoft.babyservice.entity.system.UserRole">
         <result property="id" column="ID"/>
         <result property="userId" column="USER_ID"/>
         <result property="roleId" column="ROLE_ID"/>
     </resultMap>
 
-    <insert id="insertUserRole" parameterType="com.jqsoft.nposervice.entity.system.UserRole">
+    <insert id="insertUserRole" parameterType="com.jqsoft.babyservice.entity.system.UserRole">
         insert into t_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -32,8 +32,9 @@
             </if>
         </trim>
     </insert>
-    
-    <select id="selectUserRoleByUserId" resultMap="UserRoleMapper" parameterType="com.jqsoft.nposervice.entity.system.UserRole">
+
+    <select id="selectUserRoleByUserId" resultMap="UserRoleMapper"
+            parameterType="com.jqsoft.babyservice.entity.system.UserRole">
     	select id,user_id,role_id from t_user_role where user_id = #{userId,jdbcType=VARCHAR}
     </select>
     

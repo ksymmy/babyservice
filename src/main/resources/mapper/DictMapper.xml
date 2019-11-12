@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.system.DictMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.system.Dict">
+<mapper namespace="com.jqsoft.babyservice.mapper.system.DictMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.system.Dict">
         <id column="ID" jdbcType="VARCHAR" property="id" />
         <result column="CODE" jdbcType="VARCHAR" property="code" />
         <result column="NAME" jdbcType="VARCHAR" property="name" />
@@ -23,7 +23,7 @@
     delete from t_dict
     where ID = #{id,jdbcType=VARCHAR}
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.system.Dict">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.system.Dict">
     insert into t_dict (ID, CODE, NAME, 
       PID, REMARK, SORT, 
       CONTENT)
@@ -31,7 +31,7 @@
       #{pid,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
       #{content,jdbcType=VARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.system.Dict">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.system.Dict">
         insert into t_dict
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -80,7 +80,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.system.Dict">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.system.Dict">
         update t_dict
         <set>
             <if test="code != null">
@@ -104,7 +104,7 @@
         </set>
         where ID = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.system.Dict">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.system.Dict">
     update t_dict
     set CODE = #{code,jdbcType=VARCHAR},
       NAME = #{name,jdbcType=VARCHAR},

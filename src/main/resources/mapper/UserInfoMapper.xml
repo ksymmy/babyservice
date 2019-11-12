@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.UserInfoMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.UserInfo">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.UserInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.UserInfo">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
         <result column="corp_id" jdbcType="VARCHAR" property="corpId"/>
@@ -62,7 +62,7 @@
     delete from biz_user_info
     where id = #{id,jdbcType=VARCHAR} 
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     insert into biz_user_info (id, org_id, userid,
       unionid, name, active,
       order_in_depts, isAdmin, isBoss,
@@ -88,7 +88,7 @@
       #{establishDate,jdbcType=DATE}, #{status,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}, #{job,jdbcType=TINYINT}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
         insert into biz_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -309,7 +309,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByUseridSelective" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <update id="updateByUseridSelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
         update biz_user_info
         <set>
             <if test="orgId != null">
@@ -419,7 +419,7 @@
         </set>
         where userid = #{userid,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     update biz_user_info
     set org_id = #{orgId,jdbcType=VARCHAR},
       userid = #{userid,jdbcType=VARCHAR},
@@ -457,7 +457,7 @@
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
-    <select id="selectUserInfo" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo" resultMap="BaseResultMap">
+    <select id="selectUserInfo" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from biz_user_info
@@ -570,7 +570,7 @@
         #{pageSize,jdbcType=INTEGER}
     </select>
 
-    <update id="updateStatusById" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <update id="updateStatusById" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
         update biz_user_info
         <set>
             <if test="status != null">
@@ -593,7 +593,7 @@
         where id = #{id,jdbcType=VARCHAR}
     </update>
 
-    <update id="updateByPID" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <update id="updateByPID" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
         update biz_user_info
         set
         name=#{name},
@@ -608,7 +608,7 @@
         where id=#{id}
 
     </update>
-    <update id="updateByCID" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <update id="updateByCID" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
         UPDATE biz_user_info
         SET
         credit_code=#{creditCode},
@@ -630,7 +630,7 @@
         update_time=#{updateTime}
         where id=#{id}
     </update>
-    <select id="findByID" parameterType="java.lang.String" resultType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <select id="findByID" parameterType="java.lang.String" resultType="com.jqsoft.babyservice.entity.biz.UserInfo">
         SELECT * FROM  biz_user_info WHERE id=#{id}
     </select>
 
@@ -688,7 +688,7 @@
     	UPDATE biz_user_info SET cur_user_type = #{curUserType} WHERE id = #{id}
     </update>
 
-    <select id="queryUserByOrgID" parameterType="string" resultType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <select id="queryUserByOrgID" parameterType="string" resultType="com.jqsoft.babyservice.entity.biz.UserInfo">
         SELECT * FROM  biz_user_info WHERE id=#{userId}
         UNION
         (SELECT * FROM  biz_user_info WHERE org_id = #{orgId} and user_type in (0) and status = 1 order by user_type asc limit 0,4)

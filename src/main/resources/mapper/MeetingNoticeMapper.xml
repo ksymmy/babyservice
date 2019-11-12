@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.MeetingNoticeMapper">
-  <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.MeetingNotice">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.MeetingNoticeMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.MeetingNotice">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="org_id" jdbcType="VARCHAR" property="orgId" />
     <result column="meeting_id" jdbcType="VARCHAR" property="meetingId" />
@@ -37,7 +37,7 @@
     delete from biz_meeting_notice
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.MeetingNotice">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.MeetingNotice">
     insert into biz_meeting_notice (id, org_id, meeting_id, 
       title, context, state, 
       send_notice, send_email,send_ding_msg, publish,
@@ -47,7 +47,7 @@
       #{sendNotice,jdbcType=TINYINT}, #{sendEmail,jdbcType=TINYINT},#{sendDingMsg,jdbcType=TINYINT}, #{publish,jdbcType=TIMESTAMP},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingNotice">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.MeetingNotice">
     insert into biz_meeting_notice
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -126,7 +126,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingNotice">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.MeetingNotice">
     update biz_meeting_notice
     <set>
       <if test="orgId != null">
@@ -165,7 +165,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.MeetingNotice">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.MeetingNotice">
     update biz_meeting_notice
     set org_id = #{orgId,jdbcType=VARCHAR},
       meeting_id = #{meetingId,jdbcType=VARCHAR},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.MeetingInfoMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.MeetingInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.MeetingInfo">
         <id column="id" jdbcType="VARCHAR" property="id"/>
         <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
         <result column="meeting_start" jdbcType="TIMESTAMP" property="meetingStart"/>
@@ -56,7 +56,7 @@
     delete from biz_meeting_info
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
     insert into biz_meeting_info (id, org_id, meeting_start, 
       meeting_end, enroll_start, enroll_end, 
       province_id, city_id, county_id, 
@@ -72,11 +72,11 @@
       #{state,jdbcType=TINYINT}, #{summary,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-    <insert id="insertCanParticipate" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <insert id="insertCanParticipate" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
     insert into biz_meeting_can_participate(id,meeting_id,canParticipateIds,canParticipateNames)
     values (REPLACE(UUID(),'-',''),#{id},#{canParticipateIds},#{canParticipateNames})
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
         insert into biz_meeting_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -197,7 +197,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
         update biz_meeting_info
         <set>
             <if test="orgId != null">
@@ -257,7 +257,7 @@
         </set>
         where id = #{id,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
     update biz_meeting_info
     set org_id = #{orgId,jdbcType=VARCHAR},
       meeting_start = #{meetingStart,jdbcType=TIMESTAMP},
@@ -279,7 +279,7 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
-    <update id="updateCanParticipate" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    <update id="updateCanParticipate" parameterType="com.jqsoft.babyservice.entity.biz.MeetingInfo">
     update biz_meeting_can_participate set canParticipateIds = #{canParticipateIds},
     canParticipateNames = #{canParticipateNames} where meeting_id = #{id}
   </update>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jqsoft.nposervice.mapper.biz.InfoReadedUserMapper">
-  <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.InfoReadedUserMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="info_id" jdbcType="VARCHAR" property="infoId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
@@ -21,13 +21,13 @@
     delete from biz_info_readed_user
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
     insert into biz_info_readed_user (id, info_id, user_id, 
       user_name, read_time)
     values (#{id,jdbcType=VARCHAR}, #{infoId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, 
       #{userName,jdbcType=VARCHAR}, #{readTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
     insert into biz_info_readed_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -64,7 +64,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
     update biz_info_readed_user
     <set>
       <if test="infoId != null">
@@ -82,7 +82,7 @@
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.InfoReadedUser">
     update biz_info_readed_user
     set info_id = #{infoId,jdbcType=VARCHAR},
       user_id = #{userId,jdbcType=VARCHAR},
