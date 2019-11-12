@@ -6,13 +6,13 @@ net:
     datasource: #数据源配置（这里是正式库的地址）
       driver-class-name: com.mysql.jdbc.Driver
       #      url: jdbc:mysql://192.168.44.113:3306/babyservice?useUnicode=true&characterEncoding=utf8
-      url: jdbc:mysql://10.1.55.3:3306/babyservice?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://30.40.42.204:3306/babyservice?useUnicode=true&characterEncoding=utf8
       username: root
       password: root
       validationQuery: SELECT 1 FROM DUAL
     mybatis: #mybatis配置
       dialect: mysql #分页方言  oracle/mysql
-      id-type: 3   #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+      id-type: 2   #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
       mapper-locations: classpath:mapper/*.xml #映射地址
       type-aliases-package: com.jqsoft.babyservice.entity #实体包
       # 以下 开发环境使用，线上不推荐，上线时将refresh-mapper和trace置为false,或删除配置项
