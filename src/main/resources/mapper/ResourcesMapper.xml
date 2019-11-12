@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqsoft.nposervice.mapper.system.ResourcesMapper">
+
+	<resultMap id="resMap" type="com.jqsoft.nposervice.entity.system.Resources">
+		<result column="ID" property="id" javaType="java.lang.String"/>
+		<result column="PID" property="pid" javaType="java.lang.String"/>
+		<result column="NAME" property="name" javaType="java.lang.String"/>
+		<result column="TITLE" property="title" javaType="java.lang.String"/>
+		<result column="JUMP" property="jump" javaType="java.lang.String"/>
+		<result column="CHILDREN" property="children" javaType="java.lang.Integer"/>
+	</resultMap>
+
+
+	<select id="getAllResourcesJumpByUserId" resultType="java.lang.String">
+		SELECT DISTINCT
+			T.JUMP
+		FROM
+			T_RESOURCES T
+		JOIN T_ROLE_RES TR ON T.ID = TR.RES_ID
+		JOIN T_USER_ROLE TU ON TR.ROLE_ID = TU.ROLE_ID
+		JOIN biz_user_info U ON U.ID = TU.USER_ID
+		WHERE
+			T. STATUS = 0
+		AND TU.USER_ID = #{userId}
+	</select>
+</mapper>

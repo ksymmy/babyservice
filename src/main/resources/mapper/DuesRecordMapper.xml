@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.DuesRecordMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.DuesRecord">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="user_id" jdbcType="VARCHAR" property="userId"/>
+        <result column="years" jdbcType="TINYINT" property="years"/>
+        <result column="money" jdbcType="DECIMAL" property="money"/>
+        <result column="start_date" jdbcType="DATE" property="startDate"/>
+        <result column="end_date" jdbcType="DATE" property="endDate"/>
+        <result column="pay_date" jdbcType="DATE" property="payDate"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, org_id, user_id, years, money, start_date, end_date, pay_date, create_time, update_time
+  </sql>
+    <select id="getMaxEndDate" parameterType="string" resultType="string">
+        select max(end_date) from biz_dues_record where user_id = #{userId}
+    </select>
+    <select id="queryDuesRecordList" resultMap="BaseResultMap">
+        select a.id,(case when b.user_type = 3 then b.enterprise_name else b.name end) name,a.money,a.start_date,a.end_date,a.pay_date
+        from biz_dues_record a left join biz_user_info b on a.user_id = b.id
+        where a.org_id = #{orgId}
+        <if test="param.corpname != null and '' != param.corpname">
+            and (b.name like concat(concat('%',#{param.corpname,jdbcType=VARCHAR}),'%') or b.idnumber like
+            concat(concat('%',#{param.corpname,jdbcType=INTEGER}),'%') or
+            b.enterprise_name like concat(concat('%',#{param.corpname,jdbcType=VARCHAR}),'%'))
+        </if>
+        order by a.pay_date desc
+        limit #{offset},#{size}
+    </select>
+    <select id="notice" parameterType="map" resultMap="BaseResultMap">
+        select x.id,x.name,x.end_date,x.state from (
+        SELECT
+        a.id,
+        (case when a.user_type = 3 then a.enterprise_name else a.name end) NAME,
+        max( b.end_date ) end_date,
+        date_sub(max( b.end_date ),interval '30' day) warn_date,
+        datediff(CURRENT_DATE,date_sub(max( b.end_date ),interval '30' day)) d30,
+        datediff(CURRENT_DATE,max( b.end_date )) diff,
+        (case when datediff(CURRENT_DATE,max( b.end_date )) &lt; -30 then -1 when datediff(CURRENT_DATE,max( b.end_date )) &gt;= -30 and datediff(CURRENT_DATE,max( b.end_date ))&lt;= 0 then 1 when datediff(CURRENT_DATE,max( b.end_date )) &gt; 0 then 2 else 0 end) state
+        FROM
+        biz_user_info a
+        LEFT JOIN biz_dues_record b ON a.id = b.user_id
+        WHERE
+        a.org_id = #{orgId} and a.user_type in (2,3) and a.status = 1
+        <if test="param.corpname != null and '' != param.corpname">
+            and (a.name like concat(concat('%',#{param.corpname,jdbcType=VARCHAR}),'%') or a.idnumber like
+            concat(concat('%',#{param.corpname,jdbcType=INTEGER}),'%') or
+            a.enterprise_name like concat(concat('%',#{param.corpname,jdbcType=VARCHAR}),'%'))
+        </if>
+        GROUP BY
+        a.id,
+        a.NAME
+        ORDER BY
+        state desc,max( b.end_date )
+        ) x where x.state >= 0
+        limit #{offset},#{size}
+    </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_dues_record
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from biz_dues_record
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.DuesRecord">
+    insert into biz_dues_record (id, org_id, user_id,
+      years, money, start_date,
+      end_date, pay_date, create_time,
+      update_time)
+    values (#{id,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},
+      #{years,jdbcType=TINYINT}, #{money,jdbcType=DECIMAL}, #{startDate,jdbcType=DATE},
+      #{endDate,jdbcType=DATE}, #{payDate,jdbcType=DATE}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.DuesRecord">
+        insert into biz_dues_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="years != null">
+                years,
+            </if>
+            <if test="money != null">
+                money,
+            </if>
+            <if test="startDate != null">
+                start_date,
+            </if>
+            <if test="endDate != null">
+                end_date,
+            </if>
+            <if test="payDate != null">
+                pay_date,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="years != null">
+                #{years,jdbcType=TINYINT},
+            </if>
+            <if test="money != null">
+                #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="startDate != null">
+                #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                #{endDate,jdbcType=DATE},
+            </if>
+            <if test="payDate != null">
+                #{payDate,jdbcType=DATE},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.DuesRecord">
+        update biz_dues_record
+        <set>
+            <if test="orgId != null">
+                org_id = #{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="years != null">
+                years = #{years,jdbcType=TINYINT},
+            </if>
+            <if test="money != null">
+                money = #{money,jdbcType=DECIMAL},
+            </if>
+            <if test="startDate != null">
+                start_date = #{startDate,jdbcType=DATE},
+            </if>
+            <if test="endDate != null">
+                end_date = #{endDate,jdbcType=DATE},
+            </if>
+            <if test="payDate != null">
+                pay_date = #{payDate,jdbcType=DATE},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.DuesRecord">
+    update biz_dues_record
+    set org_id = #{orgId,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR},
+      years = #{years,jdbcType=TINYINT},
+      money = #{money,jdbcType=DECIMAL},
+      start_date = #{startDate,jdbcType=DATE},
+      end_date = #{endDate,jdbcType=DATE},
+      pay_date = #{payDate,jdbcType=DATE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

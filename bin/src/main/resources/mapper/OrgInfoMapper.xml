@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.OrgInfoMapper">
+  <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="corp_logo_url" jdbcType="VARCHAR" property="corpLogoUrl" />
+    <result column="corp_name" jdbcType="VARCHAR" property="corpName" />
+    <result column="credit_code" jdbcType="VARCHAR" property="creditCode" />
+    <result column="org_type_name" jdbcType="VARCHAR" property="orgTypeName" />
+    <result column="org_type" jdbcType="VARCHAR" property="orgType" />
+    <result column="industry" jdbcType="VARCHAR" property="industry" />
+    <result column="industry_name" jdbcType="VARCHAR" property="industryName" />
+    <result column="is_authenticated" jdbcType="TINYINT" property="isAuthenticated" />
+    <result column="auth_level" jdbcType="TINYINT" property="authLevel" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="county_id" jdbcType="VARCHAR" property="countyId" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="corp_province" jdbcType="VARCHAR" property="corpProvince" />
+    <result column="corp_city" jdbcType="VARCHAR" property="corpCity" />
+    <result column="postal_code" jdbcType="VARCHAR" property="postalCode" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="establish_date" jdbcType="DATE" property="establishDate" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, corpid, corp_logo_url, corp_name, credit_code, org_type_name, org_type, industry,
+    industry_name, is_authenticated, auth_level, province_id, city_id, county_id, detail,
+    address, corp_province, corp_city, postal_code, email, establish_date, phone, create_time,
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_org_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from biz_org_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    insert into biz_org_info (id, corpid, corp_logo_url,
+      corp_name, credit_code, org_type_name,
+      org_type, industry, industry_name,
+      is_authenticated, auth_level, province_id,
+      city_id, county_id, detail,
+      address, corp_province, corp_city,
+      postal_code, email, establish_date,
+      phone, create_time, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{corpid,jdbcType=VARCHAR}, #{corpLogoUrl,jdbcType=VARCHAR},
+      #{corpName,jdbcType=VARCHAR}, #{creditCode,jdbcType=VARCHAR}, #{orgTypeName,jdbcType=VARCHAR},
+      #{orgType,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, #{industryName,jdbcType=VARCHAR},
+      #{isAuthenticated,jdbcType=TINYINT}, #{authLevel,jdbcType=TINYINT}, #{provinceId,jdbcType=VARCHAR},
+      #{cityId,jdbcType=VARCHAR}, #{countyId,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{corpProvince,jdbcType=VARCHAR}, #{corpCity,jdbcType=VARCHAR},
+      #{postalCode,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{establishDate,jdbcType=DATE},
+      #{phone,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    insert into biz_org_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="corpLogoUrl != null">
+        corp_logo_url,
+      </if>
+      <if test="corpName != null">
+        corp_name,
+      </if>
+      <if test="creditCode != null">
+        credit_code,
+      </if>
+      <if test="orgTypeName != null">
+        org_type_name,
+      </if>
+      <if test="orgType != null">
+        org_type,
+      </if>
+      <if test="industry != null">
+        industry,
+      </if>
+      <if test="industryName != null">
+        industry_name,
+      </if>
+      <if test="isAuthenticated != null">
+        is_authenticated,
+      </if>
+      <if test="authLevel != null">
+        auth_level,
+      </if>
+      <if test="provinceId != null">
+        province_id,
+      </if>
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="countyId != null">
+        county_id,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="corpProvince != null">
+        corp_province,
+      </if>
+      <if test="corpCity != null">
+        corp_city,
+      </if>
+      <if test="postalCode != null">
+        postal_code,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="establishDate != null">
+        establish_date,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="corpLogoUrl != null">
+        #{corpLogoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgTypeName != null">
+        #{orgTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null">
+        #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="industryName != null">
+        #{industryName,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuthenticated != null">
+        #{isAuthenticated,jdbcType=TINYINT},
+      </if>
+      <if test="authLevel != null">
+        #{authLevel,jdbcType=TINYINT},
+      </if>
+      <if test="provinceId != null">
+        #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="countyId != null">
+        #{countyId,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corpProvince != null">
+        #{corpProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="corpCity != null">
+        #{corpCity,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="establishDate != null">
+        #{establishDate,jdbcType=DATE},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    update biz_org_info
+    <set>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="corpLogoUrl != null">
+        corp_logo_url = #{corpLogoUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="corpName != null">
+        corp_name = #{corpName,jdbcType=VARCHAR},
+      </if>
+      <if test="creditCode != null">
+        credit_code = #{creditCode,jdbcType=VARCHAR},
+      </if>
+      <if test="orgTypeName != null">
+        org_type_name = #{orgTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="orgType != null">
+        org_type = #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="industryName != null">
+        industry_name = #{industryName,jdbcType=VARCHAR},
+      </if>
+      <if test="isAuthenticated != null">
+        is_authenticated = #{isAuthenticated,jdbcType=TINYINT},
+      </if>
+      <if test="authLevel != null">
+        auth_level = #{authLevel,jdbcType=TINYINT},
+      </if>
+      <if test="provinceId != null">
+        province_id = #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="countyId != null">
+        county_id = #{countyId,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="corpProvince != null">
+        corp_province = #{corpProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="corpCity != null">
+        corp_city = #{corpCity,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        postal_code = #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="establishDate != null">
+        establish_date = #{establishDate,jdbcType=DATE},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.OrgInfo">
+    update biz_org_info
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      corp_logo_url = #{corpLogoUrl,jdbcType=VARCHAR},
+      corp_name = #{corpName,jdbcType=VARCHAR},
+      credit_code = #{creditCode,jdbcType=VARCHAR},
+      org_type_name = #{orgTypeName,jdbcType=VARCHAR},
+      org_type = #{orgType,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      industry_name = #{industryName,jdbcType=VARCHAR},
+      is_authenticated = #{isAuthenticated,jdbcType=TINYINT},
+      auth_level = #{authLevel,jdbcType=TINYINT},
+      province_id = #{provinceId,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      county_id = #{countyId,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      corp_province = #{corpProvince,jdbcType=VARCHAR},
+      corp_city = #{corpCity,jdbcType=VARCHAR},
+      postal_code = #{postalCode,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      establish_date = #{establishDate,jdbcType=DATE},
+      phone = #{phone,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="selectByCorpId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select 
+	<include refid="Base_Column_List" />
+	from biz_org_info
+	where corpid = #{corpid,jdbcType=VARCHAR}
+  </select>
+</mapper>

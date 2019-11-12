@@ -1,0 +1,221 @@
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.jqsoft</groupId>
+		<artifactId>jq-boot-parent</artifactId>
+		<version>2.2.11</version>
+	</parent>
+	<artifactId>nposervice</artifactId>
+
+	<properties>
+		<!-- ztree -->
+		<ztree.version>3.5.0</ztree.version>
+	</properties>
+
+	<dependencies>
+		<!-- spring boot 开发工具 -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+		</dependency>
+		<!-- jqboot mvc 组件 -->
+		<!--<dependency>
+			<groupId>net.jqsoft</groupId>
+			<artifactId>jq-mvc</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>net.jqsoft</groupId>
+					<artifactId>jq-boot-starter-shiro</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.jqsoft</groupId>
+					<artifactId>jq-boot-starter-shiro-tag</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>-->
+
+		<!-- ztree控件 -->
+		<dependency>
+			<groupId>org.webjars.bower</groupId>
+			<artifactId>ztree</artifactId>
+			<version>${ztree.version}</version>
+		</dependency>
+		<!-- 数据库驱动 -->
+		<!-- 保留一个需要的 -->
+		<dependency> 
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc14</artifactId>
+			<version>10.2.0.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+		<!-- spring-boot-starter-mail -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+			<version>2.1.1.RELEASE</version>
+		</dependency>
+
+		<!-- Spring Boot junit 测试依赖 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+        <!--jq 组件 -->
+        <dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-undertow</artifactId>
+        </dependency>
+        <!-- jq freemarker 组件 -->
+        <dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-freemarker</artifactId>
+        </dependency>
+        <!-- jq persist 组件 -->
+        <dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-mybatisplus</artifactId>
+            <version>2.2.03</version>
+        </dependency>
+        <!-- jq shiro 组件 -->
+        <!--<dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-shiro</artifactId>
+        </dependency>
+        &lt;!&ndash; jq shiro tag 组件 &ndash;&gt;
+        <dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-shiro-tag</artifactId>
+        </dependency>-->
+        <!-- jqboot datasource 组件 -->
+        <dependency>
+            <groupId>net.jqsoft</groupId>
+            <artifactId>jq-boot-starter-druid</artifactId>
+            <version>2.2.03</version>
+        </dependency>
+        <!--webjars -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>webjars-locator</artifactId>
+            <version>0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>font-awesome</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>layui</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+
+		<dependency>
+			<groupId>com.aliyun.oss</groupId>
+			<artifactId>aliyun-sdk-oss</artifactId>
+			<version>3.3.0</version>
+		</dependency>
+
+		<!-- 钉钉api调用相关jar包 -->
+		<dependency>
+			<groupId>com.taobao.top</groupId>
+			<artifactId>top-api-sdk-dev</artifactId>
+			<version>dingtalk-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${pom.basedir}/lib/taobao-sdk-java-auto_1479188381469-20190905.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.taobao.top</groupId>
+			<artifactId>lippi-oapi-encrpt</artifactId>
+			<version>dingtalk-SNAPSHOT</version>
+			<scope>system</scope>
+			<systemPath>${pom.basedir}/lib/lippi-oapi-encrpt.jar</systemPath>
+		</dependency>
+
+		<!-- alipay jar -->
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>4.7.12.ALL</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>net.sf.json-lib</groupId>
+			<artifactId>json-lib</artifactId> 
+			<version>2.4</version> 
+			<classifier>jdk15</classifier>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<!-- 设定除中央仓库(repo1.maven.org/maven2/)外的其他仓库,按设定顺序进行查找. -->
+	<repositories>
+		<repository>
+			<id>nexus-snapshots</id>
+			<name>public nexus snapshots server</name>
+			<url>http://192.168.44.155/nexus/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>nexus-public</id>
+			<name>public nexus server</name>
+			<url>http://192.168.44.155/nexus/content/groups/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+		</repository>
+	</repositories>
+</project>

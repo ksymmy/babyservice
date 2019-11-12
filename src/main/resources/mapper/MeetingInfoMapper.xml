@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.MeetingInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="meeting_start" jdbcType="TIMESTAMP" property="meetingStart"/>
+        <result column="meeting_end" jdbcType="TIMESTAMP" property="meetingEnd"/>
+        <result column="enroll_start" jdbcType="TIMESTAMP" property="enrollStart"/>
+        <result column="enroll_end" jdbcType="TIMESTAMP" property="enrollEnd"/>
+        <result column="province_id" jdbcType="VARCHAR" property="provinceId"/>
+        <result column="city_id" jdbcType="VARCHAR" property="cityId"/>
+        <result column="county_id" jdbcType="VARCHAR" property="countyId"/>
+        <result column="detail" jdbcType="VARCHAR" property="detail"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="sponsor" jdbcType="VARCHAR" property="sponsor"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="context" jdbcType="VARCHAR" property="context"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+        <result column="summary" jdbcType="VARCHAR" property="summary"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+        <result column="create_user_name" jdbcType="VARCHAR" property="createUserName" />
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, org_id, meeting_start, meeting_end, enroll_start, enroll_end, province_id, city_id, 
+    county_id, detail, address, name, sponsor, type, context, state, summary, create_time, 
+    update_time,create_user_id,create_user_name
+  </sql>
+    <select id="queryMeetingList" parameterType="map" resultMap="BaseResultMap">
+        select a.id,a.org_id,a.name,a.meeting_start,a.meeting_end,a.enroll_start,a.enroll_end,a.state from
+        biz_meeting_info a
+        where a.org_id = #{corpid}
+        <if test="name != null and '' != name">
+            and a.name like concat(concat('%',#{name}),'%')
+        </if>
+        <if test="group != null and '' != group">
+            and date_format(a.meeting_start ,'%Y-%m')= #{group}
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <select id="selectCanParticipants" resultType="map">
+        select * from biz_meeting_can_participate where meeting_id = #{meetingId}
+    </select>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_meeting_info
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from biz_meeting_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+    <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    insert into biz_meeting_info (id, org_id, meeting_start, 
+      meeting_end, enroll_start, enroll_end, 
+      province_id, city_id, county_id, 
+      detail, address, name, 
+      sponsor, type, context, 
+      state, summary, create_time, 
+      update_time)
+    values (#{id,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{meetingStart,jdbcType=TIMESTAMP}, 
+      #{meetingEnd,jdbcType=TIMESTAMP}, #{enrollStart,jdbcType=TIMESTAMP}, #{enrollEnd,jdbcType=TIMESTAMP}, 
+      #{provinceId,jdbcType=VARCHAR}, #{cityId,jdbcType=VARCHAR}, #{countyId,jdbcType=VARCHAR}, 
+      #{detail,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{sponsor,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, 
+      #{state,jdbcType=TINYINT}, #{summary,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertCanParticipate" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    insert into biz_meeting_can_participate(id,meeting_id,canParticipateIds,canParticipateNames)
+    values (REPLACE(UUID(),'-',''),#{id},#{canParticipateIds},#{canParticipateNames})
+  </insert>
+    <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+        insert into biz_meeting_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="orgId != null">
+                org_id,
+            </if>
+            <if test="meetingStart != null">
+                meeting_start,
+            </if>
+            <if test="meetingEnd != null">
+                meeting_end,
+            </if>
+            <if test="enrollStart != null">
+                enroll_start,
+            </if>
+            <if test="enrollEnd != null">
+                enroll_end,
+            </if>
+            <if test="provinceId != null">
+                province_id,
+            </if>
+            <if test="cityId != null">
+                city_id,
+            </if>
+            <if test="countyId != null">
+                county_id,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="sponsor != null">
+                sponsor,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="context != null">
+                context,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="summary != null">
+                summary,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="orgId != null">
+                #{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingStart != null">
+                #{meetingStart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="meetingEnd != null">
+                #{meetingEnd,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enrollStart != null">
+                #{enrollStart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enrollEnd != null">
+                #{enrollEnd,jdbcType=TIMESTAMP},
+            </if>
+            <if test="provinceId != null">
+                #{provinceId,jdbcType=VARCHAR},
+            </if>
+            <if test="cityId != null">
+                #{cityId,jdbcType=VARCHAR},
+            </if>
+            <if test="countyId != null">
+                #{countyId,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null">
+                #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="context != null">
+                #{context,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=TINYINT},
+            </if>
+            <if test="summary != null">
+                #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+        update biz_meeting_info
+        <set>
+            <if test="orgId != null">
+                org_id = #{orgId,jdbcType=VARCHAR},
+            </if>
+            <if test="meetingStart != null">
+                meeting_start = #{meetingStart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="meetingEnd != null">
+                meeting_end = #{meetingEnd,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enrollStart != null">
+                enroll_start = #{enrollStart,jdbcType=TIMESTAMP},
+            </if>
+            <if test="enrollEnd != null">
+                enroll_end = #{enrollEnd,jdbcType=TIMESTAMP},
+            </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId,jdbcType=VARCHAR},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId,jdbcType=VARCHAR},
+            </if>
+            <if test="countyId != null">
+                county_id = #{countyId,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsor != null">
+                sponsor = #{sponsor,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="context != null">
+                context = #{context,jdbcType=VARCHAR},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=TINYINT},
+            </if>
+            <if test="summary != null">
+                summary = #{summary,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    update biz_meeting_info
+    set org_id = #{orgId,jdbcType=VARCHAR},
+      meeting_start = #{meetingStart,jdbcType=TIMESTAMP},
+      meeting_end = #{meetingEnd,jdbcType=TIMESTAMP},
+      enroll_start = #{enrollStart,jdbcType=TIMESTAMP},
+      enroll_end = #{enrollEnd,jdbcType=TIMESTAMP},
+      province_id = #{provinceId,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      county_id = #{countyId,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sponsor = #{sponsor,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      context = #{context,jdbcType=VARCHAR},
+      state = #{state,jdbcType=TINYINT},
+      summary = #{summary,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+    <update id="updateCanParticipate" parameterType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+    update biz_meeting_can_participate set canParticipateIds = #{canParticipateIds},
+    canParticipateNames = #{canParticipateNames} where meeting_id = #{id}
+  </update>
+</mapper>

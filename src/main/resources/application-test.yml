@@ -1,0 +1,13 @@
+#----------------------     这里是DEV模式        -----------------------
+#----------------------     系统配置        -----------------------
+net: 
+  jqsoft: 
+    datasource: #数据源配置（这里是测试库的地址）
+      # oracle
+      #driver-class-name: oracle.jdbc.driver.OracleDriver 
+      #url: jdbc:oracle:thin:@192.168.44.158:1521:ncms
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://192.168.44.113:3306/jq-web?useUnicode=true&characterEncoding=utf8
+      username: root
+      password: root
+      validationQuery: SELECT 1 FROM DUAL

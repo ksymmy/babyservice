@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.MemberMeetingMapper">
+
+    <select id="getMeetingInfo"  resultType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+        SELECT bmi.*,(case  when ISNULL(biru.id) then 0 ELSE 1 end)AS readState ,
+        (case  when ISNULL(bpc.state) then -1 ELSE bpc.state end) AS checkState FROM biz_meeting_info bmi
+        left join biz_meeting_can_participate bmcp on bmi.id = bmcp.meeting_id
+        LEFT JOIN biz_info_readed_user biru
+        ON bmi.id=biru.info_id and biru.user_id=#{params.userId}
+        left join biz_participants_check bpc
+        on bmi.id=bpc.meeting_id and bpc.user_id=#{params.userId}
+        where bmi.state=1 and exists(select 1 from biz_user_info bui  where bui.id=#{params.userId}	and bui.org_id = bmi.org_id
+        and INSTR(bmcp.canParticipateIds,bui.userid) > 0)
+        <if test="null != params.title and '' != params.title">
+            and bmi.name like concat('%',#{params.title},'%')
+        </if>
+        order by bmi.create_time desc
+        limit #{offset},#{size}
+    </select>
+
+    <select id="getParticipantsInfo" parameterType="map" resultType="com.jqsoft.nposervice.entity.biz.ParticipantsCheck">
+        SELECT c.*,u.name AS userName FROM biz_participants_check c LEFT JOIN biz_user_info u ON c.user_id=u.userid WHERE  c.meeting_id =#{meetingId}
+    </select>
+
+    <insert id="setMeetingState" parameterType="com.jqsoft.nposervice.entity.biz.ParticipantsCheck">
+        insert into biz_participants_check(id,meeting_id,user_id,state,process_instance_id,create_time,update_time) VALUES (#{id},#{meetingId},#{userId},#{state},#{processInstanceId},#{createTime},#{updateTime})
+    </insert>
+
+    <delete id="deleteMeetingState" parameterType="com.jqsoft.nposervice.entity.biz.ParticipantsCheck">
+        DELETE FROM biz_participants_check WHERE meeting_id=#{meetingId} and user_id=#{userId}
+    </delete>
+
+    <select id="selectMeetingById" parameterType="string"  resultType="com.jqsoft.nposervice.entity.biz.MeetingInfo">
+        SELECT bmi.*,(case  when ISNULL(biru.id) then 0 ELSE 1 end)AS readState ,
+        (case  when ISNULL(bpc.state) then -1 ELSE bpc.state end) AS checkState FROM biz_meeting_info bmi
+        LEFT JOIN biz_info_readed_user biru
+        ON bmi.id=biru.info_id and biru.user_id=#{userId}
+        left join biz_participants_check bpc
+        on bmi.id=bpc.meeting_id and bpc.user_id=#{userId}
+        where bmi.state=1 and exists(select 1 from biz_user_info bui  where bui.id=#{userId}	and bui.org_id = bmi.org_id)
+         and bmi.id=#{meetingId}
+    </select>
+
+    <select id="selectParticipantsCheck"  resultType="com.jqsoft.nposervice.entity.biz.ParticipantsCheck">
+        select * FROM biz_participants_check where meeting_id=#{meetingId} and user_id=#{userId}
+    </select>
+
+    <update id="updateParticipantsCheck">
+        UPDATE biz_participants_check SET state = #{state} where id=#{id}
+    </update>
+
+</mapper>

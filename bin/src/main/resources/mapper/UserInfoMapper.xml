@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.UserInfoMapper">
+  <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.biz.UserInfo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="unionid" jdbcType="VARCHAR" property="unionid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="active" jdbcType="TINYINT" property="active" />
+    <result column="order_in_depts" jdbcType="VARCHAR" property="orderInDepts" />
+    <result column="isAdmin" jdbcType="TINYINT" property="isadmin" />
+    <result column="isBoss" jdbcType="TINYINT" property="isboss" />
+    <result column="isHide" jdbcType="TINYINT" property="ishide" />
+    <result column="isLeader" jdbcType="TINYINT" property="isleader" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="position" jdbcType="VARCHAR" property="position" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="jobnumber" jdbcType="VARCHAR" property="jobnumber" />
+    <result column="hiredDate" jdbcType="DATE" property="hireddate" />
+    <result column="idtype" jdbcType="VARCHAR" property="idtype" />
+    <result column="idnumber" jdbcType="VARCHAR" property="idnumber" />
+    <result column="phome" jdbcType="VARCHAR" property="phome" />
+    <result column="postal_code" jdbcType="VARCHAR" property="postalCode" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="org_type" jdbcType="VARCHAR" property="orgType" />
+    <result column="industry" jdbcType="VARCHAR" property="industry" />
+    <result column="province_id" jdbcType="VARCHAR" property="provinceId" />
+    <result column="city_id" jdbcType="VARCHAR" property="cityId" />
+    <result column="county_id" jdbcType="VARCHAR" property="countyId" />
+    <result column="detail" jdbcType="VARCHAR" property="detail" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="establish_date" jdbcType="DATE" property="establishDate" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="user_type" jdbcType="TINYINT" property="userType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, org_id, userid, unionid, name, active, order_in_depts, isAdmin, isBoss, isHide,
+    isLeader, department, position, avatar, jobnumber, hiredDate, idtype, idnumber, phome,
+    postal_code, email, create_time, update_time, org_type, industry, province_id, city_id,
+    county_id, detail, address, establish_date, status, user_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_user_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from biz_user_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    insert into biz_user_info (id, org_id, userid,
+      unionid, name, active,
+      order_in_depts, isAdmin, isBoss,
+      isHide, isLeader, department,
+      position, avatar, jobnumber,
+      hiredDate, idtype, idnumber,
+      phome, postal_code, email,
+      create_time, update_time, org_type,
+      industry, province_id, city_id,
+      county_id, detail, address,
+      establish_date, status, user_type
+      )
+    values (#{id,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR},
+      #{unionid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT},
+      #{orderInDepts,jdbcType=VARCHAR}, #{isadmin,jdbcType=TINYINT}, #{isboss,jdbcType=TINYINT},
+      #{ishide,jdbcType=TINYINT}, #{isleader,jdbcType=TINYINT}, #{department,jdbcType=VARCHAR},
+      #{position,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{jobnumber,jdbcType=VARCHAR},
+      #{hireddate,jdbcType=DATE}, #{idtype,jdbcType=VARCHAR}, #{idnumber,jdbcType=VARCHAR},
+      #{phome,jdbcType=VARCHAR}, #{postalCode,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{orgType,jdbcType=VARCHAR},
+      #{industry,jdbcType=VARCHAR}, #{provinceId,jdbcType=VARCHAR}, #{cityId,jdbcType=VARCHAR},
+      #{countyId,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+      #{establishDate,jdbcType=DATE}, #{status,jdbcType=TINYINT}, #{userType,jdbcType=TINYINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    insert into biz_user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="orgId != null">
+        org_id,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="unionid != null">
+        unionid,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="active != null">
+        active,
+      </if>
+      <if test="orderInDepts != null">
+        order_in_depts,
+      </if>
+      <if test="isadmin != null">
+        isAdmin,
+      </if>
+      <if test="isboss != null">
+        isBoss,
+      </if>
+      <if test="ishide != null">
+        isHide,
+      </if>
+      <if test="isleader != null">
+        isLeader,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="jobnumber != null">
+        jobnumber,
+      </if>
+      <if test="hireddate != null">
+        hiredDate,
+      </if>
+      <if test="idtype != null">
+        idtype,
+      </if>
+      <if test="idnumber != null">
+        idnumber,
+      </if>
+      <if test="phome != null">
+        phome,
+      </if>
+      <if test="postalCode != null">
+        postal_code,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="orgType != null">
+        org_type,
+      </if>
+      <if test="industry != null">
+        industry,
+      </if>
+      <if test="provinceId != null">
+        province_id,
+      </if>
+      <if test="cityId != null">
+        city_id,
+      </if>
+      <if test="countyId != null">
+        county_id,
+      </if>
+      <if test="detail != null">
+        detail,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="establishDate != null">
+        establish_date,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orgId != null">
+        #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="active != null">
+        #{active,jdbcType=TINYINT},
+      </if>
+      <if test="orderInDepts != null">
+        #{orderInDepts,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null">
+        #{isadmin,jdbcType=TINYINT},
+      </if>
+      <if test="isboss != null">
+        #{isboss,jdbcType=TINYINT},
+      </if>
+      <if test="ishide != null">
+        #{ishide,jdbcType=TINYINT},
+      </if>
+      <if test="isleader != null">
+        #{isleader,jdbcType=TINYINT},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="jobnumber != null">
+        #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hireddate != null">
+        #{hireddate,jdbcType=DATE},
+      </if>
+      <if test="idtype != null">
+        #{idtype,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null">
+        #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phome != null">
+        #{phome,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgType != null">
+        #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null">
+        #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="countyId != null">
+        #{countyId,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="establishDate != null">
+        #{establishDate,jdbcType=DATE},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    update biz_user_info
+    <set>
+      <if test="orgId != null">
+        org_id = #{orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="active != null">
+        active = #{active,jdbcType=TINYINT},
+      </if>
+      <if test="orderInDepts != null">
+        order_in_depts = #{orderInDepts,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null">
+        isAdmin = #{isadmin,jdbcType=TINYINT},
+      </if>
+      <if test="isboss != null">
+        isBoss = #{isboss,jdbcType=TINYINT},
+      </if>
+      <if test="ishide != null">
+        isHide = #{ishide,jdbcType=TINYINT},
+      </if>
+      <if test="isleader != null">
+        isLeader = #{isleader,jdbcType=TINYINT},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        position = #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="jobnumber != null">
+        jobnumber = #{jobnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="hireddate != null">
+        hiredDate = #{hireddate,jdbcType=DATE},
+      </if>
+      <if test="idtype != null">
+        idtype = #{idtype,jdbcType=VARCHAR},
+      </if>
+      <if test="idnumber != null">
+        idnumber = #{idnumber,jdbcType=VARCHAR},
+      </if>
+      <if test="phome != null">
+        phome = #{phome,jdbcType=VARCHAR},
+      </if>
+      <if test="postalCode != null">
+        postal_code = #{postalCode,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="orgType != null">
+        org_type = #{orgType,jdbcType=VARCHAR},
+      </if>
+      <if test="industry != null">
+        industry = #{industry,jdbcType=VARCHAR},
+      </if>
+      <if test="provinceId != null">
+        province_id = #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null">
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="countyId != null">
+        county_id = #{countyId,jdbcType=VARCHAR},
+      </if>
+      <if test="detail != null">
+        detail = #{detail,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="establishDate != null">
+        establish_date = #{establishDate,jdbcType=DATE},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.nposervice.entity.biz.UserInfo">
+    update biz_user_info
+    set org_id = #{orgId,jdbcType=VARCHAR},
+      userid = #{userid,jdbcType=VARCHAR},
+      unionid = #{unionid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      active = #{active,jdbcType=TINYINT},
+      order_in_depts = #{orderInDepts,jdbcType=VARCHAR},
+      isAdmin = #{isadmin,jdbcType=TINYINT},
+      isBoss = #{isboss,jdbcType=TINYINT},
+      isHide = #{ishide,jdbcType=TINYINT},
+      isLeader = #{isleader,jdbcType=TINYINT},
+      department = #{department,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      jobnumber = #{jobnumber,jdbcType=VARCHAR},
+      hiredDate = #{hireddate,jdbcType=DATE},
+      idtype = #{idtype,jdbcType=VARCHAR},
+      idnumber = #{idnumber,jdbcType=VARCHAR},
+      phome = #{phome,jdbcType=VARCHAR},
+      postal_code = #{postalCode,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      org_type = #{orgType,jdbcType=VARCHAR},
+      industry = #{industry,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      county_id = #{countyId,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      establish_date = #{establishDate,jdbcType=DATE},
+      status = #{status,jdbcType=TINYINT},
+      user_type = #{userType,jdbcType=TINYINT}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

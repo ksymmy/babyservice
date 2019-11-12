@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqsoft.nposervice.mapper.system.DdMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.nposervice.entity.system.Dd">
+        <result property="id" column="id"/>
+        <result property="gmtCreate" column="gmt_create"/>
+        <result property="gmtModified" column="gmt_modified"/>
+        <result property="subscribeId" column="subscribe_id"/>
+        <result property="corpId" column="corp_id"/>
+        <result property="bizId" column="biz_id"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="bizData" column="biz_data"/>
+        <result property="openCursor" column="open_cursor"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="selectDdCloudData" resultMap="BaseResultMap">
+    SELECT id,gmt_create,gmt_modified,subscribe_id,corp_id,biz_id,biz_type,biz_data,open_cursor,status 
+    FROM ding_cloud_push.open_sync_biz_data WHERE status != '1'
+    </select>
+    
+    <select id="selectDdCloudDataMedium" resultMap="BaseResultMap">
+    SELECT id,gmt_create,gmt_modified,subscribe_id,corp_id,biz_id,biz_type,biz_data,open_cursor,status 
+    FROM ding_cloud_push.open_sync_biz_data_medium WHERE status != '1'
+    </select>
+    
+    <update id="updateStatusById" parameterType="map">
+    UPDATE ding_cloud_push.open_sync_biz_data SET status = #{status} WHERE id = #{id}
+    </update>
+    
+    <update id="updateStatusByMediumId" parameterType="map">
+    UPDATE ding_cloud_push.open_sync_biz_data_medium SET status = #{status} WHERE id = #{id}
+    </update>
+</mapper>

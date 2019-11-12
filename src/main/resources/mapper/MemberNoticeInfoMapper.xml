@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.nposervice.mapper.biz.MemberNoticeInfoMapper">
+
+    <select id="selectNoticeInfo"  resultType="com.jqsoft.nposervice.entity.biz.NoticeInfo">
+        SELECT
+        bni.*,
+        ( CASE WHEN ISNULL( biru.id ) THEN 0 ELSE 1 END ) AS readState
+        FROM
+        biz_notice_info bni
+        LEFT JOIN biz_info_readed_user biru ON bni.id = biru.info_id
+        AND biru.user_id = #{params.userId}
+        WHERE
+        bni.org_id = #{params.orgId}
+        AND bni.state = 1
+        AND (
+        bni.type = 1
+        OR (
+        bni.type = 2
+        AND EXISTS ( SELECT 1 FROM biz_participants_check bpc WHERE bni.source_id = bpc.meeting_id AND bpc.user_id = #{params.userId} AND bpc.state = 1 )
+        )
+        )
+        <if test="null != params.title and '' != params.title">
+            and bni.title like concat('%',#{params.title},'%')
+        </if>
+        order by bni.publish desc
+        limit #{offset},#{size}
+
+    </select>
+
+    <select id="selectNoticeFileInfoByNoticeId" parameterType="String" resultType="com.jqsoft.nposervice.entity.system.FileEntity">
+        SELECT * FROM t_file where record_id = #{noticeId}
+    </select>
+
+    <insert id="updateReceiverState" parameterType="com.jqsoft.nposervice.entity.biz.InfoReadedUser">
+        insert into biz_info_readed_user (id,info_id,user_id,user_name)
+              SELECT #{id},#{infoId},#{userId},#{userName}
+              from DUAL
+            where not EXISTS (select 1 FROM biz_info_readed_user WHERE info_id = #{infoId} and user_id =#{userId})
+    </insert>
+</mapper>
