@@ -17,7 +17,7 @@ spring:
   profiles:
     active: dev # dev 为开发环境，test 为开发环境，上线时把此项属性注释掉,切记
   application:
-    name: 社会组织服务平台 #系统名称
+    name: 宝宝健康体检 #系统名称
   devtools:
     restart:
       enabled: true #启用热启动

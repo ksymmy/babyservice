@@ -2,8 +2,7 @@ package com.jqsoft.babyservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -14,9 +13,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @EnableCaching 启用缓存
  * @EnableTransactionManagement 开启事务支持，然后在需要事务的Service方法上添加注解 @Transactional便可
  */
-@EnableAsync
-@EnableCaching
 @SpringBootApplication
+@EnableScheduling
 @EnableTransactionManagement
 public class Application {
     public static void main(String[] args) {

@@ -11,8 +11,6 @@ import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
 import com.jqsoft.babyservice.commons.interceptor.LoginCheck;
 import com.jqsoft.babyservice.commons.interceptor.SubmitTarget;
 import com.jqsoft.babyservice.commons.utils.CommUtils;
-import com.jqsoft.babyservice.commons.utils.DateUtil;
-import com.jqsoft.babyservice.commons.utils.OSSUtils;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -46,8 +43,8 @@ public class DemoController extends BaseController {
     @Autowired
     public RedisUtils redisUtils;
 
-    @Autowired
-    public OSSUtils ossUtils;
+//    @Autowired
+//    public OSSUtils ossUtils;
 
     @AuthCheck
     @GetMapping("getData")
@@ -94,13 +91,13 @@ public class DemoController extends BaseController {
     }
 
 
-    @GetMapping("upload")
-    public RestVo upload() {
-        String url = "C:\\Users\\JQ001\\Desktop\\图片\\logo.png";
-        String fileName = DateUtil.formatDate(new Date(), DateUtil.FMT_1) + "/" + CommUtils.getUUID() + ".png";
-        ossUtils.upload(url, fileName);
-        return RestVo.SUCCESS(ossUtils.fmtAccessUrl(fileName));
-    }
+//    @GetMapping("upload")
+//    public RestVo upload() {
+//        String url = "C:\\Users\\JQ001\\Desktop\\图片\\logo.png";
+//        String fileName = DateUtil.formatDate(new Date(), DateUtil.FMT_1) + "/" + CommUtils.getUUID() + ".png";
+//        ossUtils.upload(url, fileName);
+//        return RestVo.SUCCESS(ossUtils.fmtAccessUrl(fileName));
+//    }
 
     @SubmitTarget
     @GetMapping("sendMail")
