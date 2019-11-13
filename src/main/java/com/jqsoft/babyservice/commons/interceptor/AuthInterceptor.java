@@ -36,6 +36,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     UserService userService;
+
     /**
      * 前处理
      */
@@ -70,25 +71,25 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         } else if (clazz.isAnnotationPresent(ParentCheck.class) || method.isAnnotationPresent(ParentCheck.class)) {
             checkType = 3;
         }
-        if (checkType !=0 ) {
-           String corpid = this.getCorpid(request);
-           String userid = this.getUserid(request);
-           if (StringUtils.isBlank(corpid) || StringUtils.isBlank(userid)) {
-               // corpid 或 userid 为空
-               flag = 1;
-           } else {
-               UserInfo user = null;
-               if (null == user) {
-                   // 用户不存在
-                   flag = 2;
-               } else {
-                   Byte admin = user.getAdmin();
-                   if (!((admin == 1 && checkType == 2) || (admin == 0 && checkType == 3))) {
-                       // 用户角色和接口权限不符
-                       flag = 3;
-                   }
-               }
-           }
+        if (checkType != 0) {
+            String corpid = getCorpid(request);
+            String userid = getUserid(request);
+            if (StringUtils.isBlank(corpid) || StringUtils.isBlank(userid)) {
+                // corpid 或 userid 为空
+                flag = 1;
+            } else {
+                UserInfo user = userService.selectByCorpIdAndUserid(corpid, userid);
+                if (null == user) {
+                    // 用户不存在
+                    flag = 2;
+                } else {
+                    Byte admin = user.getAdmin();
+                    if (!((admin == 1 && checkType == 2) || (admin == 0 && checkType == 3))) {
+                        // 用户角色和接口权限不符
+                        flag = 3;
+                    }
+                }
+            }
         }
 
         if (0 != flag) {
@@ -109,7 +110,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         return true;
     }
 
-    private static String getCorpid(HttpServletRequest request){
+    private static String getCorpid(HttpServletRequest request) {
         String corpid = request.getHeader("corpid");
         if (StringUtils.isBlank(corpid)) {
             corpid = request.getParameter("corpid");
@@ -117,7 +118,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         return corpid;
     }
 
-    private static String getUserid(HttpServletRequest request){
+    private static String getUserid(HttpServletRequest request) {
         String userid = request.getHeader("userid");
         if (StringUtils.isBlank(userid)) {
             userid = request.getParameter("userid");
