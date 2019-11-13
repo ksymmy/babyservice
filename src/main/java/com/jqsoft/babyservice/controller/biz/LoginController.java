@@ -26,21 +26,17 @@ public class LoginController extends BaseController {
 
 
     /**
-     * TODO 登录
+     * 登录
      *
      * @param authCode 免登授权码
-     * @param corpId   从钉钉获取corpId
-     * @return
-     * @author 李健平2018072
-     * @date 2019年9月23日 下午2:28:21
+     * @param corpid   从钉钉获取corpId
+     * @param userid   userid
      */
     @RequestMapping("/login")
     public RestVo login(@RequestParam(value = "authCode") String authCode,
-                        @RequestParam(value = "corpId", required = false) String corpId) {
-        log.info("入参:临时授权码:{}", authCode);
-        log.info("用户token：{}", this.getToken());
-        log.info("授权企业id:{}", corpId);
-        return loginService.login(authCode, corpId);
+                        @RequestParam(value = "corpid") String corpid,
+                        @RequestParam(value = "userid", required = false) String userid) {
+        return loginService.login(authCode, corpid, userid);
     }
 
     public void removeUserOrToken(String userId, String token) {

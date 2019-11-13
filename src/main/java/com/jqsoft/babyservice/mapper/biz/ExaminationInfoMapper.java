@@ -1,7 +1,9 @@
 package com.jqsoft.babyservice.mapper.biz;
 
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface ExaminationInfoMapper {
     int deleteByPrimaryKey(Long id);
 

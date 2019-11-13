@@ -5,16 +5,16 @@
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
-        <result column="adress" jdbcType="VARCHAR" property="adress"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
         <result column="active" jdbcType="TINYINT" property="active"/>
-        <result column="amdin" jdbcType="TINYINT" property="amdin"/>
+        <result column="admin" jdbcType="TINYINT" property="admin"/>
         <result column="corpid" jdbcType="VARCHAR" property="corpid"/>
         <result column="userid" jdbcType="VARCHAR" property="userid"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="create_time"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="update_time"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, mobile, adress, active, amdin, corpid, userid, create_time, update_time
+    id, name, mobile, address, active, admin, corpid, userid, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
@@ -22,17 +22,20 @@
         from biz_user_info
         where id = #{id,jdbcType=BIGINT}
     </select>
+    <select id="selectByCorpIdAndUserid" resultMap="BaseResultMap">
+        select * from biz_user_info where corpid = #{corpid} and userid = #{userid}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from biz_user_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
     <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     insert into biz_user_info (id, name, mobile, 
-      adress, active, amdin, 
+      address, active, admin, 
       corpid, userid, create_time, 
       update_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{adress,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT}, #{amdin,jdbcType=TINYINT}, 
+      #{address,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT}, #{admin,jdbcType=TINYINT}, 
       #{corpid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{create_time,jdbcType=TIMESTAMP}, 
       #{update_time,jdbcType=TIMESTAMP})
   </insert>
@@ -48,14 +51,14 @@
             <if test="mobile != null">
                 mobile,
             </if>
-            <if test="adress != null">
-                adress,
+            <if test="address != null">
+                address,
             </if>
             <if test="active != null">
                 active,
             </if>
-            <if test="amdin != null">
-                amdin,
+            <if test="admin != null">
+                admin,
             </if>
             <if test="corpid != null">
                 corpid,
@@ -80,14 +83,14 @@
             <if test="mobile != null">
                 #{mobile,jdbcType=VARCHAR},
             </if>
-            <if test="adress != null">
-                #{adress,jdbcType=VARCHAR},
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
             </if>
             <if test="active != null">
                 #{active,jdbcType=TINYINT},
             </if>
-            <if test="amdin != null">
-                #{amdin,jdbcType=TINYINT},
+            <if test="admin != null">
+                #{admin,jdbcType=TINYINT},
             </if>
             <if test="corpid != null">
                 #{corpid,jdbcType=VARCHAR},
@@ -112,14 +115,14 @@
             <if test="mobile != null">
                 mobile = #{mobile,jdbcType=VARCHAR},
             </if>
-            <if test="adress != null">
-                adress = #{adress,jdbcType=VARCHAR},
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
             </if>
             <if test="active != null">
                 active = #{active,jdbcType=TINYINT},
             </if>
-            <if test="amdin != null">
-                amdin = #{amdin,jdbcType=TINYINT},
+            <if test="admin != null">
+                admin = #{admin,jdbcType=TINYINT},
             </if>
             <if test="corpid != null">
                 corpid = #{corpid,jdbcType=VARCHAR},
@@ -140,9 +143,9 @@
     update biz_user_info
     set name = #{name,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
-      adress = #{adress,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
       active = #{active,jdbcType=TINYINT},
-      amdin = #{amdin,jdbcType=TINYINT},
+      admin = #{admin,jdbcType=TINYINT},
       corpid = #{corpid,jdbcType=VARCHAR},
       userid = #{userid,jdbcType=VARCHAR},
       create_time = #{create_time,jdbcType=TIMESTAMP},

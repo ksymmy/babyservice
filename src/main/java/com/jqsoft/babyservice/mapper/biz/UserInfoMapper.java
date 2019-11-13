@@ -1,7 +1,9 @@
 package com.jqsoft.babyservice.mapper.biz;
 
 import com.jqsoft.babyservice.entity.biz.UserInfo;
+import org.apache.ibatis.annotations.Mapper;
 
+@Mapper
 public interface UserInfoMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,6 @@ public interface UserInfoMapper {
     int updateByPrimaryKeySelective(UserInfo record);
 
     int updateByPrimaryKey(UserInfo record);
+
+    UserInfo selectByCorpIdAndUserid(String corpid, String userid);
 }
