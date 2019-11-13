@@ -7,8 +7,8 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
-import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
-import com.jqsoft.babyservice.commons.interceptor.LoginCheck;
+import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
+import com.jqsoft.babyservice.commons.interceptor.UserCheck;
 import com.jqsoft.babyservice.commons.interceptor.SubmitTarget;
 import com.jqsoft.babyservice.commons.utils.CommUtils;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
@@ -46,7 +46,7 @@ public class DemoController extends BaseController {
 //    @Autowired
 //    public OSSUtils ossUtils;
 
-    @AuthCheck
+    @AdminCheck
     @GetMapping("getData")
     public RestVo getData(@RequestParam(value = "id", required = true) String id) {
         log.info("获取数据 入参 id:{}", id);
@@ -58,7 +58,7 @@ public class DemoController extends BaseController {
         return restVo;
     }
 
-    @LoginCheck
+    @UserCheck
     @GetMapping("getData1")
     public RestVo getData1(@RequestParam(value = "id", required = true) String id) {
         log.info("获取数据 入参 id:{}", id);
@@ -84,7 +84,7 @@ public class DemoController extends BaseController {
         return RestVo.SUCCESS(token);
     }
 
-    @LoginCheck
+    @UserCheck
     @GetMapping("getUserId")
     public RestVo getUserId(@RequestParam(value = "token", required = true) String token) {
         return RestVo.SUCCESS(this.getUserId());

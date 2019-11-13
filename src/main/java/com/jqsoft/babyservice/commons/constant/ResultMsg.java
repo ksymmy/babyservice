@@ -7,12 +7,9 @@ public enum ResultMsg {
     ERROR("4444", "系统异常"),
 
 
-    TOKEN_IS_NULL("0001","token为空"),
-    NOT_LOGIN("0002","未登录"),
-    USER_UNCHECK("0003", "用户未审核"),
-    USER_CHECK_FAIL("0004", "用户审核不通过"),
-    USER_IS_STOPED("0005", "用户被停用"),
-    NOT_AUTH("0006", "无此访问权限"),
+    CORPID_USERID_IS_NULL("0001","corpid或userid为空"),
+    USER_NOT_EXISTS("0002","用户不存在"),
+    NOT_AUTH("0003", "无此访问权限"),
 
     LOGIN_FAIL("0007","登录失败"),
     NOT_PARAM("0008", "缺少参数"),

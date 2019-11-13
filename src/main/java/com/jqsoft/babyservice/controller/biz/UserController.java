@@ -1,6 +1,6 @@
 package com.jqsoft.babyservice.controller.biz;
 
-import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
+import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.service.biz.UserService;
@@ -18,7 +18,7 @@ public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
-    @AuthCheck
+    @AdminCheck
     @RequestMapping("/list")
     public RestVo selectList(int currentPageIndex, int pageSize) {
         HashMap<String, Object> params = new HashMap<String, Object>() {{
