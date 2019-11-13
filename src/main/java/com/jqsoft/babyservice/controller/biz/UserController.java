@@ -3,7 +3,6 @@ package com.jqsoft.babyservice.controller.biz;
 import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
-import com.jqsoft.babyservice.service.biz.UserRoleService;
 import com.jqsoft.babyservice.service.biz.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,6 @@ import java.util.HashMap;
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserRoleService userRoleService;
 
     @AuthCheck
     @RequestMapping("/list")

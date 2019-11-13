@@ -5,21 +5,18 @@ import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
-import com.jqsoft.babyservice.service.system.ResourcesService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,10 +33,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     RedisUtils redisUtils;
-
-    @Autowired
-    ResourcesService resourcesService;
-
     /**
      * 前处理
      */
@@ -109,7 +102,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 
         }
-        if (flag == 0 && checkType == 2) {
+        /*if (flag == 0 && checkType == 2) {
             // 权限校验
             // 获取当前用户的所有资源权限
             List<String> jumpList = resourcesService.getAllResourcesJumpByUserId(userId);
@@ -117,7 +110,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             if (CollectionUtils.isEmpty(jumpList) || !jumpList.contains(requestUri)) {
                 flag = 6;
             }
-        }
+        }*/
 
         if (0 != flag) {
             response.setContentType("application/json");

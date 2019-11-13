@@ -3,7 +3,6 @@ package com.jqsoft.babyservice.service.biz;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import lombok.extern.slf4j.Slf4j;
-import net.jqsoft.common.domain.JsonResult;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
