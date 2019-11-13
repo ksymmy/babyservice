@@ -7,22 +7,22 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class UserInfo {
+public class BabyInfo {
     private Long id;
-
-    private String name;
-
-    private String mobile;
-
-    private String adress;
-
-    private Byte active;
-
-    private Byte amdin;
 
     private String corpid;
 
-    private String userid;
+    private String name;
+
+    private Date birthday;
+
+    private String avatar;
+
+    private Long father_id;
+
+    private Long mother_id;
+
+    private Byte state;
 
     private Date create_time;
 

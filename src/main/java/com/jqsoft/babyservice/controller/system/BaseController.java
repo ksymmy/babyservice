@@ -1,13 +1,11 @@
 package com.jqsoft.babyservice.controller.system;
 
-import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
-import com.jqsoft.babyservice.entity.biz.UserInfo;
-import com.jqsoft.babyservice.service.biz.MemberUserInfoService;
-import com.jqsoft.babyservice.service.biz.OrgInfoService;
+import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,14 +23,9 @@ public abstract class BaseController {
     @Autowired
     RedisUtils redisUtils;
 
-    @Autowired
-    MemberUserInfoService memberUserInfoService;
-
-    @Autowired
-    OrgInfoService orgInfoService;
-
     /**
      * 获取登录token
+     *
      * @return
      */
     public String getToken() {
@@ -48,6 +41,7 @@ public abstract class BaseController {
 
     /**
      * 获取用户ID
+     *
      * @return
      */
     public String getUserId() {
@@ -57,22 +51,5 @@ public abstract class BaseController {
         return userIdString;
     }
 
-    /**
-     * 获取用户所在的组织ID
-     * @return
-     */
-    public String getOrgId() {
-        UserInfo user = this.getUserInfo();
-        return user.getOrgId();
-    }
-
-    /**
-     * 获取用户登录信息
-     *
-     * @return
-     */
-    public UserInfo getUserInfo() {
-        return memberUserInfoService.findByID(this.getUserId()).getData();
-    }
 
 }

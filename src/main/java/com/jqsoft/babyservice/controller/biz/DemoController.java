@@ -6,19 +6,17 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeWapPayModel;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.jqsoft.babyservice.commons.constant.RedisKey;
+import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
+import com.jqsoft.babyservice.commons.interceptor.LoginCheck;
 import com.jqsoft.babyservice.commons.interceptor.SubmitTarget;
+import com.jqsoft.babyservice.commons.utils.CommUtils;
 import com.jqsoft.babyservice.commons.utils.DateUtil;
 import com.jqsoft.babyservice.commons.utils.OSSUtils;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
-import com.jqsoft.babyservice.commons.constant.RedisKey;
-import com.jqsoft.babyservice.commons.interceptor.LoginCheck;
-import com.jqsoft.babyservice.commons.utils.CommUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
-import com.jqsoft.babyservice.commons.interceptor.AuthCheck;
 import com.jqsoft.babyservice.controller.system.BaseController;
-import com.jqsoft.babyservice.mapper.system.AreaMapper;
 import com.jqsoft.babyservice.service.biz.DemoService;
-import com.jqsoft.babyservice.service.biz.MailSenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +42,6 @@ public class DemoController extends BaseController {
     @Autowired
     public DemoService demoService;
 
-    @Autowired
-    public MailSenderService mailSenderService;
 
     @Autowired
     public RedisUtils redisUtils;
@@ -53,12 +49,9 @@ public class DemoController extends BaseController {
     @Autowired
     public OSSUtils ossUtils;
 
-    @Autowired
-    public AreaMapper areaMapper;
-
     @AuthCheck
     @GetMapping("getData")
-    public RestVo getData(@RequestParam(value = "id", required = true) String id){
+    public RestVo getData(@RequestParam(value = "id", required = true) String id) {
         log.info("获取数据 入参 id:{}", id);
         RestVo restVo = demoService.getData(id);
         log.info("获取数据 出参:{}", restVo);
@@ -70,7 +63,7 @@ public class DemoController extends BaseController {
 
     @LoginCheck
     @GetMapping("getData1")
-    public RestVo getData1(@RequestParam(value = "id", required = true) String id){
+    public RestVo getData1(@RequestParam(value = "id", required = true) String id) {
         log.info("获取数据 入参 id:{}", id);
         RestVo restVo = demoService.getData(id);
         log.info("获取数据 出参:{}", restVo);
@@ -81,9 +74,9 @@ public class DemoController extends BaseController {
     }
 
     @GetMapping("login")
-    public RestVo login(@RequestParam(value = "userId", required = true) String userId){
+    public RestVo login(@RequestParam(value = "userId", required = true) String userId) {
         String tokenKey = RedisKey.LOGIN_TOKEN.getKey(userId);
-        String token = (String)redisUtils.get(tokenKey);
+        String token = (String) redisUtils.get(tokenKey);
         if (StringUtils.isNotEmpty(token)) {
             return RestVo.SUCCESS(token);
         }
@@ -96,26 +89,13 @@ public class DemoController extends BaseController {
 
     @LoginCheck
     @GetMapping("getUserId")
-    public RestVo getUserId(@RequestParam(value = "token", required = true) String token){
+    public RestVo getUserId(@RequestParam(value = "token", required = true) String token) {
         return RestVo.SUCCESS(this.getUserId());
     }
 
-    @LoginCheck
-    @GetMapping("getUserInfo")
-    public RestVo getUserInfo(@RequestParam(value = "token", required = true) String token){
-        return RestVo.SUCCESS(this.getUserInfo());
-    }
-
-    @LoginCheck
-    @GetMapping("getOrgId")
-    public RestVo getOrgId(@RequestParam(value = "token", required = true) String token){
-//        String[] res = {"1053122492@qq.com","1053122492@qq.com"};
-//        mailSenderService.sendMailBatch(res,"测试标题","测试内容");
-        return RestVo.SUCCESS(this.getOrgId());
-    }
 
     @GetMapping("upload")
-    public RestVo upload(){
+    public RestVo upload() {
         String url = "C:\\Users\\JQ001\\Desktop\\图片\\logo.png";
         String fileName = DateUtil.formatDate(new Date(), DateUtil.FMT_1) + "/" + CommUtils.getUUID() + ".png";
         ossUtils.upload(url, fileName);
@@ -124,8 +104,8 @@ public class DemoController extends BaseController {
 
     @SubmitTarget
     @GetMapping("sendMail")
-    public RestVo sendMail(){
-        String[] res = {"1053122492@qq.com","1053122492@qq.com"};
+    public RestVo sendMail() {
+        String[] res = {"1053122492@qq.com", "1053122492@qq.com"};
        /* try {
             Thread.sleep(30000);
         } catch (InterruptedException e) {
@@ -157,21 +137,21 @@ public class DemoController extends BaseController {
                 "3ZuWKT3sMZR6PJ6FyPkmxa/P+N1EWIz380JrTGGXpNl6FDTgOrvKKW8QS9i7ZiK/FLYjnBsfxIbJbBuThzWsN7Z/SrkrEvenkz9WQDbKK2WfHqw4dIOAjf2JtwesbrbQhKyk2Oyl1" +
                 "qR+wSpEos1ECgYBpX8zFU1na6L2P5UZw4aZBiAPNS9ElYY18tavvKbCqcQBysByHVESNzoR8eE50P2I9AtzZJp3EMH/XhGj4R75/vYnmKtzXwALw024FG6+mU+x0uhtuRYtNEa9rVowuePJZBDRk7HIDF7cvcgyKhzuYUgIKfX0758Z5vTrpsa41xQ==";
         // 服务器异步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
-       String notify_url = "http://www.baidu.com";
+        String notify_url = "http://www.baidu.com";
         // 页面跳转同步通知页面路径 需http://或者https://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问 商户可以自定义同步跳转地址
-       String return_url = "http://www.baidu.com";
+        String return_url = "http://www.baidu.com";
         // 请求网关地址
-       String URL = "https://openapi.alipaydev.com/gateway.do";
+        String URL = "https://openapi.alipaydev.com/gateway.do";
         // 编码
-       String CHARSET = "UTF-8";
+        String CHARSET = "UTF-8";
         // 返回格式
-       String FORMAT = "json";
+        String FORMAT = "json";
         // 支付宝公钥
-       String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2QbiZXkHbWGg0vbutpCNnRcCiIwaHKEufIwcbgp4PT8fHRVPP+EFDCKqERa14T2ueapUrDUhxdTFd" +
-               "XS72o0bUof7csRhpYLrSHmCeIg45+gEvOyFjnO3LWFwTV+koXK/5AHuBW7F4RF+18KoampojqfFfbdw3ioMiPVFbkJ4/+WC+scfSi7uh1j+OvTqNdfm0meTnZAe5NakWdanPeL46q2eDESS" +
-               "o0QG2bfbfbWiROg4nqOlOcBf8HPM1vGwCi8koI093DM52l3CJ663ZMaXkZBI2N0PbR1HxI61Z2pUge7Xq+6+/8wUgK3yKuTuzmhsrbgawMn1e01/qiTalrNOKQIDAQAB";
+        String ALIPAY_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2QbiZXkHbWGg0vbutpCNnRcCiIwaHKEufIwcbgp4PT8fHRVPP+EFDCKqERa14T2ueapUrDUhxdTFd" +
+                "XS72o0bUof7csRhpYLrSHmCeIg45+gEvOyFjnO3LWFwTV+koXK/5AHuBW7F4RF+18KoampojqfFfbdw3ioMiPVFbkJ4/+WC+scfSi7uh1j+OvTqNdfm0meTnZAe5NakWdanPeL46q2eDESS" +
+                "o0QG2bfbfbWiROg4nqOlOcBf8HPM1vGwCi8koI093DM52l3CJ663ZMaXkZBI2N0PbR1HxI61Z2pUge7Xq+6+/8wUgK3yKuTuzmhsrbgawMn1e01/qiTalrNOKQIDAQAB";
         // RSA2
-       String SIGNTYPE = "RSA2";
+        String SIGNTYPE = "RSA2";
 
         // 商户订单号，商户网站订单系统中唯一订单号，必填
 //        out_trade_no = new String(request.getParameter("out_trade_no").getBytes("ISO-8859-1"),"UTF-8");
@@ -184,15 +164,15 @@ public class DemoController extends BaseController {
 //         超时时间 可空
 //        String timeout_express="30m";
         // 销售产品码 必填
-        String product_code="QUICK_WAP_WAY";
+        String product_code = "QUICK_WAP_WAY";
         /**********************/
         // SDK 公共请求类，包含公共请求参数，以及封装了签名与验签，开发者无需关注签名与验签
         //调用RSA签名方式
-        AlipayClient client = new DefaultAlipayClient(URL, APPID, RSA_PRIVATE_KEY, FORMAT, CHARSET, ALIPAY_PUBLIC_KEY,SIGNTYPE);
-        AlipayTradeWapPayRequest alipay_request=new AlipayTradeWapPayRequest();
+        AlipayClient client = new DefaultAlipayClient(URL, APPID, RSA_PRIVATE_KEY, FORMAT, CHARSET, ALIPAY_PUBLIC_KEY, SIGNTYPE);
+        AlipayTradeWapPayRequest alipay_request = new AlipayTradeWapPayRequest();
 
         // 封装请求支付信息
-        AlipayTradeWapPayModel model=new AlipayTradeWapPayModel();
+        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
         model.setOutTradeNo(out_trade_no);
         model.setSubject(subject);
         model.setTotalAmount(total_amount);

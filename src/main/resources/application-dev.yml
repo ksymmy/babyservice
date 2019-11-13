@@ -6,7 +6,7 @@ net:
     datasource: #数据源配置（这里是正式库的地址）
       driver-class-name: com.mysql.jdbc.Driver
       #      url: jdbc:mysql://192.168.44.113:3306/babyservice?useUnicode=true&characterEncoding=utf8
-      url: jdbc:mysql://30.40.42.204:3306/babyservice?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://192.168.43.101:3306/babyservice?useUnicode=true&characterEncoding=utf8
       username: root
       password: root
       validationQuery: SELECT 1 FROM DUAL

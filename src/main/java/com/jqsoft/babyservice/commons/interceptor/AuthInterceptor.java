@@ -1,12 +1,10 @@
 package com.jqsoft.babyservice.commons.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
+import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
-import com.jqsoft.babyservice.entity.biz.UserInfo;
-import com.jqsoft.babyservice.service.biz.MemberUserInfoService;
 import com.jqsoft.babyservice.service.system.ResourcesService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -40,9 +39,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
     ResourcesService resourcesService;
-
-    @Autowired
-    MemberUserInfoService memberUserInfoService;
 
     /**
      * 前处理
@@ -81,7 +77,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             // 登录校验
             String tokenName = "token";
             String token = request.getParameter(tokenName);
-            if(StringUtils.isBlank(token)) {
+            if (StringUtils.isBlank(token)) {
                 token = request.getHeader(tokenName);
             }
 
@@ -90,18 +86,17 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             } else {
                 // 查看redis当前用户是否已经登录
                 String userIdKey = RedisKey.LOGIN_USERID.getKey(token);
-                userId = (String)redisUtils.get(userIdKey);
-                if(StringUtils.isEmpty(userId)){
+                userId = (String) redisUtils.get(userIdKey);
+                if (StringUtils.isEmpty(userId)) {
                     flag = 2;
-                }else{
+                } else {
                     // 重新设置登陆缓存的过期时间
                     String tokenKey = RedisKey.LOGIN_TOKEN.getKey(userId);
                     redisUtils.expire(tokenKey, tokenExpire, TimeUnit.MINUTES);
                     redisUtils.expire(userIdKey, tokenExpire, TimeUnit.MINUTES);
 
                     // 判断用户状态（未审核、审核不通过、停用的用户不能访问系统）
-                    UserInfo userInfo = memberUserInfoService.findByID(userId).getData();
-                    Byte status = userInfo.getStatus();
+                    Byte status = 2;
                     if (status.byteValue() == 0) {
                         flag = 3;// 未审核
                     } else if (status.byteValue() == 2) {
@@ -111,7 +106,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
                     }
                 }
             }
-
 
 
         }
@@ -125,22 +119,22 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             }
         }
 
-        if(0 != flag){
+        if (0 != flag) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
             RestVo restVo = new RestVo();
             if (1 == flag) {
                 restVo.setCode(ResultMsg.TOKEN_IS_NULL);
-            } else if (2 == flag){
+            } else if (2 == flag) {
                 restVo.setCode(ResultMsg.NOT_LOGIN);
-            } else if (3 == flag){
+            } else if (3 == flag) {
                 restVo.setCode(ResultMsg.USER_UNCHECK);
-            } else if (4 == flag){
+            } else if (4 == flag) {
                 restVo.setCode(ResultMsg.USER_CHECK_FAIL);
-            } else if (5 == flag){
+            } else if (5 == flag) {
                 restVo.setCode(ResultMsg.USER_IS_STOPED);
-            } else if (6 == flag){
+            } else if (6 == flag) {
                 restVo.setCode(ResultMsg.NOT_AUTH);
             }
             response.getWriter().write(JSONObject.toJSONString(restVo));

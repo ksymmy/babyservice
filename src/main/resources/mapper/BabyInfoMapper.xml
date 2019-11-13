@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.BabyInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="corpid" jdbcType="VARCHAR" property="corpid"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="birthday" jdbcType="DATE" property="birthday"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="father_id" jdbcType="BIGINT" property="father_id"/>
+        <result column="mother_id" jdbcType="BIGINT" property="mother_id"/>
+        <result column="state" jdbcType="TINYINT" property="state"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="create_time"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="update_time"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, corpid, name, birthday, avatar, father_id, mother_id, state, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_baby_info
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_baby_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
+    insert into biz_baby_info (id, corpid, name, 
+      birthday, avatar, father_id, 
+      mother_id, state, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR}, #{father_id,jdbcType=BIGINT}, 
+      #{mother_id,jdbcType=BIGINT}, #{state,jdbcType=TINYINT}, #{create_time,jdbcType=TIMESTAMP}, 
+      #{update_time,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
+        insert into biz_baby_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="corpid != null">
+                corpid,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="avatar != null">
+                avatar,
+            </if>
+            <if test="father_id != null">
+                father_id,
+            </if>
+            <if test="mother_id != null">
+                mother_id,
+            </if>
+            <if test="state != null">
+                state,
+            </if>
+            <if test="create_time != null">
+                create_time,
+            </if>
+            <if test="update_time != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="corpid != null">
+                #{corpid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=DATE},
+            </if>
+            <if test="avatar != null">
+                #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="father_id != null">
+                #{father_id,jdbcType=BIGINT},
+            </if>
+            <if test="mother_id != null">
+                #{mother_id,jdbcType=BIGINT},
+            </if>
+            <if test="state != null">
+                #{state,jdbcType=TINYINT},
+            </if>
+            <if test="create_time != null">
+                #{create_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                #{update_time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
+        update biz_baby_info
+        <set>
+            <if test="corpid != null">
+                corpid = #{corpid,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=DATE},
+            </if>
+            <if test="avatar != null">
+                avatar = #{avatar,jdbcType=VARCHAR},
+            </if>
+            <if test="father_id != null">
+                father_id = #{father_id,jdbcType=BIGINT},
+            </if>
+            <if test="mother_id != null">
+                mother_id = #{mother_id,jdbcType=BIGINT},
+            </if>
+            <if test="state != null">
+                state = #{state,jdbcType=TINYINT},
+            </if>
+            <if test="create_time != null">
+                create_time = #{create_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="update_time != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
+    update biz_baby_info
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      father_id = #{father_id,jdbcType=BIGINT},
+      mother_id = #{mother_id,jdbcType=BIGINT},
+      state = #{state,jdbcType=TINYINT},
+      create_time = #{create_time,jdbcType=TIMESTAMP},
+      update_time = #{update_time,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

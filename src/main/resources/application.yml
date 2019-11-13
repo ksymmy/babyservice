@@ -14,10 +14,14 @@ server:
 #        development: true
 #----------------------     SPRING配置        ----------------------- 
 spring:
-  profiles:       
+  profiles:
     active: dev # dev 为开发环境，test 为开发环境，上线时把此项属性注释掉,切记
-  application: 
+  application:
     name: 社会组织服务平台 #系统名称
-  devtools: 
+  devtools:
     restart:
       enabled: true #启用热启动
+
+app:
+  key: dingrd4sjd5px5sewf65
+  secret: 5G8pjSWoTRgKSbYpbNd2Tvl3VM_TefWheCoaNjTkfc5ZPGeWFTkm51koHIXFvftE
