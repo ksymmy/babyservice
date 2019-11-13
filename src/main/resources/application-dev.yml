@@ -40,10 +40,9 @@ logging.level.com.jqsoft.babyservice.mapper.biz: debug
 
 #************************************* mybatis config ************************************************
 mybatis.type-aliases-package: com.jqsoft.babyservice.entity.biz
-mybatis.mapperLocations: classpath:mappers/*.xml
+mybatis.mapperLocations: classpath:mapper/*.xml
 
 # 登录token redis过期时间(分钟)
 token-expire: 43200
 # 普通数据redis过期时间（分钟）
 value-expire: 1440
-
