@@ -26,7 +26,15 @@ public class BabyInfo implements Serializable {
 
     private Long fatherId;
 
+    private String fatherName;
+
+    private String fatherMobile;
+
     private Long motherId;
+
+    private String motherName;
+
+    private String motherMobile;
 
     private Byte state;
 

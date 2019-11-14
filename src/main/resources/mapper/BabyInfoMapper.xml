@@ -9,17 +9,21 @@
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="father_id" jdbcType="BIGINT" property="fatherId" />
+    <result column="father_name" jdbcType="VARCHAR" property="fatherName" />
+    <result column="father_mobile" jdbcType="VARCHAR" property="fatherMobile" />
     <result column="mother_id" jdbcType="BIGINT" property="motherId" />
+    <result column="mother_mobile" jdbcType="VARCHAR" property="motherMobile" />
+    <result column="mother_name" jdbcType="VARCHAR" property="motherName" />
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpid, name, sex, birthday, avatar, father_id, mother_id, state, create_time, 
-    update_time
+    id, corpid, name, sex, birthday, avatar, father_id, father_name, father_mobile, mother_id,
+    mother_mobile, mother_name, state, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from biz_baby_info
     where id = #{id,jdbcType=BIGINT}
@@ -29,14 +33,18 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
-    insert into biz_baby_info (id, corpid, name, 
-      sex, birthday, avatar, 
-      father_id, mother_id, state, 
-      create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR}, 
-      #{fatherId,jdbcType=BIGINT}, #{motherId,jdbcType=BIGINT}, #{state,jdbcType=TINYINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+    insert into biz_baby_info (id, corpid, name,
+      sex, birthday, avatar,
+      father_id, father_name, father_mobile,
+      mother_id, mother_mobile, mother_name,
+      state, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{sex,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR},
+      #{fatherId,jdbcType=BIGINT}, #{fatherName,jdbcType=VARCHAR}, #{fatherMobile,jdbcType=VARCHAR},
+      #{motherId,jdbcType=BIGINT}, #{motherMobile,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR},
+      #{state,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
     insert into biz_baby_info
@@ -62,8 +70,20 @@
       <if test="fatherId != null">
         father_id,
       </if>
+      <if test="fatherName != null">
+        father_name,
+      </if>
+      <if test="fatherMobile != null">
+        father_mobile,
+      </if>
       <if test="motherId != null">
         mother_id,
+      </if>
+      <if test="motherMobile != null">
+        mother_mobile,
+      </if>
+      <if test="motherName != null">
+        mother_name,
       </if>
       <if test="state != null">
         state,
@@ -97,8 +117,20 @@
       <if test="fatherId != null">
         #{fatherId,jdbcType=BIGINT},
       </if>
+      <if test="fatherName != null">
+        #{fatherName,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherMobile != null">
+        #{fatherMobile,jdbcType=VARCHAR},
+      </if>
       <if test="motherId != null">
         #{motherId,jdbcType=BIGINT},
+      </if>
+      <if test="motherMobile != null">
+        #{motherMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="motherName != null">
+        #{motherName,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
         #{state,jdbcType=TINYINT},
@@ -132,8 +164,20 @@
       <if test="fatherId != null">
         father_id = #{fatherId,jdbcType=BIGINT},
       </if>
+      <if test="fatherName != null">
+        father_name = #{fatherName,jdbcType=VARCHAR},
+      </if>
+      <if test="fatherMobile != null">
+        father_mobile = #{fatherMobile,jdbcType=VARCHAR},
+      </if>
       <if test="motherId != null">
         mother_id = #{motherId,jdbcType=BIGINT},
+      </if>
+      <if test="motherMobile != null">
+        mother_mobile = #{motherMobile,jdbcType=VARCHAR},
+      </if>
+      <if test="motherName != null">
+        mother_name = #{motherName,jdbcType=VARCHAR},
       </if>
       <if test="state != null">
         state = #{state,jdbcType=TINYINT},
@@ -155,7 +199,11 @@
       birthday = #{birthday,jdbcType=DATE},
       avatar = #{avatar,jdbcType=VARCHAR},
       father_id = #{fatherId,jdbcType=BIGINT},
+      father_name = #{fatherName,jdbcType=VARCHAR},
+      father_mobile = #{fatherMobile,jdbcType=VARCHAR},
       mother_id = #{motherId,jdbcType=BIGINT},
+      mother_mobile = #{motherMobile,jdbcType=VARCHAR},
+      mother_name = #{motherName,jdbcType=VARCHAR},
       state = #{state,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

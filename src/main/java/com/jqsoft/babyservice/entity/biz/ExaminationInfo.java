@@ -35,6 +35,8 @@ public class ExaminationInfo implements Serializable {
 
     private Byte signIn;
 
+    private Byte cancelRemind;
+
     private Date createTime;
 
     private Date updateTime;
