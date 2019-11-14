@@ -251,4 +251,67 @@
     LEFT JOIN biz_user_info m ON a.mother_id = m.id
     where a.id = #{id,jdbcType=BIGINT}
   </select>
+  <select id="overdueCount" resultType="java.util.Map">
+    SELECT
+    count(DATEDIFF( CURRENT_DATE, examination_date ) BETWEEN 8 AND 14 or NULL) overdueDays7,
+    count(DATEDIFF( CURRENT_DATE, examination_date ) BETWEEN 15 AND 21 or NULL) overdueDays14,
+    count(DATEDIFF( CURRENT_DATE, examination_date ) > 21  or NULL) overdueDays21
+    FROM
+    biz_examination_info a,
+    (SELECT t.baby_id, MAX(t.examination_date) examination_date1 FROM biz_examination_info t WHERE t.examination_date &lt; CURRENT_DATE GROUP BY t.baby_id ) b,
+    biz_baby_info c
+    WHERE
+    a.baby_id = b.baby_id
+    AND a.examination_date = b.examination_date1
+    AND b.baby_id = c.id
+    AND c.state = 1
+    AND a.sign_in = 0
+    and c.corpid = #{corpid,jdbcType=VARCHAR}
+  </select>
+  <select id="tomorrowExaminationBabysCount" resultType="java.util.Map">
+      SELECT
+          count(1) total
+      FROM
+          biz_baby_info a
+      WHERE
+          a.corpid = #{corpid,jdbcType=VARCHAR}
+          AND a.state = 1
+          AND EXISTS (
+              SELECT
+                  1
+              FROM
+                  biz_examination_info b
+              WHERE
+                  a.id = b.baby_id
+                  AND datediff( b.examination_date, CURRENT_DATE) = 1
+                  AND b.sign_in = 0
+            )
+  </select>
+  <select id="changeDateBabysCount" resultType="java.util.Map">
+      SELECT
+          count(1) total
+      FROM
+          biz_baby_info a
+      WHERE
+          a.corpid = #{corpid,jdbcType=VARCHAR}
+          AND a.state = 1
+          AND EXISTS (
+              SELECT
+                  1
+              FROM
+                  biz_examination_info b
+              WHERE
+                  a.id = b.baby_id
+                  AND b.old_examination_date IS NOT NULL
+                  AND b.sign_in = 0
+                  AND b.examination_date >= CURRENT_DATE
+             )
+  </select>
+  <select id="allBabysCount" resultType="java.util.Map">
+        select
+            count(1) total
+        from biz_baby_info a
+        where a.corpid = #{corpid,jdbcType=VARCHAR}
+        and a.state = 1
+  </select>
 </mapper>

@@ -1,54 +1,58 @@
 package com.jqsoft.babyservice.controller.system;
 
-import com.jqsoft.babyservice.commons.constant.RedisKey;
-import com.jqsoft.babyservice.commons.utils.RedisUtils;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
+import com.jqsoft.babyservice.service.biz.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 public abstract class BaseController {
 
-    private static String tokenHeader = "token";
+    private static String corpidParamName = "corpid";
+    private static String useridParamName = "userid";
 
     @Autowired(required = false)
     protected HttpServletRequest request;
 
-    @Autowired(required = false)
-    protected HttpServletResponse response;
-
     @Autowired
-    RedisUtils redisUtils;
+    UserService userService;
 
     /**
-     * 获取登录token
+     * 获取钉钉corpid
      *
      * @return
      */
-    public String getToken() {
-        String token = null;
-        if (StringUtils.isEmpty(token)) {
-            token = request.getHeader(tokenHeader);
+    public String getDdCorpid() {
+        String corpid = request.getHeader(corpidParamName);
+        if (StringUtils.isBlank(corpid)) {
+            corpid = request.getParameter(corpidParamName);
         }
-        if (StringUtils.isEmpty(token)) {
-            token = request.getParameter(tokenHeader);
-        }
-        return token;
+        return corpid;
     }
 
     /**
-     * 获取用户ID
+     * 获取钉钉userid
      *
      * @return
      */
-    public String getUserId() {
-        String token = this.getToken();
-        String userIdKey = RedisKey.LOGIN_USERID.getKey(token);
-        String userIdString = (String) redisUtils.get(userIdKey);
-        return userIdString;
+    public String getDdUserid() {
+        String userid = request.getHeader(useridParamName);
+        if (StringUtils.isBlank(userid)) {
+            userid = request.getParameter(useridParamName);
+        }
+        return userid;
+    }
+
+    /**
+     * 获取当前用户
+     *
+     * @return
+     */
+    public UserInfo getUser() {
+        return userService.selectByCorpIdAndUserid(this.getDdCorpid(), this.getDdUserid());
     }
 
 
