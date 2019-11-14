@@ -228,6 +228,12 @@
       <if test="param.overdueEnd != null and '' != param.overdueEnd">
           and DATEDIFF(CURRENT_DATE,examination_date) &lt;= #{param.overdueEnd,jdbcType=INTEGER}
       </if>
+      <if test="param.examinationType != null and '' != param.examinationType">
+          and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
+      </if>
+      <if test="param.dingTimes != null and '' != param.dingTimes">
+          and a.ding_times = #{param.dingTimes,jdbcType=INTEGER}
+      </if>
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
   </select>
