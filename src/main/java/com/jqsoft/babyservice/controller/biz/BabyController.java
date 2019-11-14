@@ -6,9 +6,7 @@ import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +18,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController
-@RequestMapping("baby")
+@RequestMapping("/baby")
 public class BabyController extends BaseController {
 
     @Autowired
@@ -58,8 +56,8 @@ public class BabyController extends BaseController {
      * @param pageBo 查询参数
      */
     @PostMapping("/overduelist")
-    public RestVo overdueList(PageBo<Map<String, Object>> pageBo) {
-        return babyService.overdueList(pageBo);
+    public RestVo overdueList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.overdueList(pageBo, corpid);
     }
 
 }
