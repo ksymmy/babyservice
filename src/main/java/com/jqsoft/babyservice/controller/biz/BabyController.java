@@ -6,6 +6,7 @@ import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,6 +26,7 @@ public class BabyController extends BaseController {
 
     /**
      * 医生端-首页统计
+     *
      * @return
      */
     @RequestMapping("indexCount")
@@ -51,6 +53,18 @@ public class BabyController extends BaseController {
     @GetMapping("/babyparentinfo")
     public RestVo babyParentInfo(Long babyid) {
         return babyService.getBabyParentInfo(babyid);
+    }
+
+
+    /**
+     * 医生端-取消逾期提醒
+     *
+     * @param examid 体检项目id
+     */
+    @Transactional
+    @PostMapping("/cancelremind")
+    public RestVo cancelRemind(Long examid) {
+        return babyService.cancelRemind(examid);
     }
 
 }
