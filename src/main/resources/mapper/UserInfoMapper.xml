@@ -26,6 +26,9 @@
     delete from biz_user_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
+    <select id="selectByCorpIdAndUserid" resultMap="BaseResultMap">
+        select * from biz_user_info where corpid = #{corpid} and userid = #{userid}
+    </select>
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     insert into biz_user_info (id, name, mobile, 
       address, active, admin, 

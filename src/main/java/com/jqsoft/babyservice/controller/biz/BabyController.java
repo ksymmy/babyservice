@@ -1,10 +1,12 @@
 package com.jqsoft.babyservice.controller.biz;
 
+import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,11 +27,10 @@ public class BabyController extends BaseController {
     public BabyService babyService;
 
     @RequestMapping("indexCount")
-    public RestVo indexCount(){
+    public RestVo indexCount() {
 //        select count(1) from biz_baby_info a
 //        where a.corpid = '1'
 //        and a.state = 1
-
 
 
 //        select * from biz_baby_info a
@@ -40,15 +41,25 @@ public class BabyController extends BaseController {
 //        where a.id = b.baby_id
 //        and datediff(b.examination_date, curdate()) = 1)
         RestVo restVo = new RestVo();
-        Map<String,String> map = new HashMap<>();
-        map.put("overdueDays7","1");
-        map.put("overdueDays14","1");
-        map.put("overdueDays21","1");
-        map.put("tomorrowExaminationBabys","10");
-        map.put("changeDateBabys","3");
-        map.put("allBabys","22");
+        Map<String, String> map = new HashMap<>();
+        map.put("overdueDays7", "1");
+        map.put("overdueDays14", "1");
+        map.put("overdueDays21", "1");
+        map.put("tomorrowExaminationBabys", "10");
+        map.put("changeDateBabys", "3");
+        map.put("allBabys", "22");
         restVo.setData(map);
         return restVo;
+    }
+
+    /**
+     * 医生端-逾期列表
+     *
+     * @param pageBo 查询参数
+     */
+    @PostMapping("/overduelist")
+    public RestVo overdueList(PageBo<Map<String, Object>> pageBo) {
+        return babyService.overdueList(pageBo);
     }
 
 }
