@@ -16,7 +16,7 @@ public class BabyService {
     @Resource
     private BabyInfoMapper babyInfoMapper;
 
-    public RestVo overdueList(PageBo<Map<String, Object>> pageBo) {
-        return RestVo.SUCCESS(babyInfoMapper.overdueList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam()));
+    public RestVo overdueList(PageBo<Map<String, Object>> pageBo, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.overdueList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
     }
 }
