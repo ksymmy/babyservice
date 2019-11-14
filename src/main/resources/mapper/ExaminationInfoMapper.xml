@@ -13,13 +13,12 @@
     <result column="overdue_days" jdbcType="SMALLINT" property="overdueDays" />
     <result column="ding_times" jdbcType="SMALLINT" property="dingTimes" />
     <result column="sign_in" jdbcType="TINYINT" property="signIn" />
-    <result column="cancel_remind" jdbcType="TINYINT" property="cancelRemind" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
     id, corpid, baby_id, examination_date, examination_type, examination_item, old_examination_date,
-    change_date_reason, overdue_days, ding_times, sign_in, cancel_remind, create_time,
+    change_date_reason, overdue_days, ding_times, sign_in, create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -36,12 +35,12 @@
     insert into biz_examination_info (id, corpid, baby_id,
       examination_date, examination_type, examination_item,
       old_examination_date, change_date_reason, overdue_days,
-      ding_times, sign_in, cancel_remind,
+      ding_times, sign_in,
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{babyId,jdbcType=BIGINT},
       #{examinationDate,jdbcType=DATE}, #{examinationType,jdbcType=TINYINT}, #{examinationItem,jdbcType=VARCHAR},
       #{oldExaminationDate,jdbcType=DATE}, #{changeDateReason,jdbcType=VARCHAR}, #{overdueDays,jdbcType=SMALLINT},
-      #{dingTimes,jdbcType=SMALLINT}, #{signIn,jdbcType=TINYINT}, #{cancelRemind,jdbcType=TINYINT},
+      #{dingTimes,jdbcType=SMALLINT}, #{signIn,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
@@ -79,9 +78,6 @@
       </if>
       <if test="signIn != null">
         sign_in,
-      </if>
-      <if test="cancelRemind != null">
-        cancel_remind,
       </if>
       <if test="createTime != null">
         create_time,
@@ -124,9 +120,6 @@
       <if test="signIn != null">
         #{signIn,jdbcType=TINYINT},
       </if>
-      <if test="cancelRemind != null">
-        #{cancelRemind,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -168,9 +161,6 @@
       <if test="signIn != null">
         sign_in = #{signIn,jdbcType=TINYINT},
       </if>
-      <if test="cancelRemind != null">
-        cancel_remind = #{cancelRemind,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -192,7 +182,6 @@
       overdue_days = #{overdueDays,jdbcType=SMALLINT},
       ding_times = #{dingTimes,jdbcType=SMALLINT},
       sign_in = #{signIn,jdbcType=TINYINT},
-      cancel_remind = #{cancelRemind,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
