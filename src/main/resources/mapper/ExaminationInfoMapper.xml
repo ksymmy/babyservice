@@ -1,177 +1,188 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="corpid" jdbcType="VARCHAR" property="corpid"/>
-        <result column="baby_id" jdbcType="BIGINT" property="baby_id"/>
-        <result column="examination_date" jdbcType="DATE" property="examination_date"/>
-        <result column="examination_type" jdbcType="TINYINT" property="examination_type"/>
-        <result column="examination_item" jdbcType="VARCHAR" property="examination_item"/>
-        <result column="change_date_reason" jdbcType="VARCHAR" property="change_date_reason"/>
-        <result column="overdue_days" jdbcType="SMALLINT" property="overdue_days"/>
-        <result column="ding_times" jdbcType="SMALLINT" property="ding_times"/>
-        <result column="sign_in" jdbcType="TINYINT" property="sign_in"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="create_time"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="update_time"/>
-    </resultMap>
-    <sql id="Base_Column_List">
-    id, corpid, baby_id, examination_date, examination_type, examination_item, change_date_reason, 
-    overdue_days, ding_times, sign_in, create_time, update_time
+  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="baby_id" jdbcType="BIGINT" property="babyId" />
+    <result column="examination_date" jdbcType="DATE" property="examinationDate" />
+    <result column="examination_type" jdbcType="TINYINT" property="examinationType" />
+    <result column="examination_item" jdbcType="VARCHAR" property="examinationItem" />
+    <result column="old_examination_date" jdbcType="DATE" property="oldExaminationDate" />
+    <result column="change_date_reason" jdbcType="VARCHAR" property="changeDateReason" />
+    <result column="overdue_days" jdbcType="SMALLINT" property="overdueDays" />
+    <result column="ding_times" jdbcType="SMALLINT" property="dingTimes" />
+    <result column="sign_in" jdbcType="TINYINT" property="signIn" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, corpid, baby_id, examination_date, examination_type, examination_item, old_examination_date, 
+    change_date_reason, overdue_days, ding_times, sign_in, create_time, update_time
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from biz_examination_info
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_examination_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from biz_examination_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     insert into biz_examination_info (id, corpid, baby_id, 
       examination_date, examination_type, examination_item, 
-      change_date_reason, overdue_days, ding_times, 
-      sign_in, create_time, update_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{baby_id,jdbcType=BIGINT}, 
-      #{examination_date,jdbcType=DATE}, #{examination_type,jdbcType=TINYINT}, #{examination_item,jdbcType=VARCHAR}, 
-      #{change_date_reason,jdbcType=VARCHAR}, #{overdue_days,jdbcType=SMALLINT}, #{ding_times,jdbcType=SMALLINT}, 
-      #{sign_in,jdbcType=TINYINT}, #{create_time,jdbcType=TIMESTAMP}, #{update_time,jdbcType=TIMESTAMP}
-      )
+      old_examination_date, change_date_reason, overdue_days, 
+      ding_times, sign_in, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{babyId,jdbcType=BIGINT}, 
+      #{examinationDate,jdbcType=DATE}, #{examinationType,jdbcType=TINYINT}, #{examinationItem,jdbcType=VARCHAR}, 
+      #{oldExaminationDate,jdbcType=DATE}, #{changeDateReason,jdbcType=VARCHAR}, #{overdueDays,jdbcType=SMALLINT}, 
+      #{dingTimes,jdbcType=SMALLINT}, #{signIn,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
-        insert into biz_examination_info
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="corpid != null">
-                corpid,
-            </if>
-            <if test="baby_id != null">
-                baby_id,
-            </if>
-            <if test="examination_date != null">
-                examination_date,
-            </if>
-            <if test="examination_type != null">
-                examination_type,
-            </if>
-            <if test="examination_item != null">
-                examination_item,
-            </if>
-            <if test="change_date_reason != null">
-                change_date_reason,
-            </if>
-            <if test="overdue_days != null">
-                overdue_days,
-            </if>
-            <if test="ding_times != null">
-                ding_times,
-            </if>
-            <if test="sign_in != null">
-                sign_in,
-            </if>
-            <if test="create_time != null">
-                create_time,
-            </if>
-            <if test="update_time != null">
-                update_time,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="corpid != null">
-                #{corpid,jdbcType=VARCHAR},
-            </if>
-            <if test="baby_id != null">
-                #{baby_id,jdbcType=BIGINT},
-            </if>
-            <if test="examination_date != null">
-                #{examination_date,jdbcType=DATE},
-            </if>
-            <if test="examination_type != null">
-                #{examination_type,jdbcType=TINYINT},
-            </if>
-            <if test="examination_item != null">
-                #{examination_item,jdbcType=VARCHAR},
-            </if>
-            <if test="change_date_reason != null">
-                #{change_date_reason,jdbcType=VARCHAR},
-            </if>
-            <if test="overdue_days != null">
-                #{overdue_days,jdbcType=SMALLINT},
-            </if>
-            <if test="ding_times != null">
-                #{ding_times,jdbcType=SMALLINT},
-            </if>
-            <if test="sign_in != null">
-                #{sign_in,jdbcType=TINYINT},
-            </if>
-            <if test="create_time != null">
-                #{create_time,jdbcType=TIMESTAMP},
-            </if>
-            <if test="update_time != null">
-                #{update_time,jdbcType=TIMESTAMP},
-            </if>
-        </trim>
-    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
-        update biz_examination_info
-        <set>
-            <if test="corpid != null">
-                corpid = #{corpid,jdbcType=VARCHAR},
-            </if>
-            <if test="baby_id != null">
-                baby_id = #{baby_id,jdbcType=BIGINT},
-            </if>
-            <if test="examination_date != null">
-                examination_date = #{examination_date,jdbcType=DATE},
-            </if>
-            <if test="examination_type != null">
-                examination_type = #{examination_type,jdbcType=TINYINT},
-            </if>
-            <if test="examination_item != null">
-                examination_item = #{examination_item,jdbcType=VARCHAR},
-            </if>
-            <if test="change_date_reason != null">
-                change_date_reason = #{change_date_reason,jdbcType=VARCHAR},
-            </if>
-            <if test="overdue_days != null">
-                overdue_days = #{overdue_days,jdbcType=SMALLINT},
-            </if>
-            <if test="ding_times != null">
-                ding_times = #{ding_times,jdbcType=SMALLINT},
-            </if>
-            <if test="sign_in != null">
-                sign_in = #{sign_in,jdbcType=TINYINT},
-            </if>
-            <if test="create_time != null">
-                create_time = #{create_time,jdbcType=TIMESTAMP},
-            </if>
-            <if test="update_time != null">
-                update_time = #{update_time,jdbcType=TIMESTAMP},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
+  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
+    insert into biz_examination_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="babyId != null">
+        baby_id,
+      </if>
+      <if test="examinationDate != null">
+        examination_date,
+      </if>
+      <if test="examinationType != null">
+        examination_type,
+      </if>
+      <if test="examinationItem != null">
+        examination_item,
+      </if>
+      <if test="oldExaminationDate != null">
+        old_examination_date,
+      </if>
+      <if test="changeDateReason != null">
+        change_date_reason,
+      </if>
+      <if test="overdueDays != null">
+        overdue_days,
+      </if>
+      <if test="dingTimes != null">
+        ding_times,
+      </if>
+      <if test="signIn != null">
+        sign_in,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="babyId != null">
+        #{babyId,jdbcType=BIGINT},
+      </if>
+      <if test="examinationDate != null">
+        #{examinationDate,jdbcType=DATE},
+      </if>
+      <if test="examinationType != null">
+        #{examinationType,jdbcType=TINYINT},
+      </if>
+      <if test="examinationItem != null">
+        #{examinationItem,jdbcType=VARCHAR},
+      </if>
+      <if test="oldExaminationDate != null">
+        #{oldExaminationDate,jdbcType=DATE},
+      </if>
+      <if test="changeDateReason != null">
+        #{changeDateReason,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueDays != null">
+        #{overdueDays,jdbcType=SMALLINT},
+      </if>
+      <if test="dingTimes != null">
+        #{dingTimes,jdbcType=SMALLINT},
+      </if>
+      <if test="signIn != null">
+        #{signIn,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
+    update biz_examination_info
+    <set>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="babyId != null">
+        baby_id = #{babyId,jdbcType=BIGINT},
+      </if>
+      <if test="examinationDate != null">
+        examination_date = #{examinationDate,jdbcType=DATE},
+      </if>
+      <if test="examinationType != null">
+        examination_type = #{examinationType,jdbcType=TINYINT},
+      </if>
+      <if test="examinationItem != null">
+        examination_item = #{examinationItem,jdbcType=VARCHAR},
+      </if>
+      <if test="oldExaminationDate != null">
+        old_examination_date = #{oldExaminationDate,jdbcType=DATE},
+      </if>
+      <if test="changeDateReason != null">
+        change_date_reason = #{changeDateReason,jdbcType=VARCHAR},
+      </if>
+      <if test="overdueDays != null">
+        overdue_days = #{overdueDays,jdbcType=SMALLINT},
+      </if>
+      <if test="dingTimes != null">
+        ding_times = #{dingTimes,jdbcType=SMALLINT},
+      </if>
+      <if test="signIn != null">
+        sign_in = #{signIn,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     update biz_examination_info
     set corpid = #{corpid,jdbcType=VARCHAR},
-      baby_id = #{baby_id,jdbcType=BIGINT},
-      examination_date = #{examination_date,jdbcType=DATE},
-      examination_type = #{examination_type,jdbcType=TINYINT},
-      examination_item = #{examination_item,jdbcType=VARCHAR},
-      change_date_reason = #{change_date_reason,jdbcType=VARCHAR},
-      overdue_days = #{overdue_days,jdbcType=SMALLINT},
-      ding_times = #{ding_times,jdbcType=SMALLINT},
-      sign_in = #{sign_in,jdbcType=TINYINT},
-      create_time = #{create_time,jdbcType=TIMESTAMP},
-      update_time = #{update_time,jdbcType=TIMESTAMP}
+      baby_id = #{babyId,jdbcType=BIGINT},
+      examination_date = #{examinationDate,jdbcType=DATE},
+      examination_type = #{examinationType,jdbcType=TINYINT},
+      examination_item = #{examinationItem,jdbcType=VARCHAR},
+      old_examination_date = #{oldExaminationDate,jdbcType=DATE},
+      change_date_reason = #{changeDateReason,jdbcType=VARCHAR},
+      overdue_days = #{overdueDays,jdbcType=SMALLINT},
+      ding_times = #{dingTimes,jdbcType=SMALLINT},
+      sign_in = #{signIn,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

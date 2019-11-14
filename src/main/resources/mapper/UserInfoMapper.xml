@@ -1,145 +1,142 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.UserInfoMapper">
-    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.UserInfo">
-        <id column="id" jdbcType="BIGINT" property="id"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
-        <result column="address" jdbcType="VARCHAR" property="address"/>
-        <result column="active" jdbcType="TINYINT" property="active"/>
-        <result column="admin" jdbcType="TINYINT" property="admin"/>
-        <result column="corpid" jdbcType="VARCHAR" property="corpid"/>
-        <result column="userid" jdbcType="VARCHAR" property="userid"/>
-        <result column="create_time" jdbcType="TIMESTAMP" property="create_time"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="update_time"/>
-    </resultMap>
-    <sql id="Base_Column_List">
+  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.UserInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="active" jdbcType="TINYINT" property="active" />
+    <result column="admin" jdbcType="TINYINT" property="admin" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="userid" jdbcType="VARCHAR" property="userid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
     id, name, mobile, address, active, admin, corpid, userid, create_time, update_time
   </sql>
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List"/>
-        from biz_user_info
-        where id = #{id,jdbcType=BIGINT}
-    </select>
-    <select id="selectByCorpIdAndUserid" resultMap="BaseResultMap">
-        select * from biz_user_info where corpid = #{corpid} and userid = #{userid}
-    </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_user_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from biz_user_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     insert into biz_user_info (id, name, mobile, 
       address, active, admin, 
       corpid, userid, create_time, 
       update_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
       #{address,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT}, #{admin,jdbcType=TINYINT}, 
-      #{corpid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{create_time,jdbcType=TIMESTAMP}, 
-      #{update_time,jdbcType=TIMESTAMP})
+      #{corpid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-    <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
-        insert into biz_user_info
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
-            <if test="name != null">
-                name,
-            </if>
-            <if test="mobile != null">
-                mobile,
-            </if>
-            <if test="address != null">
-                address,
-            </if>
-            <if test="active != null">
-                active,
-            </if>
-            <if test="admin != null">
-                admin,
-            </if>
-            <if test="corpid != null">
-                corpid,
-            </if>
-            <if test="userid != null">
-                userid,
-            </if>
-            <if test="create_time != null">
-                create_time,
-            </if>
-            <if test="update_time != null">
-                update_time,
-            </if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="mobile != null">
-                #{mobile,jdbcType=VARCHAR},
-            </if>
-            <if test="address != null">
-                #{address,jdbcType=VARCHAR},
-            </if>
-            <if test="active != null">
-                #{active,jdbcType=TINYINT},
-            </if>
-            <if test="admin != null">
-                #{admin,jdbcType=TINYINT},
-            </if>
-            <if test="corpid != null">
-                #{corpid,jdbcType=VARCHAR},
-            </if>
-            <if test="userid != null">
-                #{userid,jdbcType=VARCHAR},
-            </if>
-            <if test="create_time != null">
-                #{create_time,jdbcType=TIMESTAMP},
-            </if>
-            <if test="update_time != null">
-                #{update_time,jdbcType=TIMESTAMP},
-            </if>
-        </trim>
-    </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
-        update biz_user_info
-        <set>
-            <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
-            </if>
-            <if test="mobile != null">
-                mobile = #{mobile,jdbcType=VARCHAR},
-            </if>
-            <if test="address != null">
-                address = #{address,jdbcType=VARCHAR},
-            </if>
-            <if test="active != null">
-                active = #{active,jdbcType=TINYINT},
-            </if>
-            <if test="admin != null">
-                admin = #{admin,jdbcType=TINYINT},
-            </if>
-            <if test="corpid != null">
-                corpid = #{corpid,jdbcType=VARCHAR},
-            </if>
-            <if test="userid != null">
-                userid = #{userid,jdbcType=VARCHAR},
-            </if>
-            <if test="create_time != null">
-                create_time = #{create_time,jdbcType=TIMESTAMP},
-            </if>
-            <if test="update_time != null">
-                update_time = #{update_time,jdbcType=TIMESTAMP},
-            </if>
-        </set>
-        where id = #{id,jdbcType=BIGINT}
-    </update>
-    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
+  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
+    insert into biz_user_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="active != null">
+        active,
+      </if>
+      <if test="admin != null">
+        admin,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="active != null">
+        #{active,jdbcType=TINYINT},
+      </if>
+      <if test="admin != null">
+        #{admin,jdbcType=TINYINT},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
+    update biz_user_info
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="active != null">
+        active = #{active,jdbcType=TINYINT},
+      </if>
+      <if test="admin != null">
+        admin = #{admin,jdbcType=TINYINT},
+      </if>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
     update biz_user_info
     set name = #{name,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
@@ -148,8 +145,8 @@
       admin = #{admin,jdbcType=TINYINT},
       corpid = #{corpid,jdbcType=VARCHAR},
       userid = #{userid,jdbcType=VARCHAR},
-      create_time = #{create_time,jdbcType=TIMESTAMP},
-      update_time = #{update_time,jdbcType=TIMESTAMP}
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

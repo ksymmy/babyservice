@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.WorkTimeMapper">
+  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.WorkTime">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="monday" jdbcType="TINYINT" property="monday" />
+    <result column="tuesday" jdbcType="TINYINT" property="tuesday" />
+    <result column="wednesday" jdbcType="TINYINT" property="wednesday" />
+    <result column="thursday" jdbcType="TINYINT" property="thursday" />
+    <result column="sriday" jdbcType="TINYINT" property="sriday" />
+    <result column="saturday" jdbcType="TINYINT" property="saturday" />
+    <result column="sunday" jdbcType="TINYINT" property="sunday" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, corpid, monday, tuesday, wednesday, thursday, sriday, saturday, sunday, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_work_time
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_work_time
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    insert into biz_work_time (id, corpid, monday, 
+      tuesday, wednesday, thursday, 
+      sriday, saturday, sunday, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{monday,jdbcType=TINYINT}, 
+      #{tuesday,jdbcType=TINYINT}, #{wednesday,jdbcType=TINYINT}, #{thursday,jdbcType=TINYINT}, 
+      #{sriday,jdbcType=TINYINT}, #{saturday,jdbcType=TINYINT}, #{sunday,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    insert into biz_work_time
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="monday != null">
+        monday,
+      </if>
+      <if test="tuesday != null">
+        tuesday,
+      </if>
+      <if test="wednesday != null">
+        wednesday,
+      </if>
+      <if test="thursday != null">
+        thursday,
+      </if>
+      <if test="sriday != null">
+        sriday,
+      </if>
+      <if test="saturday != null">
+        saturday,
+      </if>
+      <if test="sunday != null">
+        sunday,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="monday != null">
+        #{monday,jdbcType=TINYINT},
+      </if>
+      <if test="tuesday != null">
+        #{tuesday,jdbcType=TINYINT},
+      </if>
+      <if test="wednesday != null">
+        #{wednesday,jdbcType=TINYINT},
+      </if>
+      <if test="thursday != null">
+        #{thursday,jdbcType=TINYINT},
+      </if>
+      <if test="sriday != null">
+        #{sriday,jdbcType=TINYINT},
+      </if>
+      <if test="saturday != null">
+        #{saturday,jdbcType=TINYINT},
+      </if>
+      <if test="sunday != null">
+        #{sunday,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    update biz_work_time
+    <set>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="monday != null">
+        monday = #{monday,jdbcType=TINYINT},
+      </if>
+      <if test="tuesday != null">
+        tuesday = #{tuesday,jdbcType=TINYINT},
+      </if>
+      <if test="wednesday != null">
+        wednesday = #{wednesday,jdbcType=TINYINT},
+      </if>
+      <if test="thursday != null">
+        thursday = #{thursday,jdbcType=TINYINT},
+      </if>
+      <if test="sriday != null">
+        sriday = #{sriday,jdbcType=TINYINT},
+      </if>
+      <if test="saturday != null">
+        saturday = #{saturday,jdbcType=TINYINT},
+      </if>
+      <if test="sunday != null">
+        sunday = #{sunday,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    update biz_work_time
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      monday = #{monday,jdbcType=TINYINT},
+      tuesday = #{tuesday,jdbcType=TINYINT},
+      wednesday = #{wednesday,jdbcType=TINYINT},
+      thursday = #{thursday,jdbcType=TINYINT},
+      sriday = #{sriday,jdbcType=TINYINT},
+      saturday = #{saturday,jdbcType=TINYINT},
+      sunday = #{sunday,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.WorkTime">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="monday" jdbcType="TINYINT" property="monday" />
+    <result column="tuesday" jdbcType="TINYINT" property="tuesday" />
+    <result column="wednesday" jdbcType="TINYINT" property="wednesday" />
+    <result column="thursday" jdbcType="TINYINT" property="thursday" />
+    <result column="sriday" jdbcType="TINYINT" property="sriday" />
+    <result column="saturday" jdbcType="TINYINT" property="saturday" />
+    <result column="sunday" jdbcType="TINYINT" property="sunday" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, corpid, monday, tuesday, wednesday, thursday, sriday, saturday, sunday, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_work_time
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_work_time
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    insert into biz_work_time (id, corpid, monday, 
+      tuesday, wednesday, thursday, 
+      sriday, saturday, sunday, 
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{monday,jdbcType=TINYINT}, 
+      #{tuesday,jdbcType=TINYINT}, #{wednesday,jdbcType=TINYINT}, #{thursday,jdbcType=TINYINT}, 
+      #{sriday,jdbcType=TINYINT}, #{saturday,jdbcType=TINYINT}, #{sunday,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    insert into biz_work_time
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="monday != null">
+        monday,
+      </if>
+      <if test="tuesday != null">
+        tuesday,
+      </if>
+      <if test="wednesday != null">
+        wednesday,
+      </if>
+      <if test="thursday != null">
+        thursday,
+      </if>
+      <if test="sriday != null">
+        sriday,
+      </if>
+      <if test="saturday != null">
+        saturday,
+      </if>
+      <if test="sunday != null">
+        sunday,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="monday != null">
+        #{monday,jdbcType=TINYINT},
+      </if>
+      <if test="tuesday != null">
+        #{tuesday,jdbcType=TINYINT},
+      </if>
+      <if test="wednesday != null">
+        #{wednesday,jdbcType=TINYINT},
+      </if>
+      <if test="thursday != null">
+        #{thursday,jdbcType=TINYINT},
+      </if>
+      <if test="sriday != null">
+        #{sriday,jdbcType=TINYINT},
+      </if>
+      <if test="saturday != null">
+        #{saturday,jdbcType=TINYINT},
+      </if>
+      <if test="sunday != null">
+        #{sunday,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    update biz_work_time
+    <set>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="monday != null">
+        monday = #{monday,jdbcType=TINYINT},
+      </if>
+      <if test="tuesday != null">
+        tuesday = #{tuesday,jdbcType=TINYINT},
+      </if>
+      <if test="wednesday != null">
+        wednesday = #{wednesday,jdbcType=TINYINT},
+      </if>
+      <if test="thursday != null">
+        thursday = #{thursday,jdbcType=TINYINT},
+      </if>
+      <if test="sriday != null">
+        sriday = #{sriday,jdbcType=TINYINT},
+      </if>
+      <if test="saturday != null">
+        saturday = #{saturday,jdbcType=TINYINT},
+      </if>
+      <if test="sunday != null">
+        sunday = #{sunday,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
+    update biz_work_time
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      monday = #{monday,jdbcType=TINYINT},
+      tuesday = #{tuesday,jdbcType=TINYINT},
+      wednesday = #{wednesday,jdbcType=TINYINT},
+      thursday = #{thursday,jdbcType=TINYINT},
+      sriday = #{sriday,jdbcType=TINYINT},
+      saturday = #{saturday,jdbcType=TINYINT},
+      sunday = #{sunday,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
