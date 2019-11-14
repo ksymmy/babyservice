@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -24,29 +23,13 @@ public class BabyController extends BaseController {
     @Autowired
     public BabyService babyService;
 
+    /**
+     * 医生端-首页统计
+     * @return
+     */
     @RequestMapping("indexCount")
     public RestVo indexCount() {
-//        select count(1) from biz_baby_info a
-//        where a.corpid = '1'
-//        and a.state = 1
-
-
-//        select * from biz_baby_info a
-//        where a.corpid = '1'
-//        and a.state = 1
-//        and exists
-//        (select 1 from biz_examination_info b
-//        where a.id = b.baby_id
-//        and datediff(b.examination_date, curdate()) = 1)
-        RestVo restVo = new RestVo();
-        Map<String, String> map = new HashMap<>();
-        map.put("overdueDays7", "1");
-        map.put("overdueDays14", "1");
-        map.put("overdueDays21", "1");
-        map.put("tomorrowExaminationBabys", "10");
-        map.put("changeDateBabys", "3");
-        map.put("allBabys", "22");
-        restVo.setData(map);
+        RestVo restVo = babyService.indexCount(this.getDdCorpid());
         return restVo;
     }
 

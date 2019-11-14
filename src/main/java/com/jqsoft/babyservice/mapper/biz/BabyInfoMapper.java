@@ -25,4 +25,13 @@ public interface BabyInfoMapper {
                           @Param("size") Integer size,
                           @Param("param") Map param,
                           @Param("corpid") String corpid);
+
+    Map overdueCount(@Param("corpid") String corpid);
+
+    Map tomorrowExaminationBabysCount(@Param("corpid") String corpid);
+
+    Map changeDateBabysCount(@Param("corpid") String corpid);
+
+    Map allBabysCount(@Param("corpid") String corpid);
+
 }
