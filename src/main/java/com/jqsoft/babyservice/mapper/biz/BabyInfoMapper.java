@@ -25,4 +25,6 @@ public interface BabyInfoMapper {
                           @Param("size") Integer size,
                           @Param("param") Map param,
                           @Param("corpid") String corpid);
+
+    Map getBabyParentInfo(Long id);
 }

@@ -210,7 +210,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <select id="overdueList" resultType="map">
-      select a.id,c.name,c.birthday,a.examination_type
+    select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type
       examinationType,b.examinationDate,DATEDIFF(CURRENT_DATE,examination_date) overdueDays,a.ding_times dingTimes
       from biz_examination_info a,
       (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
@@ -236,5 +236,19 @@
       </if>
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
+  </select>
+  <select id="getBabyParentInfo" resultType="map">
+    SELECT
+        a.id,
+        a.father_name fatherName,
+        a.father_mobile fatherMobile,
+        f.active fatherActive,
+        a.mother_name motherName,
+        a.mother_mobile motherMobile,
+        m.active motherActive
+    FROM biz_baby_info a
+    LEFT JOIN biz_user_info f ON a.father_id = f.id
+    LEFT JOIN biz_user_info m ON a.mother_id = m.id
+    where a.id = #{id,jdbcType=BIGINT}
   </select>
 </mapper>

@@ -60,4 +60,14 @@ public class BabyController extends BaseController {
         return babyService.overdueList(pageBo, corpid);
     }
 
+    /**
+     * 医生端-儿童档案-父母信息
+     *
+     * @param babyid babyid
+     */
+    @GetMapping("/babyparentinfo")
+    public RestVo babyParentInfo(Long babyid) {
+        return babyService.getBabyParentInfo(babyid);
+    }
+
 }
