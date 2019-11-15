@@ -291,14 +291,14 @@
 	b.birthday,
 	a.examination_type examinationType,
 	a.examination_date examinationDate,
-	-1 overdueDays
+	-2 overdueDays
 FROM
 	biz_examination_info a
 	LEFT JOIN biz_baby_info b ON a.baby_id = b.id
 WHERE
 	b.state = 1
 	AND a.sign_in = 0
-	AND DATEDIFF( CURRENT_DATE, a.examination_date ) = -1
+	AND DATEDIFF( CURRENT_DATE, a.examination_date ) = -2
 	AND b.corpid = #{corpid}
 	ORDER BY a.examination_type
 	limit #{offset},#{size}
