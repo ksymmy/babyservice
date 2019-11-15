@@ -186,4 +186,26 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="myExaminationInfo" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_examination_info a
+    where a.baby_id = #{babyId,jdbcType=BIGINT}
+    order by a.examination_type
+  </select>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into biz_examination_info (id, corpid, baby_id,
+      examination_date, examination_type, examination_item,
+      old_examination_date, change_date_reason, overdue_days,
+      ding_times, sign_in,
+      create_time, update_time)
+    values
+      <foreach collection="infos" item="item" separator=",">
+        (#{item.id,jdbcType=BIGINT}, #{item.corpid,jdbcType=VARCHAR}, #{item.babyId,jdbcType=BIGINT},
+        #{item.examinationDate,jdbcType=DATE}, #{item.examinationType,jdbcType=TINYINT}, #{item.examinationItem,jdbcType=VARCHAR},
+        #{item.oldExaminationDate,jdbcType=DATE}, #{item.changeDateReason,jdbcType=VARCHAR}, #{item.overdueDays,jdbcType=SMALLINT},
+        #{item.dingTimes,jdbcType=SMALLINT}, #{item.signIn,jdbcType=TINYINT},
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
+      </foreach>
+  </insert>
 </mapper>
