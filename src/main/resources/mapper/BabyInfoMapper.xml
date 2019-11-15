@@ -232,7 +232,14 @@
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
       <if test="param.dingTimes != null and '' != param.dingTimes">
-          and a.ding_times = #{param.dingTimes,jdbcType=INTEGER}
+          <choose>
+              <when test="param.dingTimes == 3 ">
+                  and a.ding_times >= #{param.dingTimes,jdbcType=INTEGER}
+              </when>
+              <otherwise>
+                  and a.ding_times = #{param.dingTimes,jdbcType=INTEGER}
+              </otherwise>
+          </choose>
       </if>
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
