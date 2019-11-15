@@ -38,6 +38,11 @@ public interface BabyInfoMapper {
                                   @Param("param") Map param,
                                   @Param("corpid") String corpid);
 
+    List<Map> allBabysList(@Param("offset") Integer offset,
+                           @Param("size") Integer size,
+                           @Param("param") Map param,
+                           @Param("corpid") String corpid);
+
     Map getBabyParentInfo(Long id);
 
     Map overdueCount(@Param("corpid") String corpid);

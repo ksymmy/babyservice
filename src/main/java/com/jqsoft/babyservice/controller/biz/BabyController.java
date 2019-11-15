@@ -110,4 +110,26 @@ public class BabyController extends BaseController {
     public RestVo changeDateBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
         return babyService.changeDateBabysList(pageBo, corpid);
     }
+
+    /**
+     * 医生端-总管理儿童
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/allbabyslist")
+    public RestVo allBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.allBabysList(pageBo, corpid);
+    }
+
+    /**
+     * 医生端-取消儿童管理
+     *
+     * @param id:
+     */
+    @Transactional
+    @PostMapping("/cancelbaby")
+    public RestVo cancelBaby(Long id) {
+        return babyService.cancelBaby(id);
+    }
 }

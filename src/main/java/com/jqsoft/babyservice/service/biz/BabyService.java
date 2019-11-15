@@ -2,6 +2,7 @@ package com.jqsoft.babyservice.service.biz;
 
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.vo.RestVo;
+import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
@@ -39,6 +40,10 @@ public class BabyService {
 
     public RestVo changeDateBabysList(PageBo<Map<String, Object>> pageBo, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.changeDateBabysList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
+    }
+
+    public RestVo allBabysList(PageBo<Map<String, Object>> pageBo, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.allBabysList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
     }
 
     /**
@@ -81,5 +86,12 @@ public class BabyService {
 //        ExaminationInfo entity = new ExaminationInfo();
 //        entity.setId(id);
         return RestVo.SUCCESS();
+    }
+
+    public RestVo cancelBaby(Long id) {
+        BabyInfo babyInfo = new BabyInfo();
+        babyInfo.setId(id);
+        babyInfo.setState((byte) 0);
+        return RestVo.SUCCESS(babyInfoMapper.updateByPrimaryKeySelective(babyInfo));
     }
 }

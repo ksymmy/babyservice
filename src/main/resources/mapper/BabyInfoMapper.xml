@@ -248,8 +248,8 @@
         x.examination_type
     </select>
   <select id="overdueList" resultType="map">
-    select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type
-      examinationType,b.examinationDate,DATEDIFF(CURRENT_DATE,examination_date) overdueDays,a.ding_times dingTimes
+      select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type age,
+      b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
       from biz_examination_info a,
       (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
       where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
@@ -303,6 +303,9 @@ WHERE
 	ORDER BY a.examination_type
 	limit #{offset},#{size}
   </select>
+    <select id="allBabysList" resultType="map">
+
+    </select>
     <select id="changeDateBabysList" resultType="map">
     SELECT
         b.id,
