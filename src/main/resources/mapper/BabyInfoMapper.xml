@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.BabyInfoMapper">
-  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="corpid" jdbcType="VARCHAR" property="corpid" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="name" jdbcType="VARCHAR" property="name"/>
     <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
@@ -209,9 +209,47 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="overListCount" resultType="map">
+        SELECT
+        x.examination_type examinationType,
+        COUNT( x.id ) cnt
+        FROM
+        biz_examination_info x
+        INNER JOIN (
+        SELECT
+        a.baby_id,
+        MAX( a.examination_date ) maxdate
+        FROM
+        biz_examination_info a
+        WHERE
+        a.examination_date &lt; CURRENT_DATE AND a.sign_in = 0
+        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 AND a.corpid = #{corpid} )
+        GROUP BY a.baby_id
+        ) y ON ( x.baby_id = y.baby_id AND x.examination_date = y.maxdate )
+        <where>
+            <if test="overdueStart != null and '' != overdueStart">
+                and DATEDIFF(CURRENT_DATE,y.maxdate) > #{overdueStart,jdbcType=INTEGER}
+            </if>
+            <if test="overdueEnd != null and '' != overdueEnd">
+                and DATEDIFF(CURRENT_DATE,y.maxdate) &lt;= #{overdueEnd,jdbcType=INTEGER}
+            </if>
+            <if test="dingTimes != null and '' != dingTimes">
+                <choose>
+                    <when test="dingTimes == 3 ">
+                        and x.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                    </when>
+                    <otherwise>
+                        and x.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY
+        x.examination_type
+    </select>
   <select id="overdueList" resultType="map">
-    select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type
-      examinationType,b.examinationDate,DATEDIFF(CURRENT_DATE,examination_date) overdueDays,a.ding_times dingTimes
+      select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type age,
+      b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
       from biz_examination_info a,
       (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
       where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
@@ -223,20 +261,93 @@
       and a.sign_in = 0
       and c.corpid = #{corpid}
       <if test="param.overdueStart != null and '' != param.overdueStart">
-          and DATEDIFF(CURRENT_DATE,examination_date) > #{param.overdueStart,jdbcType=INTEGER}
+          and DATEDIFF(CURRENT_DATE,a.examination_date) > #{param.overdueStart,jdbcType=INTEGER}
       </if>
       <if test="param.overdueEnd != null and '' != param.overdueEnd">
-          and DATEDIFF(CURRENT_DATE,examination_date) &lt;= #{param.overdueEnd,jdbcType=INTEGER}
+          and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{param.overdueEnd,jdbcType=INTEGER}
       </if>
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
       <if test="param.dingTimes != null and '' != param.dingTimes">
-          and a.ding_times = #{param.dingTimes,jdbcType=INTEGER}
+          <choose>
+              <when test="param.dingTimes == 3 ">
+                  and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
+              </when>
+              <otherwise>
+                  and a.ding_times = #{param.dingTimes,jdbcType=SMALLINT}
+              </otherwise>
+          </choose>
       </if>
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
   </select>
+    <select id="tomorrowExaminationBabysList" resultType="map">
+    SELECT
+	a.id,
+	b.id babyId,
+	b.name,
+	b.sex,
+	b.birthday,
+	a.examination_type examinationType,
+	a.examination_date examinationDate,
+	-2 overdueDays
+FROM
+	biz_examination_info a
+	LEFT JOIN biz_baby_info b ON a.baby_id = b.id
+WHERE
+	b.state = 1
+	AND a.sign_in = 0
+	AND DATEDIFF( CURRENT_DATE, a.examination_date ) = -2
+	AND b.corpid = #{corpid}
+	ORDER BY a.examination_type
+	limit #{offset},#{size}
+  </select>
+    <select id="allBabysList" resultType="map">
+        SELECT * FROM (
+        SELECT a.id,a.name,a.sex,a.birthday,a.corpid,
+        (SELECT examination_type FROM biz_examination_info WHERE baby_id = a.id AND examination_date =( SELECT max(
+        x.examination_date ) FROM biz_examination_info x WHERE x.examination_date &lt;= CURRENT_DATE AND x.baby_id =
+        a.id )) age,
+        (SELECT min( y.examination_date ) FROM biz_examination_info y WHERE y.examination_date &gt;= CURRENT_DATE AND
+        y.sign_in = 0 AND y.baby_id = a.id) nextExaminationDate
+        FROM biz_baby_info a where a.state = 1 AND a.corpid = #{corpid}
+        ) baby
+        <where>
+            <if test="param.name != null and param.name != ''">
+                AND baby.name LIKE CONCAT('%',CONCAT(#{param.name},'%'))
+            </if>
+            <if test="param.age != null and param.age != ''">
+                AND baby.age = #{param.age,jdbcType=INTEGER}
+            </if>
+            <if test="param.year != null and param.year != ''">
+                AND DATE_FORMAT(baby.birthday,'%Y') = #{param.year,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY baby.age,baby.birthday
+        limit #{offset},#{size}
+    </select>
+    <select id="changeDateBabysList" resultType="map">
+    SELECT
+        b.id,
+        b.name,
+        b.sex,
+        b.birthday,
+        a.examination_type examinationType,
+        a.old_examination_date oldExaminationDate,
+        a.examination_date examinationDate,
+        IFNULL( a.change_date_reason, '' ) changeDateReason
+    FROM
+        biz_examination_info a
+        LEFT JOIN biz_baby_info b ON a.baby_id = b.id
+    WHERE
+        b.corpid = #{corpid}
+        AND old_examination_date IS NOT NULL
+        AND sign_in = 0
+        AND examination_date >= CURRENT_DATE
+        ORDER BY a.examination_type
+        limit #{offset},#{size}
+    </select>
   <select id="getBabyParentInfo" resultType="map">
     SELECT
         a.id,
@@ -283,7 +394,7 @@
                   biz_examination_info b
               WHERE
                   a.id = b.baby_id
-                  AND datediff( b.examination_date, CURRENT_DATE) = 1
+                  AND datediff( b.examination_date, CURRENT_DATE) = 2
                   AND b.sign_in = 0
             )
   </select>

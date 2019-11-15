@@ -6,6 +6,7 @@ import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -25,12 +26,25 @@ public class BabyController extends BaseController {
 
     /**
      * 医生端-首页统计
+     *
      * @return
      */
     @RequestMapping("indexCount")
     public RestVo indexCount() {
         RestVo restVo = babyService.indexCount(this.getDdCorpid());
         return restVo;
+    }
+
+    /**
+     * 医生端-逾期列表-逾期数量(按月龄分组)
+     *
+     * @param overdueStart 逾期时间起
+     * @param overdueEnd   逾期时间止
+     * @param dingTimes    钉次数
+     */
+    @GetMapping("/overduelistcount")
+    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, @RequestHeader("corpid") String corpid) {
+        return babyService.overListCount(overdueStart, overdueEnd, dingTimes, corpid);
     }
 
     /**
@@ -53,4 +67,69 @@ public class BabyController extends BaseController {
         return babyService.getBabyParentInfo(babyid);
     }
 
+
+    /**
+     * 医生端-取消逾期提醒
+     *
+     * @param examid 体检项目id
+     */
+    @Transactional
+    @PostMapping("/cancelremind")
+    public RestVo cancelRemind(Long examid) {
+        return babyService.cancelRemind(examid);
+    }
+
+    /**
+     * 医生端-明日体检通知
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/tomorrowexaminationbabyslist")
+    public RestVo tomorrowExaminationBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.tomorrowExaminationBabysList(pageBo, corpid);
+    }
+
+    /**
+     * 医生端-明日体检-延后一天
+     *
+     * @param examId 体检id
+     */
+    @PostMapping("/delayoneday")
+    public RestVo delayOneDay(Long examId) {
+        return babyService.delayOneDay(examId);
+    }
+
+    /**
+     * 医生端-申请改期列表
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/changedatebabyslist")
+    public RestVo changeDateBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.changeDateBabysList(pageBo, corpid);
+    }
+
+    /**
+     * 医生端-总管理儿童
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/allbabyslist")
+    public RestVo allBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.allBabysList(pageBo, corpid);
+    }
+
+    /**
+     * 医生端-取消儿童管理
+     *
+     * @param id:
+     */
+    @Transactional
+    @PostMapping("/cancelbaby")
+    public RestVo cancelBaby(Long id) {
+        return babyService.cancelBaby(id);
+    }
 }
