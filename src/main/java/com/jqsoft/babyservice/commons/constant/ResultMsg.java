@@ -11,7 +11,8 @@ public enum ResultMsg {
     USER_NOT_EXISTS("0002","用户不存在"),
     NOT_AUTH("0003", "无此访问权限"),
 
-    LOGIN_FAIL("0007","登录失败"),
+    DATA_NOT_EXISTS("0004", "数据不存在"),
+    NO_AUTH_DEL_BABY("0007","不是此baby家长无权限删除"),
     NOT_PARAM("0008", "缺少参数"),
     ILLEGAL_PARAM_FORMAT("0009", "非法参数格式"),
     FILE_IS_NULL("0010", "空文件"),

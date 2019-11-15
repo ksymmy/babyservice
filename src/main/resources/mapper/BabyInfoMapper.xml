@@ -4,7 +4,8 @@
     <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="corpid" jdbcType="VARCHAR" property="corpid" />
-    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
@@ -17,9 +18,11 @@
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <collection property="examinationInfos" column="id" fetchType="lazy" select="com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper.myExaminationInfo"></collection>
   </resultMap>
+
   <sql id="Base_Column_List">
-    id, corpid, name, sex, birthday, avatar, father_id, father_name, father_mobile, mother_id,
+    id, corpid, parent_id, name, sex, birthday, avatar, father_id, father_name, father_mobile, mother_id,
     mother_mobile, mother_name, state, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -32,14 +35,14 @@
     delete from biz_baby_info
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
-    insert into biz_baby_info (id, corpid, name,
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    insert into biz_baby_info (id, corpid, parent_id, name,
       sex, birthday, avatar,
       father_id, father_name, father_mobile,
       mother_id, mother_mobile, mother_name,
       state, create_time, update_time
       )
-    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
       #{sex,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR},
       #{fatherId,jdbcType=BIGINT}, #{fatherName,jdbcType=VARCHAR}, #{fatherMobile,jdbcType=VARCHAR},
       #{motherId,jdbcType=BIGINT}, #{motherMobile,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR},
@@ -54,6 +57,9 @@
       </if>
       <if test="corpid != null">
         corpid,
+      </if>
+      <if test="parentId != null">
+        parent_id,
       </if>
       <if test="name != null">
         name,
@@ -102,6 +108,9 @@
       <if test="corpid != null">
         #{corpid,jdbcType=VARCHAR},
       </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -149,6 +158,9 @@
       <if test="corpid != null">
         corpid = #{corpid,jdbcType=VARCHAR},
       </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
@@ -194,6 +206,7 @@
   <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
     update biz_baby_info
     set corpid = #{corpid,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
       name = #{name,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=TINYINT},
       birthday = #{birthday,jdbcType=DATE},
@@ -424,5 +437,14 @@ WHERE
         from biz_baby_info a
         where a.corpid = #{corpid,jdbcType=VARCHAR}
         and a.state = 1
+  </select>
+  <select id="myBabys" resultMap="BaseResultMap">
+    SELECT
+        a.*
+    FROM
+        biz_baby_info a
+    WHERE
+        a.state = 1
+        and (a.parent_id = #{parentId,jdbcType=BIGINT} OR a.father_id = #{parentId,jdbcType=BIGINT} OR a.mother_id = #{parentId,jdbcType=BIGINT})
   </select>
 </mapper>

@@ -19,7 +19,7 @@ public class WorkTime implements Serializable {
 
     private Byte thursday;
 
-    private Byte sriday;
+    private Byte friday;
 
     private Byte saturday;
 

@@ -12,7 +12,7 @@ public enum RedisKey {
     LOGIN_CORP_USER("LOGIN:%s:%s"),
     LOGIN_ACCESS_TOKEN("LOGIN:ACCESS-TOKEN"),
 
-    ORG_INFO("ORG:INFO:%s"),
+    WORK_TIME("WORKTIME:%s"),
     REPEAT_SUBMIT("REPEAT_SUBMIT:%s:%s");
 
 

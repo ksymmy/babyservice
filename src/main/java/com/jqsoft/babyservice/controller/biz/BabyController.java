@@ -1,8 +1,11 @@
 package com.jqsoft.babyservice.controller.biz;
 
 import com.jqsoft.babyservice.commons.bo.PageBo;
+import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
+import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
+import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,13 @@ public class BabyController extends BaseController {
     @Autowired
     public BabyService babyService;
 
+    //******************************************* 医生端接口 *************************************************************
     /**
      * 医生端-首页统计
      *
      * @return
      */
+    @AdminCheck
     @RequestMapping("indexCount")
     public RestVo indexCount() {
         RestVo restVo = babyService.indexCount(this.getDdCorpid());
@@ -131,5 +136,39 @@ public class BabyController extends BaseController {
     @PostMapping("/cancelbaby")
     public RestVo cancelBaby(Long id) {
         return babyService.cancelBaby(id);
+    }
+
+
+    //******************************************* 医生端接口 *************************************************************
+    /**
+     * 家长端--获取我的宝宝信息
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("myBabys")
+    public RestVo myBabys(){
+        return babyService.myBabys(this.getUserId());
+    }
+
+    /**
+     * 家长端-删除宝宝信息
+     * @param babyId
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("delBaby")
+    public RestVo delBabyInfo(Long babyId){
+        return babyService.delBabyInfo(babyId,this.getUser().getId());
+    }
+
+    /**
+     * 家长端-保存宝宝信息
+     * @param babyInfo
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("saveBabyInfo")
+    public RestVo saveBabyInfo(@RequestBody BabyInfo babyInfo){
+        return babyService.saveBabyInfo(babyInfo,this.getUser().getId(), this.getDdCorpid());
     }
 }

@@ -589,6 +589,21 @@ public final class DateUtil {
         return strArr;
     }
 
+    public static int getDayOfWeek(Date date){
+        if (null == date) {
+            return 0;
+        }
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        int day = c.get(Calendar.DAY_OF_WEEK);
+        if (day == 1) {
+            return 7;
+        } else {
+            return day - 1;
+        }
+    }
+
+
     public static void main(String[] args) throws ParseException {
 //        System.out.println(DateUtil.getYesterdayBeforDate(7, DateUtil.DAY));
 //        System.out.println(TimeConst.Range.getObject("DAY_7").getRange());
@@ -598,6 +613,7 @@ public final class DateUtil {
         System.out.println(getMonthDate());
         System.out.println(getLastDayMonthDate());
 //        System.out.println(formatDate(parseDatePlus("20190409"), "yyyy-MM-dd HH:mm:ss.SSS"));
+        System.out.println(DateUtil.getDayOfWeek(new Date()));
 
     }
 

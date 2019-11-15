@@ -8,14 +8,14 @@
     <result column="tuesday" jdbcType="TINYINT" property="tuesday" />
     <result column="wednesday" jdbcType="TINYINT" property="wednesday" />
     <result column="thursday" jdbcType="TINYINT" property="thursday" />
-    <result column="sriday" jdbcType="TINYINT" property="sriday" />
+    <result column="friday" jdbcType="TINYINT" property="friday" />
     <result column="saturday" jdbcType="TINYINT" property="saturday" />
     <result column="sunday" jdbcType="TINYINT" property="sunday" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpid, monday, tuesday, wednesday, thursday, sriday, saturday, sunday, create_time, 
+    id, corpid, monday, tuesday, wednesday, thursday, friday, saturday, sunday, create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -31,11 +31,11 @@
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
     insert into biz_work_time (id, corpid, monday, 
       tuesday, wednesday, thursday, 
-      sriday, saturday, sunday, 
+      friday, saturday, sunday,
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{monday,jdbcType=TINYINT}, 
       #{tuesday,jdbcType=TINYINT}, #{wednesday,jdbcType=TINYINT}, #{thursday,jdbcType=TINYINT}, 
-      #{sriday,jdbcType=TINYINT}, #{saturday,jdbcType=TINYINT}, #{sunday,jdbcType=TINYINT}, 
+      #{friday,jdbcType=TINYINT}, #{saturday,jdbcType=TINYINT}, #{sunday,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.WorkTime">
@@ -59,8 +59,8 @@
       <if test="thursday != null">
         thursday,
       </if>
-      <if test="sriday != null">
-        sriday,
+      <if test="friday != null">
+        friday,
       </if>
       <if test="saturday != null">
         saturday,
@@ -94,8 +94,8 @@
       <if test="thursday != null">
         #{thursday,jdbcType=TINYINT},
       </if>
-      <if test="sriday != null">
-        #{sriday,jdbcType=TINYINT},
+      <if test="friday != null">
+        #{friday,jdbcType=TINYINT},
       </if>
       <if test="saturday != null">
         #{saturday,jdbcType=TINYINT},
@@ -129,8 +129,8 @@
       <if test="thursday != null">
         thursday = #{thursday,jdbcType=TINYINT},
       </if>
-      <if test="sriday != null">
-        sriday = #{sriday,jdbcType=TINYINT},
+      <if test="friday != null">
+        friday = #{friday,jdbcType=TINYINT},
       </if>
       <if test="saturday != null">
         saturday = #{saturday,jdbcType=TINYINT},
@@ -154,11 +154,17 @@
       tuesday = #{tuesday,jdbcType=TINYINT},
       wednesday = #{wednesday,jdbcType=TINYINT},
       thursday = #{thursday,jdbcType=TINYINT},
-      sriday = #{sriday,jdbcType=TINYINT},
+      friday = #{friday,jdbcType=TINYINT},
       saturday = #{saturday,jdbcType=TINYINT},
       sunday = #{sunday,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <select id="getWorkTimeByCorpid" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_work_time
+    where corpid = #{corpid,jdbcType=VARCHAR}
+  </select>
 </mapper>
