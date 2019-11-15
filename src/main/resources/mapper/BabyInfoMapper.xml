@@ -304,7 +304,28 @@ WHERE
 	limit #{offset},#{size}
   </select>
     <select id="allBabysList" resultType="map">
-
+        SELECT * FROM (
+        SELECT a.id,a.name,a.sex,a.birthday,a.corpid,
+        (SELECT examination_type FROM biz_examination_info WHERE baby_id = a.id AND examination_date =( SELECT max(
+        x.examination_date ) FROM biz_examination_info x WHERE x.examination_date &lt;= CURRENT_DATE AND x.baby_id =
+        a.id )) age,
+        (SELECT min( y.examination_date ) FROM biz_examination_info y WHERE y.examination_date &gt;= CURRENT_DATE AND
+        y.sign_in = 0 AND y.baby_id = a.id) nextExaminationDate
+        FROM biz_baby_info a where a.state = 1 AND a.corpid = #{corpid}
+        ) baby
+        <where>
+            <if test="param.name != null and param.name != ''">
+                AND baby.name LIKE CONCAT('%',CONCAT(#{param.name},'%'))
+            </if>
+            <if test="param.age != null and param.age != ''">
+                AND baby.age = #{param.age,jdbcType=INTEGER}
+            </if>
+            <if test="param.year != null and param.year != ''">
+                AND DATE_FORMAT(baby.birthday,'%Y') = #{param.year,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY baby.age,baby.birthday
+        limit #{offset},#{size}
     </select>
     <select id="changeDateBabysList" resultType="map">
     SELECT
