@@ -21,6 +21,10 @@ public class BabyService {
     @Resource
     private ExaminationInfoMapper examinationInfoMapper;
 
+    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes) {
+        return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes));
+    }
+
     public RestVo overdueList(PageBo<Map<String, Object>> pageBo, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overdueList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
     }

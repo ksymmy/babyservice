@@ -21,6 +21,8 @@ public interface BabyInfoMapper {
 
     int updateByPrimaryKey(BabyInfo record);
 
+    List<Map> overListCount(int overdueStart, int overdueEnd, int dingTimes);
+
     List<Map> overdueList(@Param("offset") Integer offset,
                           @Param("size") Integer size,
                           @Param("param") Map param,

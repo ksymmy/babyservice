@@ -36,6 +36,18 @@ public class BabyController extends BaseController {
     }
 
     /**
+     * 医生端-逾期列表-逾期数量(按月龄分组)
+     *
+     * @param overdueStart 逾期时间起
+     * @param overdueEnd   逾期时间止
+     * @param dingTimes    钉次数
+     */
+    @GetMapping("/overduelistcount")
+    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes) {
+        return babyService.overListCount(overdueStart, overdueEnd, dingTimes);
+    }
+
+    /**
      * 医生端-逾期列表
      *
      * @param pageBo 查询参数

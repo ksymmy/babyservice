@@ -209,6 +209,44 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="overListCount" resultType="map">
+        SELECT
+        x.examination_type examinationType,
+        COUNT( x.id ) cnt
+        FROM
+        biz_examination_info x
+        INNER JOIN (
+        SELECT
+        a.baby_id,
+        MAX( a.examination_date ) maxdate
+        FROM
+        biz_examination_info a
+        WHERE
+        a.examination_date &lt; CURRENT_DATE AND a.sign_in = 0
+        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 )
+        GROUP BY a.baby_id
+        ) y ON ( x.baby_id = y.baby_id AND x.examination_date = y.maxdate )
+        <where>
+            <if test="overdueStart != null and '' != overdueStart">
+                and DATEDIFF(CURRENT_DATE,y.maxdate) > #{overdueStart,jdbcType=INTEGER}
+            </if>
+            <if test="overdueEnd != null and '' != overdueEnd">
+                and DATEDIFF(CURRENT_DATE,y.maxdate) &lt;= #{overdueEnd,jdbcType=INTEGER}
+            </if>
+            <if test="dingTimes != null and '' != dingTimes">
+                <choose>
+                    <when test="dingTimes == 3 ">
+                        and x.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                    </when>
+                    <otherwise>
+                        and x.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                    </otherwise>
+                </choose>
+            </if>
+        </where>
+        GROUP BY
+        x.examination_type
+    </select>
   <select id="overdueList" resultType="map">
     select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type
       examinationType,b.examinationDate,DATEDIFF(CURRENT_DATE,examination_date) overdueDays,a.ding_times dingTimes
@@ -223,10 +261,10 @@
       and a.sign_in = 0
       and c.corpid = #{corpid}
       <if test="param.overdueStart != null and '' != param.overdueStart">
-          and DATEDIFF(CURRENT_DATE,examination_date) > #{param.overdueStart,jdbcType=INTEGER}
+          and DATEDIFF(CURRENT_DATE,a.examination_date) > #{param.overdueStart,jdbcType=INTEGER}
       </if>
       <if test="param.overdueEnd != null and '' != param.overdueEnd">
-          and DATEDIFF(CURRENT_DATE,examination_date) &lt;= #{param.overdueEnd,jdbcType=INTEGER}
+          and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{param.overdueEnd,jdbcType=INTEGER}
       </if>
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
@@ -234,10 +272,10 @@
       <if test="param.dingTimes != null and '' != param.dingTimes">
           <choose>
               <when test="param.dingTimes == 3 ">
-                  and a.ding_times >= #{param.dingTimes,jdbcType=INTEGER}
+                  and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
               </when>
               <otherwise>
-                  and a.ding_times = #{param.dingTimes,jdbcType=INTEGER}
+                  and a.ding_times = #{param.dingTimes,jdbcType=SMALLINT}
               </otherwise>
           </choose>
       </if>
