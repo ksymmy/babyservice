@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.BabyInfoMapper">
-  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.BabyInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="corpid" jdbcType="VARCHAR" property="corpid" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="name" jdbcType="VARCHAR" property="name"/>
     <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
@@ -282,7 +282,7 @@
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
   </select>
-    <select id="tomorrowNoticeList" resultType="map">
+    <select id="tomorrowExaminationBabysList" resultType="map">
     SELECT
 	a.id,
 	b.id babyId,
@@ -303,6 +303,27 @@ WHERE
 	ORDER BY a.examination_type
 	limit #{offset},#{size}
   </select>
+    <select id="changeDateBabysList" resultType="map">
+    SELECT
+        b.id,
+        b.name,
+        b.sex,
+        b.birthday,
+        a.examination_type examinationType,
+        a.old_examination_date oldExaminationDate,
+        a.examination_date examinationDate,
+        IFNULL( a.change_date_reason, '' ) changeDateReason
+    FROM
+        biz_examination_info a
+        LEFT JOIN biz_baby_info b ON a.baby_id = b.id
+    WHERE
+        b.corpid = #{corpid}
+        AND old_examination_date IS NOT NULL
+        AND sign_in = 0
+        AND examination_date >= CURRENT_DATE
+        ORDER BY a.examination_type
+        limit #{offset},#{size}
+    </select>
   <select id="getBabyParentInfo" resultType="map">
     SELECT
         a.id,
@@ -349,7 +370,7 @@ WHERE
                   biz_examination_info b
               WHERE
                   a.id = b.baby_id
-                  AND datediff( b.examination_date, CURRENT_DATE) = 1
+                  AND datediff( b.examination_date, CURRENT_DATE) = 2
                   AND b.sign_in = 0
             )
   </select>

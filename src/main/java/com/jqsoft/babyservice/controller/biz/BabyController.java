@@ -85,9 +85,9 @@ public class BabyController extends BaseController {
      * @param pageBo:
      * @param corpid:
      */
-    @PostMapping("/tomorrownoticelist")
-    public RestVo tomorrowNoticeList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
-        return babyService.tomorrowNoticeList(pageBo, corpid);
+    @PostMapping("/tomorrowexaminationbabyslist")
+    public RestVo tomorrowExaminationBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.tomorrowExaminationBabysList(pageBo, corpid);
     }
 
     /**
@@ -100,4 +100,14 @@ public class BabyController extends BaseController {
         return babyService.delayOneDay(examId);
     }
 
+    /**
+     * 医生端-申请改期列表
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/changedatebabyslist")
+    public RestVo changeDateBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.changeDateBabysList(pageBo, corpid);
+    }
 }

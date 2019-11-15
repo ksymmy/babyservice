@@ -33,8 +33,12 @@ public class BabyService {
         return RestVo.SUCCESS(babyInfoMapper.getBabyParentInfo(id));
     }
 
-    public RestVo tomorrowNoticeList(PageBo<Map<String, Object>> pageBo, String corpid) {
-        return RestVo.SUCCESS(babyInfoMapper.tomorrowNoticeList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
+    public RestVo tomorrowExaminationBabysList(PageBo<Map<String, Object>> pageBo, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.tomorrowExaminationBabysList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
+    }
+
+    public RestVo changeDateBabysList(PageBo<Map<String, Object>> pageBo, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.changeDateBabysList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
     }
 
     /**

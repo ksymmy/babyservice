@@ -28,10 +28,15 @@ public interface BabyInfoMapper {
                           @Param("param") Map param,
                           @Param("corpid") String corpid);
 
-    List<Map> tomorrowNoticeList(@Param("offset") Integer offset,
-                                 @Param("size") Integer size,
-                                 @Param("param") Map param,
-                                 @Param("corpid") String corpid);
+    List<Map> tomorrowExaminationBabysList(@Param("offset") Integer offset,
+                                           @Param("size") Integer size,
+                                           @Param("param") Map param,
+                                           @Param("corpid") String corpid);
+
+    List<Map> changeDateBabysList(@Param("offset") Integer offset,
+                                  @Param("size") Integer size,
+                                  @Param("param") Map param,
+                                  @Param("corpid") String corpid);
 
     Map getBabyParentInfo(Long id);
 
