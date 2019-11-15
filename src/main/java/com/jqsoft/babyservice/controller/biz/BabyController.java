@@ -43,8 +43,8 @@ public class BabyController extends BaseController {
      * @param dingTimes    钉次数
      */
     @GetMapping("/overduelistcount")
-    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes) {
-        return babyService.overListCount(overdueStart, overdueEnd, dingTimes);
+    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, @RequestHeader("corpid") String corpid) {
+        return babyService.overListCount(overdueStart, overdueEnd, dingTimes, corpid);
     }
 
     /**
@@ -77,6 +77,27 @@ public class BabyController extends BaseController {
     @PostMapping("/cancelremind")
     public RestVo cancelRemind(Long examid) {
         return babyService.cancelRemind(examid);
+    }
+
+    /**
+     * 医生端-明日体检通知
+     *
+     * @param pageBo:
+     * @param corpid:
+     */
+    @PostMapping("/tomorrownoticelist")
+    public RestVo tomorrowNoticeList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
+        return babyService.tomorrowNoticeList(pageBo, corpid);
+    }
+
+    /**
+     * 医生端-明日体检-延后一天
+     *
+     * @param examId 体检id
+     */
+    @PostMapping("/delayoneday")
+    public RestVo delayOneDay(Long examId) {
+        return babyService.delayOneDay(examId);
     }
 
 }

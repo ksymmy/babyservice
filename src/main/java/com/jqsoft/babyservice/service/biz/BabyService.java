@@ -21,8 +21,8 @@ public class BabyService {
     @Resource
     private ExaminationInfoMapper examinationInfoMapper;
 
-    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes) {
-        return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes));
+    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes, corpid));
     }
 
     public RestVo overdueList(PageBo<Map<String, Object>> pageBo, String corpid) {
@@ -31,6 +31,10 @@ public class BabyService {
 
     public RestVo getBabyParentInfo(Long id) {
         return RestVo.SUCCESS(babyInfoMapper.getBabyParentInfo(id));
+    }
+
+    public RestVo tomorrowNoticeList(PageBo<Map<String, Object>> pageBo, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.tomorrowNoticeList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
     }
 
     /**
@@ -67,5 +71,11 @@ public class BabyService {
         entity.setId(id);
         entity.setSignIn((byte) 1);
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
+    }
+
+    public RestVo delayOneDay(Long id) {
+//        ExaminationInfo entity = new ExaminationInfo();
+//        entity.setId(id);
+        return RestVo.SUCCESS();
     }
 }
