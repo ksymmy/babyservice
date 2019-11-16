@@ -15,6 +15,7 @@
     <result column="mother_id" jdbcType="BIGINT" property="motherId" />
     <result column="mother_mobile" jdbcType="VARCHAR" property="motherMobile" />
     <result column="mother_name" jdbcType="VARCHAR" property="motherName" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
@@ -23,7 +24,7 @@
 
   <sql id="Base_Column_List">
     id, corpid, parent_id, name, sex, birthday, avatar, father_id, father_name, father_mobile, mother_id,
-    mother_mobile, mother_name, state, create_time, update_time
+    mother_mobile, mother_name, address, state, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select
@@ -40,13 +41,13 @@
       sex, birthday, avatar,
       father_id, father_name, father_mobile,
       mother_id, mother_mobile, mother_name,
-      state, create_time, update_time
+      address, state, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
       #{sex,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR},
       #{fatherId,jdbcType=BIGINT}, #{fatherName,jdbcType=VARCHAR}, #{fatherMobile,jdbcType=VARCHAR},
       #{motherId,jdbcType=BIGINT}, #{motherMobile,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR},
-      #{state,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      #{address,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo">
@@ -91,6 +92,9 @@
       <if test="motherName != null">
         mother_name,
       </if>
+        <if test="address != null">
+            address,
+        </if>
       <if test="state != null">
         state,
       </if>
@@ -141,6 +145,9 @@
       <if test="motherName != null">
         #{motherName,jdbcType=VARCHAR},
       </if>
+       <if test="address != null">
+            #{address,jdbcType=VARCHAR},
+        </if>
       <if test="state != null">
         #{state,jdbcType=TINYINT},
       </if>
@@ -191,6 +198,9 @@
       <if test="motherName != null">
         mother_name = #{motherName,jdbcType=VARCHAR},
       </if>
+        <if test="address != null">
+            address = #{address,jdbcType=VARCHAR},
+        </if>
       <if test="state != null">
         state = #{state,jdbcType=TINYINT},
       </if>
@@ -217,6 +227,7 @@
       mother_id = #{motherId,jdbcType=BIGINT},
       mother_mobile = #{motherMobile,jdbcType=VARCHAR},
       mother_name = #{motherName,jdbcType=VARCHAR},
+       address = #{address,jdbcType=VARCHAR},
       state = #{state,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}

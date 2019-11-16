@@ -152,13 +152,13 @@ public class BabyController extends BaseController {
 
     /**
      * 家长端-删除宝宝信息
-     * @param babyId
+     * @param id
      * @return
      */
     @ParentCheck
     @RequestMapping("delBaby")
-    public RestVo delBabyInfo(Long babyId){
-        return babyService.delBabyInfo(babyId,this.getUser().getId());
+    public RestVo delBabyInfo(Long id){
+        return babyService.delBabyInfo(id,this.getUser().getId());
     }
 
     /**

@@ -41,6 +41,8 @@ public class BabyInfo implements Serializable {
 
     private String motherMobile;
 
+    private String address;
+
     private Byte state;
 
     private Date createTime;
