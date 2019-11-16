@@ -2,6 +2,7 @@ package com.jqsoft.babyservice.mapper.biz;
 
 import com.jqsoft.babyservice.entity.biz.RemindNews;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -19,5 +20,5 @@ public interface RemindNewsMapper {
 
     int updateByPrimaryKey(RemindNews record);
 
-    void batchInsert(List<RemindNews> remindNewsList);
+    void batchInsert(@Param("remindNewsList") List<RemindNews> remindNewsList);
 }
