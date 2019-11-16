@@ -150,4 +150,17 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into biz_remind_news (id, corpid, examination_id,
+      title, context, type,
+      sign_in, confirm, create_time,
+      update_time)
+    values
+        <foreach collection="remindNewsList" item="info" separator=",">
+          (#{info.id,jdbcType=BIGINT}, #{info.corpid,jdbcType=VARCHAR}, #{info.examinationId,jdbcType=BIGINT},
+            #{info.title,jdbcType=VARCHAR}, #{info.context,jdbcType=VARCHAR}, #{info.type,jdbcType=TINYINT},
+            #{info.signIn,jdbcType=TINYINT}, #{info.confirm,jdbcType=TINYINT}, #{info.createTime,jdbcType=TIMESTAMP},
+            #{info.updateTime,jdbcType=TIMESTAMP})
+        </foreach>
+  </insert>
 </mapper>

@@ -369,6 +369,19 @@ public final class DateUtil {
     }
 
     /**
+     * 两个日期之间间隔天数
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static Long differentDaysByDate(Date date1,Date date2)
+    {
+        date1 = DateUtil.parseDate(DateUtil.formatDate(date1, DateUtil.FMT_1),DateUtil.FMT_1);
+        date2 = DateUtil.parseDate(DateUtil.formatDate(date2, DateUtil.FMT_1),DateUtil.FMT_1);
+        return DateUtil.differentDaysByMillisecond(date1, date2);
+    }
+
+    /**
      * 自定义时间范围，通过时间秒毫秒数判断两个时间的间隔多少天(向上取整)
      * @param date1
      * @param date2
@@ -603,17 +616,19 @@ public final class DateUtil {
         }
     }
 
-
     public static void main(String[] args) throws ParseException {
 //        System.out.println(DateUtil.getYesterdayBeforDate(7, DateUtil.DAY));
 //        System.out.println(TimeConst.Range.getObject("DAY_7").getRange());
 //        System.out.println(TimeConst.Range.getObject("DAY_7"));
 //
 //        String dateStr = "20190313 12:12:12";
-        System.out.println(getMonthDate());
-        System.out.println(getLastDayMonthDate());
-//        System.out.println(formatDate(parseDatePlus("20190409"), "yyyy-MM-dd HH:mm:ss.SSS"));
-        System.out.println(DateUtil.getDayOfWeek(new Date()));
+//        System.out.println(getMonthDate());
+//        System.out.println(getLastDayMonthDate());
+////        System.out.println(formatDate(parseDatePlus("20190409"), "yyyy-MM-dd HH:mm:ss.SSS"));
+//        System.out.println(DateUtil.getDayOfWeek(new Date()));
+        Date date1 = DateUtil.parseDate("2019-03-13 22:22:12",DateUtil.FMT_3);
+        Date date2 = DateUtil.parseDate("2019-03-14 09:12:12",DateUtil.FMT_3);
+        System.out.println(DateUtil.differentDaysByDate(date1,date2));
 
     }
 

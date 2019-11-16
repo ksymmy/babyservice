@@ -39,5 +39,11 @@ public class ExaminationInfo implements Serializable {
 
     private Date updateTime;
 
+    private String babyName;
+
+    private String userid;
+
+    private Date birthday;
+
 
 }
