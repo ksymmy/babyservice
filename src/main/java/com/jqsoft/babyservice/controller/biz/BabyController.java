@@ -167,8 +167,8 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("saveBabyInfo")
-    public RestVo saveBabyInfo(@RequestBody BabyInfo babyInfo){
-        return babyService.saveBabyInfo(babyInfo,this.getUser().getId(), this.getDdCorpid());
+    @RequestMapping("addBabyInfo")
+    public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo){
+        return babyService.addBabyInfo(babyInfo,this.getUser().getId(), this.getDdCorpid());
     }
 }

@@ -7,13 +7,15 @@ import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.entity.biz.WorkTime;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
+import com.jqsoft.babyservice.mapper.biz.UserInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.WorkTimeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,11 +32,15 @@ public class BabyService {
 
     @Resource
     private BabyInfoMapper babyInfoMapper;
+
     @Resource
     private ExaminationInfoMapper examinationInfoMapper;
 
     @Resource
     private WorkTimeMapper workTimeMapper;
+
+    @Resource
+    private UserInfoMapper userInfoMapper;
 
     public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes, corpid));
@@ -176,36 +182,49 @@ public class BabyService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RestVo saveBabyInfo(BabyInfo babyInfo, Long parentId, String corpid){
+    public RestVo addBabyInfo(BabyInfo babyInfo, Long parentId, String corpid){
         if (null == babyInfo || null == babyInfo.getBirthday()) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
         babyInfo.setParentId(parentId);
         babyInfo.setCorpid(corpid);
+        babyInfo.setState((byte)1);
+        babyInfo.setId(null);
+        babyInfo.setFatherId(null);
+        babyInfo.setMotherId(null);
         Date now = new Date();
         babyInfo.setCreateTime(now);
         babyInfo.setUpdateTime(now);
-        if (null == babyInfo.getId()) {
-            babyInfoMapper.insert(babyInfo);
-            // 生成体检计划
-            byte[] examinationType = {1,3,6,8,12,18,24,30,36};
-            for (int j = 0;j < examinationType.length ; j++) {
-                ExaminationInfo info = new ExaminationInfo();
-                info.setBabyId(babyInfo.getId());
-                info.setExaminationType(examinationType[j]);
-                info.setExaminationDate(this.getExaminationDate(corpid, DateUtils.addMonths(babyInfo.getBirthday(),examinationType[j])));
-                String item = "健康体检";
-                item = examinationType[j] == 1 ? ("满月" + item) : (examinationType[j] + "月龄" + item);
-                info.setExaminationItem(item);
-                info.setDingTimes((short)0);
-                info.setSignIn((byte)0);
-                info.setCreateTime(now);
-                info.setUpdateTime(now);
-                examinationInfoMapper.insert(info);
-            }
-        } else {
-            babyInfoMapper.updateByPrimaryKey(babyInfo);
+
+        // 父母手机号如果已填写则需要绑定
+        if (StringUtils.isNotBlank(babyInfo.getFatherMobile())) {
+            UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getFatherMobile());
+            babyInfo.setFatherId(null != userInfo ? userInfo.getId() : null);
         }
+        if (StringUtils.isNotBlank(babyInfo.getMotherMobile())) {
+            UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getMotherMobile());
+            babyInfo.setMotherId(null != userInfo ? userInfo.getId() : null);
+        }
+
+        babyInfoMapper.insert(babyInfo);
+
+        // 生成体检计划
+        byte[] examinationType = {1,3,6,8,12,18,24,30,36};
+        for (int j = 0;j < examinationType.length ; j++) {
+            ExaminationInfo info = new ExaminationInfo();
+            info.setBabyId(babyInfo.getId());
+            info.setExaminationType(examinationType[j]);
+            info.setExaminationDate(this.getExaminationDate(corpid, DateUtils.addMonths(babyInfo.getBirthday(),examinationType[j])));
+            String item = "健康体检";
+            item = examinationType[j] == 1 ? ("满月" + item) : (examinationType[j] + "月龄" + item);
+            info.setExaminationItem(item);
+            info.setDingTimes((short)0);
+            info.setSignIn((byte)0);
+            info.setCreateTime(now);
+            info.setUpdateTime(now);
+            examinationInfoMapper.insert(info);
+        }
+
 
         return RestVo.SUCCESS();
     }

@@ -18,4 +18,6 @@ public interface UserInfoMapper {
     int updateByPrimaryKey(UserInfo record);
 
     UserInfo selectByCorpIdAndUserid(String corpid, String userid);
+
+    UserInfo getUserInfoByMobile(String mobile);
 }
