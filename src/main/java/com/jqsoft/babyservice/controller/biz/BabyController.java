@@ -6,6 +6,7 @@ import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
@@ -182,7 +183,8 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("myBabys")
     public RestVo myBabys() {
-        return babyService.myBabys(this.getUserId());
+        UserInfo user = this.getUser();
+        return babyService.myBabys(user.getId(), user.getMobile());
     }
 
     /**

@@ -3,6 +3,8 @@ package com.jqsoft.babyservice.mapper.biz;
 import com.jqsoft.babyservice.entity.biz.RemindNews;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface RemindNewsMapper {
     int deleteByPrimaryKey(Long id);
@@ -16,4 +18,6 @@ public interface RemindNewsMapper {
     int updateByPrimaryKeySelective(RemindNews record);
 
     int updateByPrimaryKey(RemindNews record);
+
+    void batchInsert(List<RemindNews> remindNewsList);
 }

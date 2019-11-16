@@ -23,4 +23,6 @@ public interface ExaminationInfoMapper {
     List<ExaminationInfo> myExaminationInfo(@Param("babyId") Long babyId);
 
     void batchInsert(List<ExaminationInfo> infos);
+
+    List<ExaminationInfo> getNeedRemindExaminationInfoList();
 }

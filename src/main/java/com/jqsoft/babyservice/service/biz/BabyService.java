@@ -7,7 +7,6 @@ import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
-import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.entity.biz.WorkTime;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
@@ -128,11 +127,12 @@ public class BabyService {
 
     /**
      * 医生端-获取我的宝宝信息
-     *
+     * @param parentId 必填
+     * @param mobile 可不填
      * @return
      */
-    public RestVo myBabys(Long parentId) {
-        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(parentId);
+    public RestVo myBabys(Long parentId, String mobile) {
+        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(parentId, mobile);
         if (CollectionUtils.isNotEmpty(babyInfos)) {
             int size = babyInfos.size();
             for (int i = 0; i < size; i++) {
@@ -208,15 +208,15 @@ public class BabyService {
         babyInfo.setCreateTime(now);
         babyInfo.setUpdateTime(now);
 
-        // 父母手机号如果已填写则需要绑定
-        if (StringUtils.isNotBlank(babyInfo.getFatherMobile())) {
+        // 父母手机号如果已填写则需要绑定（用手机号直接关联）
+        /*if (StringUtils.isNotBlank(babyInfo.getFatherMobile())) {
             UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getFatherMobile());
             babyInfo.setFatherId(null != userInfo ? userInfo.getId() : null);
         }
         if (StringUtils.isNotBlank(babyInfo.getMotherMobile())) {
             UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getMotherMobile());
             babyInfo.setMotherId(null != userInfo ? userInfo.getId() : null);
-        }
+        }*/
 
         babyInfoMapper.insert(babyInfo);
 

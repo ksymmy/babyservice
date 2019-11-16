@@ -9,10 +9,8 @@
     <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="birthday" jdbcType="DATE" property="birthday" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
-    <result column="father_id" jdbcType="BIGINT" property="fatherId" />
     <result column="father_name" jdbcType="VARCHAR" property="fatherName" />
     <result column="father_mobile" jdbcType="VARCHAR" property="fatherMobile" />
-    <result column="mother_id" jdbcType="BIGINT" property="motherId" />
     <result column="mother_mobile" jdbcType="VARCHAR" property="motherMobile" />
     <result column="mother_name" jdbcType="VARCHAR" property="motherName" />
     <result column="address" jdbcType="VARCHAR" property="address" />
@@ -23,7 +21,7 @@
   </resultMap>
 
   <sql id="Base_Column_List">
-    id, corpid, parent_id, name, sex, birthday, avatar, father_id, father_name, father_mobile, mother_id,
+    id, corpid, parent_id, name, sex, birthday, avatar, father_name, father_mobile,
     mother_mobile, mother_name, address, state, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -39,14 +37,14 @@
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.BabyInfo" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
     insert into biz_baby_info (id, corpid, parent_id, name,
       sex, birthday, avatar,
-      father_id, father_name, father_mobile,
-      mother_id, mother_mobile, mother_name,
+      father_name, father_mobile,
+      mother_mobile, mother_name,
       address, state, create_time, update_time
       )
     values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR},
       #{sex,jdbcType=TINYINT}, #{birthday,jdbcType=DATE}, #{avatar,jdbcType=VARCHAR},
-      #{fatherId,jdbcType=BIGINT}, #{fatherName,jdbcType=VARCHAR}, #{fatherMobile,jdbcType=VARCHAR},
-      #{motherId,jdbcType=BIGINT}, #{motherMobile,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR},
+      #{fatherName,jdbcType=VARCHAR}, #{fatherMobile,jdbcType=VARCHAR},
+      #{motherMobile,jdbcType=VARCHAR}, #{motherName,jdbcType=VARCHAR},
       #{address,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
@@ -74,17 +72,11 @@
       <if test="avatar != null">
         avatar,
       </if>
-      <if test="fatherId != null">
-        father_id,
-      </if>
       <if test="fatherName != null">
         father_name,
       </if>
       <if test="fatherMobile != null">
         father_mobile,
-      </if>
-      <if test="motherId != null">
-        mother_id,
       </if>
       <if test="motherMobile != null">
         mother_mobile,
@@ -127,17 +119,11 @@
       <if test="avatar != null">
         #{avatar,jdbcType=VARCHAR},
       </if>
-      <if test="fatherId != null">
-        #{fatherId,jdbcType=BIGINT},
-      </if>
       <if test="fatherName != null">
         #{fatherName,jdbcType=VARCHAR},
       </if>
       <if test="fatherMobile != null">
         #{fatherMobile,jdbcType=VARCHAR},
-      </if>
-      <if test="motherId != null">
-        #{motherId,jdbcType=BIGINT},
       </if>
       <if test="motherMobile != null">
         #{motherMobile,jdbcType=VARCHAR},
@@ -180,17 +166,11 @@
       <if test="avatar != null">
         avatar = #{avatar,jdbcType=VARCHAR},
       </if>
-      <if test="fatherId != null">
-        father_id = #{fatherId,jdbcType=BIGINT},
-      </if>
       <if test="fatherName != null">
         father_name = #{fatherName,jdbcType=VARCHAR},
       </if>
       <if test="fatherMobile != null">
         father_mobile = #{fatherMobile,jdbcType=VARCHAR},
-      </if>
-      <if test="motherId != null">
-        mother_id = #{motherId,jdbcType=BIGINT},
       </if>
       <if test="motherMobile != null">
         mother_mobile = #{motherMobile,jdbcType=VARCHAR},
@@ -221,10 +201,8 @@
       sex = #{sex,jdbcType=TINYINT},
       birthday = #{birthday,jdbcType=DATE},
       avatar = #{avatar,jdbcType=VARCHAR},
-      father_id = #{fatherId,jdbcType=BIGINT},
       father_name = #{fatherName,jdbcType=VARCHAR},
       father_mobile = #{fatherMobile,jdbcType=VARCHAR},
-      mother_id = #{motherId,jdbcType=BIGINT},
       mother_mobile = #{motherMobile,jdbcType=VARCHAR},
       mother_name = #{motherName,jdbcType=VARCHAR},
        address = #{address,jdbcType=VARCHAR},
@@ -448,8 +426,8 @@ WHERE
         a.mother_mobile motherMobile,
         m.active motherActive
     FROM biz_baby_info a
-    LEFT JOIN biz_user_info f ON a.father_id = f.id
-    LEFT JOIN biz_user_info m ON a.mother_id = m.id
+    LEFT JOIN biz_user_info f ON a.father_mobile = f.mobile
+    LEFT JOIN biz_user_info m ON a.mother_mobile = f.mobile
     where a.id = #{id,jdbcType=BIGINT}
   </select>
   <select id="overdueCount" resultType="java.util.Map">
@@ -522,6 +500,8 @@ WHERE
         biz_baby_info a
     WHERE
         a.state = 1
-        and (a.parent_id = #{parentId,jdbcType=BIGINT} OR a.father_id = #{parentId,jdbcType=BIGINT} OR a.mother_id = #{parentId,jdbcType=BIGINT})
+        and (a.parent_id = #{parentId,jdbcType=BIGINT}
+            OR a.father_mobile = #{mobile,jdbcType=VARCHAR}
+            OR a.mother_mobile = #{mobile,jdbcType=VARCHAR})
   </select>
 </mapper>
