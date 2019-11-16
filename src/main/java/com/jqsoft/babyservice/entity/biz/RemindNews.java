@@ -5,25 +5,26 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 提醒消息
+ */
 @Data
-public class WorkTime implements Serializable {
+public class RemindNews implements Serializable {
     private Long id;
 
     private String corpid;
 
-    private Byte monday;
+    private Long examinationId;
 
-    private Byte tuesday;
+    private String title;
 
-    private Byte wednesday;
+    private String context;
 
-    private Byte thursday;
+    private Byte type;
 
-    private Byte friday;
+    private Byte signIn;
 
-    private Byte saturday;
-
-    private Byte sunday;
+    private Byte confirm;
 
     private Date createTime;
 

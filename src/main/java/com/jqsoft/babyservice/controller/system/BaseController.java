@@ -56,4 +56,11 @@ public abstract class BaseController {
     }
 
 
+    /**
+     * 获取当前用户ID
+     * @return
+     */
+    public Long getUserId(){
+        return this.getUser().getId();
+    }
 }

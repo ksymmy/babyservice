@@ -2,6 +2,7 @@ package com.jqsoft.babyservice.mapper.biz;
 
 import com.jqsoft.babyservice.entity.biz.WorkTime;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface WorkTimeMapper {
@@ -16,4 +17,6 @@ public interface WorkTimeMapper {
     int updateByPrimaryKeySelective(WorkTime record);
 
     int updateByPrimaryKey(WorkTime record);
+
+    WorkTime getWorkTimeByCorpid(@Param("corpid") String corpid);
 }

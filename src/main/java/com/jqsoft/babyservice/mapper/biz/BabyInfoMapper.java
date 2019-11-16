@@ -53,4 +53,6 @@ public interface BabyInfoMapper {
 
     Map allBabysCount(@Param("corpid") String corpid);
 
+    List<BabyInfo> myBabys(@Param("parentId") Long parentId);
+
 }
