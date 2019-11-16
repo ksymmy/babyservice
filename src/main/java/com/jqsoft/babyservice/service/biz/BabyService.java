@@ -168,7 +168,7 @@ public class BabyService {
      * @param babyId
      * @return
      */
-    public RestVo delBabyInfo(Long babyId, Long parentId) {
+    public RestVo delBabyInfo(Long babyId, Long parentId, String mobile) {
         if (null == babyId) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -178,8 +178,8 @@ public class BabyService {
         }
         // 判断删除的宝宝是否为当前操作人的子女
         if (!(null != babyInfo.getParentId() && parentId == babyInfo.getParentId().longValue())
-                || (null != babyInfo.getFatherId() && parentId == babyInfo.getFatherId().longValue())
-                || (null != babyInfo.getMotherId() && parentId == babyInfo.getMotherId().longValue())) {
+                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(mobile) && mobile.equals(babyInfo.getFatherMobile()))
+                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(mobile) && mobile.equals(babyInfo.getMotherMobile()))) {
             return RestVo.FAIL(ResultMsg.NO_AUTH_DEL_BABY);
         }
 
@@ -202,8 +202,6 @@ public class BabyService {
         babyInfo.setCorpid(corpid);
         babyInfo.setState((byte) 1);
         babyInfo.setId(null);
-        babyInfo.setFatherId(null);
-        babyInfo.setMotherId(null);
         Date now = new Date();
         babyInfo.setCreateTime(now);
         babyInfo.setUpdateTime(now);

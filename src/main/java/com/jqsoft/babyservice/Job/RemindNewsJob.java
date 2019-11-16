@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -43,9 +42,9 @@ public class RemindNewsJob {
     @Value("${remind.template2}")
     private String remindTemplate2;
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
 //    @Scheduled(cron = "${job.cron.remindNewsJob}")
-    private void remindNewsJob() {
+    public void remindNewsJob() {
         log.info("定时提醒任务-开始");
         // 获取所有需要提醒的体检计划
         Date now = new Date();

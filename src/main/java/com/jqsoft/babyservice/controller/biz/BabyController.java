@@ -1,5 +1,6 @@
 package com.jqsoft.babyservice.controller.biz;
 
+import com.jqsoft.babyservice.Job.RemindNewsJob;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
@@ -7,7 +8,6 @@ import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
-import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +30,7 @@ public class BabyController extends BaseController {
     public BabyService babyService;
 
     @Resource
-    private ExaminationInfoMapper examinationInfoMapper;
+    private RemindNewsJob remindNewsJob;
 
     //******************************************* 医生端接口 *************************************************************
 
@@ -196,7 +196,8 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("delBaby")
     public RestVo delBabyInfo(Long id) {
-        return babyService.delBabyInfo(id, this.getUser().getId());
+        UserInfo user = this.getUser();
+        return babyService.delBabyInfo(id, user.getId(), user.getMobile());
     }
 
     /**
@@ -209,5 +210,10 @@ public class BabyController extends BaseController {
     @RequestMapping("addBabyInfo")
     public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo) {
         return babyService.addBabyInfo(babyInfo, this.getUser().getId(), this.getDdCorpid());
+    }
+
+    @RequestMapping("test")
+    public void test(){
+        remindNewsJob.remindNewsJob();
     }
 }
