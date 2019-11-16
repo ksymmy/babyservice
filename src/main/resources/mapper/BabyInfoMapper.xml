@@ -269,7 +269,7 @@
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
-      <if test="param.dingTimes != null and '' != param.dingTimes">
+      <if test="param.dingTimes != null">
           <choose>
               <when test="param.dingTimes == 3 ">
                   and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
@@ -310,7 +310,7 @@ WHERE
         x.examination_date ) FROM biz_examination_info x WHERE x.examination_date &lt;= CURRENT_DATE AND x.baby_id =
         a.id )) age,
         (SELECT min( y.examination_date ) FROM biz_examination_info y WHERE y.examination_date &gt;= CURRENT_DATE AND
-        y.sign_in = 0 AND y.baby_id = a.id) nextExaminationDate
+        y.sign_in = 0 AND y.baby_id = a.id) textTime
         FROM biz_baby_info a where a.state = 1 AND a.corpid = #{corpid}
         ) baby
         <where>

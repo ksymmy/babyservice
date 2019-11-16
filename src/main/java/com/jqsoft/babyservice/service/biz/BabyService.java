@@ -94,4 +94,8 @@ public class BabyService {
         babyInfo.setState((byte) 0);
         return RestVo.SUCCESS(babyInfoMapper.updateByPrimaryKeySelective(babyInfo));
     }
+
+    public RestVo getBabyInfo(Long babyid) {
+        return RestVo.SUCCESS(babyInfoMapper.selectByPrimaryKey(babyid));
+    }
 }
