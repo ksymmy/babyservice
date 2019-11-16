@@ -233,6 +233,72 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <select id="overdueDingUserid" resultType="string">
+        select DISTINCT(u.userid) from biz_user_info u where u.mobile in (
+        select m.father_mobile from biz_baby_info m where m.corpid = #{corpid} and m.father_mobile is not null and
+        EXISTS (select 1 from
+        ( select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type age,
+        b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
+        from biz_examination_info a,
+        (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
+        where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
+        biz_baby_info c
+        where a.baby_id = b.baby_id and a.examination_date = b.examinationDate and b.baby_id = c.id
+        and c.state = 1 and a.sign_in = 0
+        <if test="overdueStart != null and '' != overdueStart">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) > #{overdueStart,jdbcType=INTEGER}
+        </if>
+        <if test="overdueEnd != null and '' != overdueEnd">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{overdueEnd,jdbcType=INTEGER}
+        </if>
+        <if test="age != null">
+            and a.examination_type = #{age,jdbcType=INTEGER}
+        </if>
+        <if test="dingTimes != null">
+            <choose>
+                <when test="dingTimes == 3 ">
+                    and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                </when>
+                <otherwise>
+                    and a.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                </otherwise>
+            </choose>
+        </if>
+        ) m1 where m1.babyId = m.id )
+        UNION
+        select m.mother_mobile from biz_baby_info m where m.corpid = #{corpid} and m.mother_mobile is not null and
+        EXISTS (select 1 from
+        ( select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type age,
+        b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
+        from biz_examination_info a,
+        (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
+        where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
+        biz_baby_info c
+        where a.baby_id = b.baby_id and a.examination_date = b.examinationDate and b.baby_id = c.id
+        and c.state = 1 and a.sign_in = 0
+        <if test="overdueStart != null and '' != overdueStart">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) > #{overdueStart,jdbcType=INTEGER}
+        </if>
+        <if test="overdueEnd != null and '' != overdueEnd">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{overdueEnd,jdbcType=INTEGER}
+        </if>
+        <if test="age != null">
+            and a.examination_type = #{age,jdbcType=INTEGER}
+        </if>
+        <if test="dingTimes != null">
+            <choose>
+                <when test="dingTimes == 3 ">
+                    and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                </when>
+                <otherwise>
+                    and a.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                </otherwise>
+            </choose>
+        </if>
+        ) m1 where m1.babyId = m.id )
+        ) and u.corpid = #{corpid}
+
+    </select>
     <select id="overListCount" resultType="map">
         SELECT
         x.examination_type examinationType,
