@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.RemindNewsMapper">
+  <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.RemindNews">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
+    <result column="examination_id" jdbcType="BIGINT" property="examinationId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="context" jdbcType="VARCHAR" property="context" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="sign_in" jdbcType="TINYINT" property="signIn" />
+    <result column="confirm" jdbcType="TINYINT" property="confirm" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, corpid, examination_id, title, context, type, sign_in, confirm, create_time, 
+    update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from biz_remind_news
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_remind_news
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
+    insert into biz_remind_news (id, corpid, examination_id, 
+      title, context, type, 
+      sign_in, confirm, create_time, 
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{examinationId,jdbcType=BIGINT}, 
+      #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
+      #{signIn,jdbcType=TINYINT}, #{confirm,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
+    insert into biz_remind_news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="corpid != null">
+        corpid,
+      </if>
+      <if test="examinationId != null">
+        examination_id,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="context != null">
+        context,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="signIn != null">
+        sign_in,
+      </if>
+      <if test="confirm != null">
+        confirm,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="corpid != null">
+        #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="examinationId != null">
+        #{examinationId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="context != null">
+        #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="signIn != null">
+        #{signIn,jdbcType=TINYINT},
+      </if>
+      <if test="confirm != null">
+        #{confirm,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
+    update biz_remind_news
+    <set>
+      <if test="corpid != null">
+        corpid = #{corpid,jdbcType=VARCHAR},
+      </if>
+      <if test="examinationId != null">
+        examination_id = #{examinationId,jdbcType=BIGINT},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="context != null">
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="signIn != null">
+        sign_in = #{signIn,jdbcType=TINYINT},
+      </if>
+      <if test="confirm != null">
+        confirm = #{confirm,jdbcType=TINYINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
+    update biz_remind_news
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      examination_id = #{examinationId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      context = #{context,jdbcType=VARCHAR},
+      type = #{type,jdbcType=TINYINT},
+      sign_in = #{signIn,jdbcType=TINYINT},
+      confirm = #{confirm,jdbcType=TINYINT},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
