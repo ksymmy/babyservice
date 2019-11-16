@@ -313,8 +313,8 @@
 	b.name,
 	b.sex,
 	b.birthday,
-	a.examination_type examinationType,
-	a.examination_date examinationDate,
+	a.examination_type age,
+	a.examination_date textTime,
 	-2 overdueDays
 FROM
 	biz_examination_info a
@@ -357,10 +357,10 @@ WHERE
         b.name,
         b.sex,
         b.birthday,
-        a.examination_type examinationType,
-        a.old_examination_date oldExaminationDate,
-        a.examination_date examinationDate,
-        IFNULL( a.change_date_reason, '' ) changeDateReason
+        a.examination_type age,
+        a.old_examination_date textTime,
+        a.examination_date changeTime,
+        IFNULL( a.change_date_reason, '' ) result
     FROM
         biz_examination_info a
         LEFT JOIN biz_baby_info b ON a.baby_id = b.id
@@ -369,7 +369,7 @@ WHERE
         AND old_examination_date IS NOT NULL
         AND sign_in = 0
         AND examination_date >= CURRENT_DATE
-        ORDER BY a.examination_type
+        ORDER BY a.examination_date
         limit #{offset},#{size}
     </select>
   <select id="getBabyParentInfo" resultType="map">

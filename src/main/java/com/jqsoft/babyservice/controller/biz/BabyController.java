@@ -6,12 +6,13 @@ import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
+import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -24,10 +25,14 @@ import java.util.Map;
 @RequestMapping("/baby")
 public class BabyController extends BaseController {
 
-    @Autowired
+    @Resource
     public BabyService babyService;
 
+    @Resource
+    private ExaminationInfoMapper examinationInfoMapper;
+
     //******************************************* 医生端接口 *************************************************************
+
     /**
      * 医生端-首页统计
      *
@@ -111,10 +116,11 @@ public class BabyController extends BaseController {
      * 医生端-明日体检-延后一天
      *
      * @param examId 体检id
+     * @param corpid corpid
      */
     @PostMapping("/delayoneday")
-    public RestVo delayOneDay(Long examId) {
-        return babyService.delayOneDay(examId);
+    public RestVo delayOneDay(Long examId, @RequestHeader("corpid") String corpid) {
+        return babyService.delayOneDay(examId, corpid);
     }
 
     /**
@@ -152,35 +158,39 @@ public class BabyController extends BaseController {
 
 
     //******************************************* 医生端接口 *************************************************************
+
     /**
      * 家长端--获取我的宝宝信息
+     *
      * @return
      */
     @ParentCheck
     @RequestMapping("myBabys")
-    public RestVo myBabys(){
+    public RestVo myBabys() {
         return babyService.myBabys(this.getUserId());
     }
 
     /**
      * 家长端-删除宝宝信息
+     *
      * @param id
      * @return
      */
     @ParentCheck
     @RequestMapping("delBaby")
-    public RestVo delBabyInfo(Long id){
-        return babyService.delBabyInfo(id,this.getUser().getId());
+    public RestVo delBabyInfo(Long id) {
+        return babyService.delBabyInfo(id, this.getUser().getId());
     }
 
     /**
      * 家长端-保存宝宝信息
+     *
      * @param babyInfo
      * @return
      */
     @ParentCheck
     @RequestMapping("addBabyInfo")
-    public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo){
-        return babyService.addBabyInfo(babyInfo,this.getUser().getId(), this.getDdCorpid());
+    public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo) {
+        return babyService.addBabyInfo(babyInfo, this.getUser().getId(), this.getDdCorpid());
     }
 }

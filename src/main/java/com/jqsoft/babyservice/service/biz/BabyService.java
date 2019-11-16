@@ -103,10 +103,10 @@ public class BabyService {
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
-    public RestVo delayOneDay(Long id) {
-//        ExaminationInfo entity = new ExaminationInfo();
-//        entity.setId(id);
-        return RestVo.SUCCESS();
+    public RestVo delayOneDay(Long id, String corpid) {
+        ExaminationInfo entity = examinationInfoMapper.selectByPrimaryKey(id);
+        entity.setExaminationDate(this.getExaminationDate(corpid, entity.getExaminationDate()));
+        return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
     public RestVo cancelBaby(Long id) {
@@ -236,6 +236,12 @@ public class BabyService {
     }
 
 
+    /**
+     * 获取下个一个工作日: 先过滤医院假日,在过滤法定节日
+     *
+     * @param corpid:corpid
+     * @param date:待延期的日期
+     */
     public Date getExaminationDate(String corpid, Date date) {
         if (null == date) {
             return null;
