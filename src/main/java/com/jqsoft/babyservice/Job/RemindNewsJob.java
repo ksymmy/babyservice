@@ -62,7 +62,6 @@ public class RemindNewsJob {
                     RemindNews news = new RemindNews();
                     news.setExaminationId(info.getId());
                     news.setSignIn((byte)0);
-                    news.setConfirm((byte)0);
                     news.setCreateTime(now);
                     news.setUpdateTime(now);
                     String age = info.getExaminationType() == 1 ? "满月" : info.getExaminationType() + "月龄";

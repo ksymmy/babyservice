@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface ExaminationInfoMapper {
@@ -25,4 +26,8 @@ public interface ExaminationInfoMapper {
     void batchInsert(List<ExaminationInfo> infos);
 
     List<ExaminationInfo> getNeedRemindExaminationInfoList(int offset, int size);
+
+     void examinationConfirmByNewsId(Long id);
+
+    Map<String,String> applyDelay(Long newsId);
 }

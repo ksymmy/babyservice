@@ -27,7 +27,7 @@ public class ExaminationInfo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8", locale = "zh")
     private Date oldExaminationDate;
 
-    private String changeDateReason;
+    private String delayReason;
 
     private Short overdueDays;
 
@@ -40,6 +40,8 @@ public class ExaminationInfo implements Serializable {
     private Date updateTime;
 
     private String babyName;
+
+    private Byte confirm;
 
     private String userid;
 

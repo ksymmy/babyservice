@@ -24,8 +24,6 @@ public class RemindNews implements Serializable {
 
     private Byte signIn;
 
-    private Byte confirm;
-
     private Date createTime;
 
     private Date updateTime;
