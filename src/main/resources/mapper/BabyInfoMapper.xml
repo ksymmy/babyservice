@@ -291,7 +291,7 @@
         biz_examination_info a
         WHERE
         a.examination_date &lt; CURRENT_DATE AND a.sign_in = 0
-        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 AND a.corpid = #{corpid} )
+        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 )
         GROUP BY a.baby_id
         ) y ON ( x.baby_id = y.baby_id AND x.examination_date = y.maxdate )
         <where>
@@ -301,7 +301,7 @@
             <if test="overdueEnd != null and '' != overdueEnd">
                 and DATEDIFF(CURRENT_DATE,y.maxdate) &lt;= #{overdueEnd,jdbcType=INTEGER}
             </if>
-            <if test="dingTimes != null and '' != dingTimes">
+            <if test="dingTimes != null">
                 <choose>
                     <when test="dingTimes == 3 ">
                         and x.ding_times >= #{dingTimes,jdbcType=SMALLINT}

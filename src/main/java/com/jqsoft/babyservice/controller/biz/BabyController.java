@@ -103,6 +103,7 @@ public class BabyController extends BaseController {
      * @param babyid babyid
      * @param corpid corpid
      */
+    @Deprecated
     @GetMapping("/babyinfo")
     public RestVo babyInfo(Long babyid, @RequestHeader("corpid") String corpid) {
         return babyService.getBabyInfo(babyid, corpid);
@@ -113,7 +114,6 @@ public class BabyController extends BaseController {
      *
      * @param babyid babyid
      */
-    @Deprecated
     @GetMapping("/babyparentinfo")
     public RestVo babyParentInfo(Long babyid) {
         return babyService.getBabyParentInfo(babyid);
@@ -230,45 +230,49 @@ public class BabyController extends BaseController {
 
     /**
      * 家长端-消息列表
+     *
      * @param pageBo
      * @return
      */
     @ParentCheck
     @RequestMapping("remindNewsList")
-    public RestVo remindNewsList(@RequestBody PageBo<Map<String, Object>> pageBo){
+    public RestVo remindNewsList(@RequestBody PageBo<Map<String, Object>> pageBo) {
         return remindNewsService.remindNewsList(pageBo, this.getUserId());
     }
 
     /**
      * 家长端-确认可以按时体检
+     *
      * @param examinationId
      * @return
      */
     @ParentCheck
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long examinationId){
+    public RestVo examinationConfirm(Long examinationId) {
         return examinationService.examinationConfirm(examinationId);
     }
 
     /**
      * 家长端-签到
+     *
      * @param examinationId
      * @return
      */
     @ParentCheck
     @RequestMapping("signIn")
-    public RestVo signIn(Long examinationId){
+    public RestVo signIn(Long examinationId) {
         return examinationService.signIn(examinationId);
     }
 
     /**
      * 家长端-申请延期
+     *
      * @param examinationId
      * @return
      */
     @ParentCheck
     @RequestMapping("applyDelay")
-    public RestVo applyDelay(Long examinationId){
+    public RestVo applyDelay(Long examinationId) {
         return examinationService.applyDelay(examinationId);
     }
 
@@ -280,7 +284,7 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("confirmDelay")
-    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
+    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern = "yyyy-MM-dd") Date delayDate, String delayReason) {
         return examinationService.confirmDelay(this.getDdCorpid(), examinationId, delayDate, delayReason);
     }
 
