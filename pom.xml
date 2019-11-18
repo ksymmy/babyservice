@@ -71,12 +71,12 @@
 
         <!-- database begin-->
         <!-- mybatis -->
-       <!-- <dependency>
-            <groupId>org.mybatis.generator</groupId>
-            <artifactId>mybatis-generator-core</artifactId>
-            <type>jar</type>
-            <scope>test</scope>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>org.mybatis.generator</groupId>
+             <artifactId>mybatis-generator-core</artifactId>
+             <type>jar</type>
+             <scope>test</scope>
+         </dependency>-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -113,15 +113,15 @@
         </dependency>
 
         <!-- Swagger2 -->
-      <!--  <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-        </dependency>
+        <!--  <dependency>
+              <groupId>io.springfox</groupId>
+              <artifactId>springfox-swagger2</artifactId>
+          </dependency>
 
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>-->
+          <dependency>
+              <groupId>io.springfox</groupId>
+              <artifactId>springfox-swagger-ui</artifactId>
+          </dependency>-->
 
 
         <!--aliyunOSS-->
@@ -148,7 +148,7 @@
             <artifactId>top-api-sdk-dev</artifactId>
             <version>dingtalk-SNAPSHOT</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/lib/taobao-sdk-java-auto_1479188381469-20190905.jar</systemPath>
+            <systemPath>${pom.basedir}/lib/taobao-sdk-java-auto_1479188381469-20191114.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.taobao.top</groupId>

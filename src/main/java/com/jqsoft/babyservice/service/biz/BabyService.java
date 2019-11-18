@@ -1,14 +1,20 @@
 package com.jqsoft.babyservice.service.biz;
 
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiUserGetByMobileRequest;
+import com.dingtalk.api.response.OapiUserGetByMobileResponse;
 import com.jqsoft.babyservice.commons.bo.PageBo;
+import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
+import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
-import com.jqsoft.babyservice.mapper.biz.UserInfoMapper;
+import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -36,7 +43,10 @@ public class BabyService {
     private WorkTimeService workTimeService;
 
     @Resource
-    private UserInfoMapper userInfoMapper;
+    private RedisUtils redisUtils;
+
+    @Resource
+    private LoginService loginService;
 
     public RestVo overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes, corpid));
@@ -262,5 +272,23 @@ public class BabyService {
     }
 
 
-
+    public RestVo getUseridByMobile(String mobile) {
+        String key = RedisKey.LOGIN_MOBILE_USERID.getKey(mobile);
+        if (null != redisUtils.get(key)) {
+            return RestVo.SUCCESS(redisUtils.get(key));
+        }
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get_by_mobile");
+        OapiUserGetByMobileRequest request = new OapiUserGetByMobileRequest();
+        request.setMobile(mobile);
+        OapiUserGetByMobileResponse execute;
+        try {
+            execute = client.execute(request, loginService.getAccessToken());
+            String userid = execute.getUserid();
+            if (StringUtils.isNotBlank(userid)) redisUtils.add(key, userid, 30, TimeUnit.DAYS);
+            return RestVo.SUCCESS(userid);
+        } catch (ApiException e) {
+            e.printStackTrace();
+            return RestVo.FAIL();
+        }
+    }
 }

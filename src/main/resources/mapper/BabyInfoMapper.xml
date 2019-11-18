@@ -427,7 +427,7 @@ WHERE
         m.active motherActive
     FROM biz_baby_info a
     LEFT JOIN biz_user_info f ON a.father_mobile = f.mobile
-    LEFT JOIN biz_user_info m ON a.mother_mobile = f.mobile
+    LEFT JOIN biz_user_info m ON a.mother_mobile = m.mobile
     where a.id = #{id,jdbcType=BIGINT}
   </select>
   <select id="overdueCount" resultType="java.util.Map">

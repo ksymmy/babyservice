@@ -83,6 +83,16 @@ public class BabyController extends BaseController {
     }
 
     /**
+     * 根据手机号获取userid
+     *
+     * @param mobile:
+     */
+    @GetMapping("/getuseridbbymobile")
+    public RestVo getUseridBbyMobile(String mobile) {
+        return babyService.getUseridByMobile(mobile);
+    }
+
+    /**
      * 获取DING 对象的userid
      *
      * @param overdueStart 逾期时间起
