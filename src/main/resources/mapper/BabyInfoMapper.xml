@@ -412,6 +412,7 @@ WHERE
         b.corpid = #{corpid}
         AND old_examination_date IS NOT NULL
         AND sign_in = 0
+        AND b.state = 1
         AND examination_date >= CURRENT_DATE
         ORDER BY a.examination_date
         limit #{offset},#{size}
