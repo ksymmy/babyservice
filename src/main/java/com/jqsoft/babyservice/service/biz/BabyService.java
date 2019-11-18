@@ -2,12 +2,10 @@ package com.jqsoft.babyservice.service.biz;
 
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
-import com.jqsoft.babyservice.commons.utils.DateUtil;
 import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
-import com.jqsoft.babyservice.entity.biz.WorkTime;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.UserInfoMapper;
@@ -229,99 +227,33 @@ public class BabyService {
             examinationInfoMapper.insert(info);
         }
 
-
         return RestVo.SUCCESS();
     }
 
 
     /**
-     * 获取下个一个工作日: 先过滤医院假日,在过滤法定节日
+     * 判断当前日期是否为有效工作日，如果不是则获取下一个有效工作日: 1.不是法定节假日 2.在医院工作时间
      *
      * @param corpid:corpid
-     * @param date:待延期的日期
+     * @param date:延期的日期
      */
     public Date getExaminationDate(String corpid, Date date) {
-        if (null == date) {
+        if (null == date || date.before(new Date())) {
             return null;
         }
-        WorkTime workTime = workTimeService.getWorkTimeByCorpid(corpid);
-        if (null == workTime
-                || (workTime.getMonday() == 0
-                && workTime.getTuesday() == 0
-                && workTime.getWednesday() == 0
-                && workTime.getThursday() == 0
-                && workTime.getFriday() == 0
-                && workTime.getSaturday() == 0
-                && workTime.getSunday() == 0)) {
-            workTime = new WorkTime();
-            workTime.setMonday((byte) 1);
-            workTime.setTuesday((byte) 1);
-            workTime.setWednesday((byte) 1);
-            workTime.setThursday((byte) 1);
-            workTime.setFriday((byte) 1);
-            workTime.setSaturday((byte) 0);
-            workTime.setSunday((byte) 0);
-        }
 
-        // 判断是否在节假日期间
+        // 判断是否是节假日或者不在医院工作时间
         int i = 0;// 往后判断30天
-        while (LunarSolarConverter.isHolidays(date)) {
+        while (LunarSolarConverter.isHolidays(date) || !(workTimeService.isWorkTime(corpid, date))) {
             if (++i >= 30) {
                 return null;
             }
             date = DateUtils.addDays(date, 1);
         }
 
-        // 计算日期是星期几
-        int day = DateUtil.getDayOfWeek(date);
-        // 判断日期是否在医院上班时间，不在则往后延一天继续判断
-        while (!((day == 1 && workTime.getMonday() == 1)
-                || (day == 2 && workTime.getTuesday() == 1)
-                || (day == 3 && workTime.getWednesday() == 1)
-                || (day == 4 && workTime.getThursday() == 1)
-                || (day == 5 && workTime.getFriday() == 1)
-                || (day == 6 && workTime.getSaturday() == 1)
-                || (day == 7 && workTime.getSunday() == 1))) {
-            if (++i >= 30) {
-                return null;
-            }
-            date = DateUtils.addDays(date, 1);
-            day = DateUtil.getDayOfWeek(date);
-        }
         return date;
     }
 
-    public boolean isWorkTime(String corpid, Date date){
-        WorkTime workTime = workTimeService.getWorkTimeByCorpid(corpid);
-        if (null == workTime
-                || (workTime.getMonday() == 0
-                && workTime.getTuesday() == 0
-                && workTime.getWednesday() == 0
-                && workTime.getThursday() == 0
-                && workTime.getFriday() == 0
-                && workTime.getSaturday() == 0
-                && workTime.getSunday() == 0)) {
-            workTime = new WorkTime();
-            workTime.setMonday((byte) 1);
-            workTime.setTuesday((byte) 1);
-            workTime.setWednesday((byte) 1);
-            workTime.setThursday((byte) 1);
-            workTime.setFriday((byte) 1);
-            workTime.setSaturday((byte) 0);
-            workTime.setSunday((byte) 0);
-        }
-        // 计算日期是星期几
-        int day = DateUtil.getDayOfWeek(date);
-        if ((day == 1 && workTime.getMonday() == 1)
-                || (day == 2 && workTime.getTuesday() == 1)
-                || (day == 3 && workTime.getWednesday() == 1)
-                || (day == 4 && workTime.getThursday() == 1)
-                || (day == 5 && workTime.getFriday() == 1)
-                || (day == 6 && workTime.getSaturday() == 1)
-                || (day == 7 && workTime.getSunday() == 1)) {
-            return true;
-        }
-        return false;
-    }
+
 
 }

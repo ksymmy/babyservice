@@ -12,6 +12,7 @@ import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -236,8 +237,8 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("confirmDelay")
-    public RestVo confirmDelay(Long examinationId, Date delayDate, String delayReason){
-        return examinationService.confirmDelay(examinationId, delayDate, delayReason);
+    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
+        return examinationService.confirmDelay(this.getDdCorpid(), examinationId, delayDate, delayReason);
     }
 
     @RequestMapping("test")

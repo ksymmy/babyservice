@@ -1,6 +1,7 @@
 package com.jqsoft.babyservice.service.biz;
 
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
+import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
@@ -20,8 +21,12 @@ import java.util.Map;
 @Slf4j
 @Service
 public class ExaminationService {
+
     @Resource
     private ExaminationInfoMapper examinationInfoMapper;
+
+    @Resource
+    private WorkTimeService workTimeService;
 
     /**
      * 家长端-确认可以正常体检
@@ -65,7 +70,52 @@ public class ExaminationService {
      * @param delayReason
      * @return
      */
-    public RestVo confirmDelay(Long examinationId, Date delayDate, String delayReason){
+    public RestVo confirmDelay(String corpid, Long examinationId, Date delayDate, String delayReason){
+        if (null == examinationId || null == delayDate) {
+            return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+
+        Date now = new Date();
+        if (DateUtils.isSameDay(delayDate, now) || delayDate.before(now)) {
+            return RestVo.FAIL(ResultMsg.BEFORE_TIME);
+        }
+
+        ExaminationInfo examinationInfo = examinationInfoMapper.selectByPrimaryKey(examinationId);
+        if (null == examinationInfo) {
+            return RestVo.FAIL(ResultMsg.DATA_NOT_EXISTS);
+        }
+
+        // 判断延期日期是否在一个月以内
+        Date maxDate = DateUtils.addMonths(examinationInfo.getExaminationDate(), 1);
+        if (delayDate.after(maxDate)) {
+            return RestVo.FAIL(ResultMsg.NOT_IN_ONE_MONTH);
+        }
+
+        // 是否是法定节假日
+        boolean isHolidays = LunarSolarConverter.isHolidays(delayDate);
+        if (!isHolidays) {
+            return RestVo.FAIL(ResultMsg.IN_HOLIDAYS);
+        }
+
+        // 是否在医院不上班时间
+        boolean isWorkTime = workTimeService.isWorkTime(corpid,delayDate);
+        if (!isWorkTime) {
+            return RestVo.FAIL(ResultMsg.NOT_IN_WORK_TIME);
+        }
+
+        examinationInfoMapper.confirmDelay(examinationId, delayDate, delayReason);
+
+        return RestVo.SUCCESS();
+    }
+
+    /**
+     * 校验延期日期是否有效
+     * @param corpid
+     * @param examinationId
+     * @param delayDate
+     * @return
+     */
+    /*public RestVo checkDelayDate(String corpid, Long examinationId, Date delayDate){
         if (null == examinationId || null == delayDate) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -82,12 +132,18 @@ public class ExaminationService {
         }
 
         // 是否是法定节假日
-//        isWorkTime
+        boolean isHolidays = LunarSolarConverter.isHolidays(delayDate);
+        if (!isHolidays) {
+            return RestVo.FAIL(ResultMsg.IN_HOLIDAYS);
+        }
 
         // 是否在医院不上班时间
-
+        boolean isWorkTime = workTimeService.isWorkTime(corpid,delayDate);
+        if (!isWorkTime) {
+            return RestVo.FAIL(ResultMsg.NOT_IN_WORK_TIME);
+        }
 
         return RestVo.SUCCESS();
-    }
+    }*/
 }
 

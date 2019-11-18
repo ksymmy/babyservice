@@ -4,6 +4,7 @@ import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,4 +31,6 @@ public interface ExaminationInfoMapper {
      void examinationConfirmByNewsId(Long id);
 
     Map<String,String> applyDelay(Long newsId);
+
+    void confirmDelay(Long examinationId, Date delayDate, String delayReason);
 }

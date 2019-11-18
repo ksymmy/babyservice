@@ -29,6 +29,9 @@ public enum ResultMsg {
     DD_GRANT_FAIL("0019","企业钉盘授权失败"),
     DD_GETCORPINFO_FAIL("0020","调用钉钉接口获取企业信息失败"),
     NOT_IN_ONE_MONTH("0021","只能改期一个月以内时间"),
+    NOT_IN_WORK_TIME("0022","不在医院上班时间"),
+    IN_HOLIDAYS("0023","不能选择法定节假日"),
+    BEFORE_TIME("0024","不能选择当天或以前时间"),
     ;
 
     private String code;
