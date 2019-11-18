@@ -373,7 +373,7 @@ WHERE
   </select>
     <select id="allBabysList" resultType="map">
         SELECT * FROM (
-        SELECT a.id,a.name,a.sex,a.birthday,a.corpid,
+        SELECT a.id babyId,a.name,a.sex,a.birthday,a.corpid,
         (SELECT examination_type FROM biz_examination_info WHERE baby_id = a.id AND examination_date =( SELECT max(
         x.examination_date ) FROM biz_examination_info x WHERE x.examination_date &lt;= CURRENT_DATE AND x.baby_id =
         a.id )) age,
@@ -404,7 +404,7 @@ WHERE
         a.examination_type age,
         a.old_examination_date textTime,
         a.examination_date changeTime,
-        IFNULL( a.change_date_reason, '' ) result
+        IFNULL( a.delay_reason, '' ) result
     FROM
         biz_examination_info a
         LEFT JOIN biz_baby_info b ON a.baby_id = b.id
@@ -504,4 +504,8 @@ WHERE
             OR a.father_mobile = #{mobile,jdbcType=VARCHAR}
             OR a.mother_mobile = #{mobile,jdbcType=VARCHAR})
   </select>
+
+    <select id="getBabyInfo" resultType="map">
+
+    </select>
 </mapper>

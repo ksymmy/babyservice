@@ -118,14 +118,15 @@ public class BabyService {
         return RestVo.SUCCESS(babyInfoMapper.updateByPrimaryKeySelective(babyInfo));
     }
 
-    public RestVo getBabyInfo(Long babyid) {
-        return RestVo.SUCCESS(babyInfoMapper.selectByPrimaryKey(babyid));
+    public RestVo getBabyInfo(Long babyid, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.getBabyInfo(babyid, corpid));
     }
 
     /**
      * 医生端-获取我的宝宝信息
+     *
      * @param parentId 必填
-     * @param mobile 可不填
+     * @param mobile   可不填
      * @return
      */
     public RestVo myBabys(Long parentId, String mobile) {

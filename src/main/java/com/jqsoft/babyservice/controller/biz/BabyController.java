@@ -101,10 +101,11 @@ public class BabyController extends BaseController {
      * 医生端-儿童档案
      *
      * @param babyid babyid
+     * @param corpid corpid
      */
     @GetMapping("/babyinfo")
-    public RestVo babyInfo(Long babyid) {
-        return babyService.getBabyInfo(babyid);
+    public RestVo babyInfo(Long babyid, @RequestHeader("corpid") String corpid) {
+        return babyService.getBabyInfo(babyid, corpid);
     }
 
     /**
@@ -273,6 +274,7 @@ public class BabyController extends BaseController {
 
     /**
      * 家长端-确认延期
+     *
      * @param
      * @return
      */
@@ -283,7 +285,7 @@ public class BabyController extends BaseController {
     }
 
     @RequestMapping("test")
-    public void test(String title,String context,String userid){
+    public void test(String title, String context, String userid) {
 //        remindNewsJob.remindNewsJob();
 //        ddUtils.sendDdMessage(title,context,userid);
     }
