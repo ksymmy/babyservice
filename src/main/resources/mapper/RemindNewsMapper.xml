@@ -3,7 +3,6 @@
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.RemindNewsMapper">
   <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.RemindNews">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
     <result column="examination_id" jdbcType="BIGINT" property="examinationId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="context" jdbcType="VARCHAR" property="context" />
@@ -13,7 +12,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpid, examination_id, title, context, type, sign_in, create_time,
+    id, examination_id, title, context, type, sign_in, create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -27,11 +26,11 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
-    insert into biz_remind_news (id, corpid, examination_id, 
+    insert into biz_remind_news (id, examination_id,
       title, context, type, 
       sign_in, create_time,
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{examinationId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{examinationId,jdbcType=BIGINT},
       #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
       #{signIn,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})
@@ -41,9 +40,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="corpid != null">
-        corpid,
       </if>
       <if test="examinationId != null">
         examination_id,
@@ -71,9 +67,6 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="corpid != null">
-        #{corpid,jdbcType=VARCHAR},
-      </if>
       <if test="examinationId != null">
         #{examinationId,jdbcType=BIGINT},
       </if>
@@ -100,9 +93,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
     update biz_remind_news
     <set>
-      <if test="corpid != null">
-        corpid = #{corpid,jdbcType=VARCHAR},
-      </if>
       <if test="examinationId != null">
         examination_id = #{examinationId,jdbcType=BIGINT},
       </if>
@@ -129,7 +119,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
     update biz_remind_news
-    set corpid = #{corpid,jdbcType=VARCHAR},
+    set
       examination_id = #{examinationId,jdbcType=BIGINT},
       title = #{title,jdbcType=VARCHAR},
       context = #{context,jdbcType=VARCHAR},
@@ -140,16 +130,38 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into biz_remind_news (id, corpid, examination_id,
+    insert into biz_remind_news (id, examination_id,
       title, context, type,
       sign_in, create_time,
       update_time)
     values
         <foreach collection="remindNewsList" item="info" separator=",">
-          (#{info.id,jdbcType=BIGINT}, #{info.corpid,jdbcType=VARCHAR}, #{info.examinationId,jdbcType=BIGINT},
+          (#{info.id,jdbcType=BIGINT}, #{info.examinationId,jdbcType=BIGINT},
             #{info.title,jdbcType=VARCHAR}, #{info.context,jdbcType=VARCHAR}, #{info.type,jdbcType=TINYINT},
             #{info.signIn,jdbcType=TINYINT}, #{info.createTime,jdbcType=TIMESTAMP},
             #{info.updateTime,jdbcType=TIMESTAMP})
         </foreach>
   </insert>
+  <select id="remindNewsList" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            biz_remind_news a
+        WHERE
+            EXISTS (
+                SELECT
+                    1
+                FROM
+                    biz_examination_info b,
+                    biz_baby_info c,
+                    biz_user_info d
+                WHERE
+                    a.examination_id = b.id
+                    AND b.baby_id = c.id
+                    AND ( c.parent_id = d.id OR c.father_mobile = d.mobile OR c.mother_mobile = d.mobile )
+                    AND d.id = #{userId,jdbcType=BIGINT}
+                    )
+        ORDER BY a.create_time DESC
+        limit ${offset},${size}
+  </select>
 </mapper>

@@ -30,28 +30,41 @@ public class ExaminationService {
 
     /**
      * 家长端-确认可以正常体检
-     * @param newsId
+     * @param examinationId
      * @return
      */
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long newsId){
-        if (null == newsId) {
+    public RestVo examinationConfirm(Long examinationId){
+        if (null == examinationId) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
-        examinationInfoMapper.examinationConfirmByNewsId(newsId);
+        examinationInfoMapper.examinationConfirm(examinationId);
+        return RestVo.SUCCESS();
+    }
+
+    /**
+     * 家长端-签到
+     * @param examinationId
+     * @return
+     */
+    public RestVo signIn(Long examinationId){
+        if (null == examinationId) {
+            return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+        examinationInfoMapper.signIn(examinationId);
         return RestVo.SUCCESS();
     }
 
     /**
      * 家长端-申请延期
-     * @param newsId
+     * @param examinationId
      * @return
      */
-    public RestVo applyDelay(Long newsId){
-        if (null == newsId) {
+    public RestVo applyDelay(Long examinationId){
+        if (null == examinationId) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
-        Map<String,String> map = examinationInfoMapper.applyDelay(newsId);
+        Map<String,String> map = examinationInfoMapper.applyDelay(examinationId);
         String examinationType = map.get("examinationType");
         if (StringUtils.isNotBlank(examinationType)){
             if ("1".equals(examinationType)) {
@@ -93,7 +106,7 @@ public class ExaminationService {
 
         // 是否是法定节假日
         boolean isHolidays = LunarSolarConverter.isHolidays(delayDate);
-        if (!isHolidays) {
+        if (isHolidays) {
             return RestVo.FAIL(ResultMsg.IN_HOLIDAYS);
         }
 

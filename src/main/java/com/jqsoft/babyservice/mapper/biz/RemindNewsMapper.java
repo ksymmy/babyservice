@@ -21,4 +21,6 @@ public interface RemindNewsMapper {
     int updateByPrimaryKey(RemindNews record);
 
     void batchInsert(@Param("remindNewsList") List<RemindNews> remindNewsList);
+
+    List<RemindNews> remindNewsList(int offset, int size, Long userId);
 }

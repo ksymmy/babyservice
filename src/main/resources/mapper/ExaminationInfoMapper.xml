@@ -3,7 +3,6 @@
 <mapper namespace="com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper">
   <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="corpid" jdbcType="VARCHAR" property="corpid" />
     <result column="baby_id" jdbcType="BIGINT" property="babyId" />
     <result column="examination_date" jdbcType="DATE" property="examinationDate" />
     <result column="examination_type" jdbcType="TINYINT" property="examinationType" />
@@ -20,7 +19,7 @@
     <result column="birthday" jdbcType="DATE" property="birthday" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpid, baby_id, examination_date, examination_type, examination_item, old_examination_date,
+    id, baby_id, examination_date, examination_type, examination_item, old_examination_date,
     delay_reason, overdue_days, ding_times, sign_in, confirm, create_time,
     update_time
   </sql>
@@ -35,12 +34,12 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
-    insert into biz_examination_info (id, corpid, baby_id,
+    insert into biz_examination_info (id, baby_id,
       examination_date, examination_type, examination_item,
       old_examination_date, delay_reason, overdue_days,
       ding_times, sign_in, confirm,
       create_time, update_time)
-    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{babyId,jdbcType=BIGINT},
+    values (#{id,jdbcType=BIGINT}, #{babyId,jdbcType=BIGINT},
       #{examinationDate,jdbcType=DATE}, #{examinationType,jdbcType=TINYINT}, #{examinationItem,jdbcType=VARCHAR},
       #{oldExaminationDate,jdbcType=DATE}, #{delayReason,jdbcType=VARCHAR}, #{overdueDays,jdbcType=SMALLINT},
       #{dingTimes,jdbcType=SMALLINT}, #{signIn,jdbcType=TINYINT}, #{confirm,jdbcType=TINYINT},
@@ -51,9 +50,6 @@
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
-      </if>
-      <if test="corpid != null">
-        corpid,
       </if>
       <if test="babyId != null">
         baby_id,
@@ -96,9 +92,6 @@
       <if test="id != null">
         #{id,jdbcType=BIGINT},
       </if>
-      <if test="corpid != null">
-        #{corpid,jdbcType=VARCHAR},
-      </if>
       <if test="babyId != null">
         #{babyId,jdbcType=BIGINT},
       </if>
@@ -140,9 +133,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     update biz_examination_info
     <set>
-      <if test="corpid != null">
-        corpid = #{corpid,jdbcType=VARCHAR},
-      </if>
       <if test="babyId != null">
         baby_id = #{babyId,jdbcType=BIGINT},
       </if>
@@ -184,7 +174,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     update biz_examination_info
-    set corpid = #{corpid,jdbcType=VARCHAR},
+    set
       baby_id = #{babyId,jdbcType=BIGINT},
       examination_date = #{examinationDate,jdbcType=DATE},
       examination_type = #{examinationType,jdbcType=TINYINT},
@@ -207,14 +197,14 @@
     order by a.examination_type
   </select>
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into biz_examination_info (id, corpid, baby_id,
+    insert into biz_examination_info (id, baby_id,
       examination_date, examination_type, examination_item,
       old_examination_date, delay_reason, overdue_days,
       ding_times, sign_in, confirm,
       create_time, update_time)
     values
       <foreach collection="infos" item="item" separator=",">
-        (#{item.id,jdbcType=BIGINT}, #{item.corpid,jdbcType=VARCHAR}, #{item.babyId,jdbcType=BIGINT},
+        (#{item.id,jdbcType=BIGINT}, #{item.babyId,jdbcType=BIGINT},
         #{item.examinationDate,jdbcType=DATE}, #{item.examinationType,jdbcType=TINYINT}, #{item.examinationItem,jdbcType=VARCHAR},
         #{item.oldExaminationDate,jdbcType=DATE}, #{item.delayReason,jdbcType=VARCHAR}, #{item.overdueDays,jdbcType=SMALLINT},
         #{item.dingTimes,jdbcType=SMALLINT}, #{item.signIn,jdbcType=TINYINT}, #{item.confirm,jdbcType=TINYINT},
@@ -237,10 +227,10 @@
           AND datediff( CURRENT_DATE, a.examination_date ) IN ( - 1, 0, 1, 3, 6 )
           limit ${offset},${size}
   </select>
-  <update id="examinationConfirmByNewsId" parameterType="java.lang.Long">
+  <update id="examinationConfirm" parameterType="java.lang.Long">
         update biz_examination_info a
         set a.confirm = 1
-        where EXISTS(select 1 from biz_remind_news b where b.examination_id = a.id and b.id = #{id,jdbcType=BIGINT})
+        where a.id = #{examinationId,jdbcType=BIGINT})
   </update>
   <select id="applyDelay" resultType="java.util.Map">
     SELECT
@@ -249,11 +239,9 @@
         b.id examinationId
     FROM
         biz_baby_info a,
-        biz_examination_info b,
-        biz_remind_news c
+        biz_examination_info b
     WHERE
-        c.id = #{newsId,jdbcType=BIGINT}
-        AND c.examination_id = b.id
+        b.id = #{examinationId,jdbcType=BIGINT}
         AND b.baby_id = a.id
         limit 1
   </select>
@@ -262,6 +250,11 @@
     SET a.old_examination_date = a.examination_date,
     a.examination_date = #{delayDate,jdbcType=DATE},
     a.delay_reason = #{delayReason,jdbcType=VARCHAR}
+    WHERE a.id = #{examinationId,jdbcType=BIGINT}
+  </update>
+  <update id="signIn">
+    UPDATE biz_examination_info a
+    SET a.sign_in = 1
     WHERE a.id = #{examinationId,jdbcType=BIGINT}
   </update>
 </mapper>
