@@ -4,6 +4,7 @@ import com.jqsoft.babyservice.Job.RemindNewsJob;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
+import com.jqsoft.babyservice.commons.utils.DdUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
@@ -31,6 +32,9 @@ public class BabyController extends BaseController {
 
     @Resource
     private RemindNewsJob remindNewsJob;
+
+    @Resource
+    private DdUtils ddUtils;
 
     //******************************************* 医生端接口 *************************************************************
 
@@ -198,7 +202,8 @@ public class BabyController extends BaseController {
     }
 
     @RequestMapping("test")
-    public void test(){
+    public void test(String title,String context,String userid){
         remindNewsJob.remindNewsJob();
+//        ddUtils.sendDdMessage(title,context,userid);
     }
 }

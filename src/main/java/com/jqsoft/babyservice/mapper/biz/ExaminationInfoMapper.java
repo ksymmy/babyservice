@@ -24,5 +24,5 @@ public interface ExaminationInfoMapper {
 
     void batchInsert(List<ExaminationInfo> infos);
 
-    List<ExaminationInfo> getNeedRemindExaminationInfoList();
+    List<ExaminationInfo> getNeedRemindExaminationInfoList(int offset, int size);
 }
