@@ -11,7 +11,9 @@ import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
+import com.jqsoft.babyservice.service.biz.RemindNewsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +42,9 @@ public class BabyController extends BaseController {
 
     @Resource
     private ExaminationService examinationService;
+
+    @Resource
+    private RemindNewsService remindNewsService;
 
     //******************************************* 医生端接口 *************************************************************
 
@@ -223,25 +228,47 @@ public class BabyController extends BaseController {
 
 
     /**
+     * 家长端-消息列表
+     * @param pageBo
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("remindNewsList")
+    public RestVo remindNewsList(@RequestBody PageBo<Map<String, Object>> pageBo){
+        return remindNewsService.remindNewsList(pageBo, this.getUserId());
+    }
+
+    /**
      * 家长端-确认可以按时体检
-     * @param newsId
+     * @param examinationId
      * @return
      */
     @ParentCheck
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long newsId){
-        return examinationService.examinationConfirm(newsId);
+    public RestVo examinationConfirm(Long examinationId){
+        return examinationService.examinationConfirm(examinationId);
+    }
+
+    /**
+     * 家长端-签到
+     * @param examinationId
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("signIn")
+    public RestVo signIn(Long examinationId){
+        return examinationService.signIn(examinationId);
     }
 
     /**
      * 家长端-申请延期
-     * @param newsId
+     * @param examinationId
      * @return
      */
     @ParentCheck
     @RequestMapping("applyDelay")
-    public RestVo applyDelay(Long newsId){
-        return examinationService.applyDelay(newsId);
+    public RestVo applyDelay(Long examinationId){
+        return examinationService.applyDelay(examinationId);
     }
 
     /**
@@ -251,8 +278,8 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("confirmDelay")
-    public RestVo confirmDelay(Long examinationId, Date delayDate, String delayReason){
-        return examinationService.confirmDelay(examinationId, delayDate, delayReason);
+    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
+        return examinationService.confirmDelay(this.getDdCorpid(), examinationId, delayDate, delayReason);
     }
 
     @RequestMapping("test")

@@ -11,8 +11,6 @@ import java.util.Date;
 public class ExaminationInfo implements Serializable {
     private Long id;
 
-    private String corpid;
-
     private Long babyId;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
