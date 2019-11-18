@@ -38,10 +38,13 @@ public class BabyService {
     @Resource
     private UserInfoMapper userInfoMapper;
 
-    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, String corpid) {
+    public RestVo overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes, corpid));
     }
 
+    public RestVo overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.overdueDingUserid(overdueStart, overdueEnd, dingTimes, age, corpid));
+    }
 
     public RestVo overdueList(PageBo<Map<String, Object>> pageBo, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overdueList(pageBo.getOffset(), pageBo.getSize(), pageBo.getParam(), corpid));
@@ -96,12 +99,14 @@ public class BabyService {
         ExaminationInfo entity = new ExaminationInfo();
         entity.setId(id);
         entity.setSignIn((byte) 1);
+        entity.setUpdateTime(new Date());
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
     public RestVo delayOneDay(Long id, String corpid) {
         ExaminationInfo entity = examinationInfoMapper.selectByPrimaryKey(id);
-        entity.setExaminationDate(this.getExaminationDate(corpid, entity.getExaminationDate()));
+        entity.setExaminationDate(this.getExaminationDate(corpid, DateUtils.addDays(entity.getExaminationDate(), 1)));
+        entity.setUpdateTime(new Date());
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
@@ -109,17 +114,19 @@ public class BabyService {
         BabyInfo babyInfo = new BabyInfo();
         babyInfo.setId(id);
         babyInfo.setState((byte) 0);
+        babyInfo.setUpdateTime(new Date());
         return RestVo.SUCCESS(babyInfoMapper.updateByPrimaryKeySelective(babyInfo));
     }
 
-    public RestVo getBabyInfo(Long babyid) {
-        return RestVo.SUCCESS(babyInfoMapper.selectByPrimaryKey(babyid));
+    public RestVo getBabyInfo(Long babyid, String corpid) {
+        return RestVo.SUCCESS(babyInfoMapper.getBabyInfo(babyid, corpid));
     }
 
     /**
      * 医生端-获取我的宝宝信息
+     *
      * @param parentId 必填
-     * @param mobile 可不填
+     * @param mobile   可不填
      * @return
      */
     public RestVo myBabys(Long parentId, String mobile) {

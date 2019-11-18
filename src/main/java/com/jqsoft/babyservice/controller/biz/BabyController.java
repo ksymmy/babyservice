@@ -68,7 +68,7 @@ public class BabyController extends BaseController {
      * @param dingTimes    钉次数
      */
     @GetMapping("/overduelistcount")
-    public RestVo overListCount(int overdueStart, int overdueEnd, int dingTimes, @RequestHeader("corpid") String corpid) {
+    public RestVo overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, @RequestHeader("corpid") String corpid) {
         return babyService.overListCount(overdueStart, overdueEnd, dingTimes, corpid);
     }
 
@@ -82,15 +82,30 @@ public class BabyController extends BaseController {
         return babyService.overdueList(pageBo, corpid);
     }
 
+    /**
+     * 获取DING 对象的userid
+     *
+     * @param overdueStart 逾期时间起
+     * @param overdueEnd   逾期时间止
+     * @param dingTimes    钉次数
+     * @param age          月龄
+     * @param corpid       corpid
+     */
+    @GetMapping("/overdueDingUserid")
+    public RestVo overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, @RequestHeader("corpid") String corpid) {
+        return babyService.overdueDingUserid(overdueStart, overdueEnd, dingTimes, age, corpid);
+    }
+
 
     /**
      * 医生端-儿童档案
      *
      * @param babyid babyid
+     * @param corpid corpid
      */
     @GetMapping("/babyinfo")
-    public RestVo babyInfo(Long babyid) {
-        return babyService.getBabyInfo(babyid);
+    public RestVo babyInfo(Long babyid, @RequestHeader("corpid") String corpid) {
+        return babyService.getBabyInfo(babyid, corpid);
     }
 
     /**
@@ -133,6 +148,7 @@ public class BabyController extends BaseController {
      * @param examId 体检id
      * @param corpid corpid
      */
+    @Transactional
     @PostMapping("/delayoneday")
     public RestVo delayOneDay(Long examId, @RequestHeader("corpid") String corpid) {
         return babyService.delayOneDay(examId, corpid);
@@ -258,6 +274,7 @@ public class BabyController extends BaseController {
 
     /**
      * 家长端-确认延期
+     *
      * @param
      * @return
      */
@@ -268,7 +285,7 @@ public class BabyController extends BaseController {
     }
 
     @RequestMapping("test")
-    public void test(String title,String context,String userid){
+    public void test(String title, String context, String userid) {
 //        remindNewsJob.remindNewsJob();
 //        ddUtils.sendDdMessage(title,context,userid);
     }

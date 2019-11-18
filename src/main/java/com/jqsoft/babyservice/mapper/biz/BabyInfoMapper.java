@@ -21,7 +21,9 @@ public interface BabyInfoMapper {
 
     int updateByPrimaryKey(BabyInfo record);
 
-    List<Map> overListCount(int overdueStart, int overdueEnd, int dingTimes, String corpid);
+    List<Map> overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, String corpid);
+
+    String overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
 
     List<Map> overdueList(@Param("offset") Integer offset,
                           @Param("size") Integer size,
@@ -54,6 +56,7 @@ public interface BabyInfoMapper {
     Map allBabysCount(@Param("corpid") String corpid);
 
     List<BabyInfo> myBabys(@Param("parentId") Long parentId,
-                             @Param("mobile") String mobile);
+                           @Param("mobile") String mobile);
 
+    Map getBabyInfo(Long babyid, String corpid);
 }
