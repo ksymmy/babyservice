@@ -11,7 +11,6 @@ import com.jqsoft.babyservice.entity.biz.WorkTime;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.UserInfoMapper;
-import com.jqsoft.babyservice.mapper.biz.WorkTimeMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,7 @@ public class BabyService {
     private ExaminationInfoMapper examinationInfoMapper;
 
     @Resource
-    private WorkTimeMapper workTimeMapper;
+    private WorkTimeService workTimeService;
 
     @Resource
     private UserInfoMapper userInfoMapper;
@@ -230,6 +229,7 @@ public class BabyService {
             info.setExaminationItem(item);
             info.setDingTimes((short) 0);
             info.setSignIn((byte) 0);
+            info.setConfirm((byte) 0);
             info.setCreateTime(now);
             info.setUpdateTime(now);
             examinationInfoMapper.insert(info);
@@ -252,8 +252,15 @@ public class BabyService {
         if (null == date) {
             return null;
         }
-        WorkTime workTime = workTimeMapper.getWorkTimeByCorpid(corpid);
-        if (null == workTime) {
+        WorkTime workTime = workTimeService.getWorkTimeByCorpid(corpid);
+        if (null == workTime
+                || (workTime.getMonday() == 0
+                && workTime.getTuesday() == 0
+                && workTime.getWednesday() == 0
+                && workTime.getThursday() == 0
+                && workTime.getFriday() == 0
+                && workTime.getSaturday() == 0
+                && workTime.getSunday() == 0)) {
             workTime = new WorkTime();
             workTime.setMonday((byte) 1);
             workTime.setTuesday((byte) 1);
@@ -262,18 +269,6 @@ public class BabyService {
             workTime.setFriday((byte) 1);
             workTime.setSaturday((byte) 0);
             workTime.setSunday((byte) 0);
-        }
-
-        // 判断医院是否7天不上班
-        if (workTime.getMonday() == 0
-                && workTime.getTuesday() == 0
-                && workTime.getWednesday() == 0
-                && workTime.getThursday() == 0
-                && workTime.getFriday() == 0
-                && workTime.getSaturday() == 0
-                && workTime.getSunday() == 0) {
-            log.info("corpid:{} 医院7天不上班", corpid);
-            return null;
         }
 
         // 判断是否在节假日期间
@@ -302,6 +297,39 @@ public class BabyService {
             day = DateUtil.getDayOfWeek(date);
         }
         return date;
+    }
+
+    public boolean isWorkTime(String corpid, Date date){
+        WorkTime workTime = workTimeService.getWorkTimeByCorpid(corpid);
+        if (null == workTime
+                || (workTime.getMonday() == 0
+                && workTime.getTuesday() == 0
+                && workTime.getWednesday() == 0
+                && workTime.getThursday() == 0
+                && workTime.getFriday() == 0
+                && workTime.getSaturday() == 0
+                && workTime.getSunday() == 0)) {
+            workTime = new WorkTime();
+            workTime.setMonday((byte) 1);
+            workTime.setTuesday((byte) 1);
+            workTime.setWednesday((byte) 1);
+            workTime.setThursday((byte) 1);
+            workTime.setFriday((byte) 1);
+            workTime.setSaturday((byte) 0);
+            workTime.setSunday((byte) 0);
+        }
+        // 计算日期是星期几
+        int day = DateUtil.getDayOfWeek(date);
+        if ((day == 1 && workTime.getMonday() == 1)
+                || (day == 2 && workTime.getTuesday() == 1)
+                || (day == 3 && workTime.getWednesday() == 1)
+                || (day == 4 && workTime.getThursday() == 1)
+                || (day == 5 && workTime.getFriday() == 1)
+                || (day == 6 && workTime.getSaturday() == 1)
+                || (day == 7 && workTime.getSunday() == 1)) {
+            return true;
+        }
+        return false;
     }
 
 }

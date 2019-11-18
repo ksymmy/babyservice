@@ -4,16 +4,19 @@ import com.jqsoft.babyservice.Job.RemindNewsJob;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
+import com.jqsoft.babyservice.commons.utils.DdUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.service.biz.BabyService;
+import com.jqsoft.babyservice.service.biz.ExaminationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -31,6 +34,12 @@ public class BabyController extends BaseController {
 
     @Resource
     private RemindNewsJob remindNewsJob;
+
+    @Resource
+    private DdUtils ddUtils;
+
+    @Resource
+    private ExaminationService examinationService;
 
     //******************************************* 医生端接口 *************************************************************
 
@@ -176,7 +185,7 @@ public class BabyController extends BaseController {
     //******************************************* 医生端接口 *************************************************************
 
     /**
-     * 家长端--获取我的宝宝信息
+     * 家长端-获取我的宝宝信息
      *
      * @return
      */
@@ -190,14 +199,14 @@ public class BabyController extends BaseController {
     /**
      * 家长端-删除宝宝信息
      *
-     * @param id
+     * @param babyId
      * @return
      */
     @ParentCheck
     @RequestMapping("delBaby")
-    public RestVo delBabyInfo(Long id) {
+    public RestVo delBabyInfo(Long babyId) {
         UserInfo user = this.getUser();
-        return babyService.delBabyInfo(id, user.getId(), user.getMobile());
+        return babyService.delBabyInfo(babyId, user.getId(), user.getMobile());
     }
 
     /**
@@ -212,8 +221,43 @@ public class BabyController extends BaseController {
         return babyService.addBabyInfo(babyInfo, this.getUser().getId(), this.getDdCorpid());
     }
 
+
+    /**
+     * 家长端-确认可以按时体检
+     * @param newsId
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("examinationConfirm")
+    public RestVo examinationConfirm(Long newsId){
+        return examinationService.examinationConfirm(newsId);
+    }
+
+    /**
+     * 家长端-申请延期
+     * @param newsId
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("applyDelay")
+    public RestVo applyDelay(Long newsId){
+        return examinationService.applyDelay(newsId);
+    }
+
+    /**
+     * 家长端-确认延期
+     * @param
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("confirmDelay")
+    public RestVo confirmDelay(Long examinationId, Date delayDate, String delayReason){
+        return examinationService.confirmDelay(examinationId, delayDate, delayReason);
+    }
+
     @RequestMapping("test")
-    public void test(){
-        remindNewsJob.remindNewsJob();
+    public void test(String title,String context,String userid){
+//        remindNewsJob.remindNewsJob();
+//        ddUtils.sendDdMessage(title,context,userid);
     }
 }

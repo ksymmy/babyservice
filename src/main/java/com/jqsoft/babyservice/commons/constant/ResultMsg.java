@@ -28,6 +28,7 @@ public enum ResultMsg {
     DD_GET_SPACEID_FAIL("0018","获取企业钉盘spaceId失败"),
     DD_GRANT_FAIL("0019","企业钉盘授权失败"),
     DD_GETCORPINFO_FAIL("0020","调用钉钉接口获取企业信息失败"),
+    NOT_IN_ONE_MONTH("0021","只能改期一个月以内时间"),
     ;
 
     private String code;

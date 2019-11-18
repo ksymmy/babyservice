@@ -9,12 +9,11 @@
     <result column="context" jdbcType="VARCHAR" property="context" />
     <result column="type" jdbcType="TINYINT" property="type" />
     <result column="sign_in" jdbcType="TINYINT" property="signIn" />
-    <result column="confirm" jdbcType="TINYINT" property="confirm" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpid, examination_id, title, context, type, sign_in, confirm, create_time, 
+    id, corpid, examination_id, title, context, type, sign_in, create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -30,11 +29,11 @@
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
     insert into biz_remind_news (id, corpid, examination_id, 
       title, context, type, 
-      sign_in, confirm, create_time, 
+      sign_in, create_time,
       update_time)
     values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{examinationId,jdbcType=BIGINT}, 
       #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, 
-      #{signIn,jdbcType=TINYINT}, #{confirm,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{signIn,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
@@ -60,9 +59,6 @@
       </if>
       <if test="signIn != null">
         sign_in,
-      </if>
-      <if test="confirm != null">
-        confirm,
       </if>
       <if test="createTime != null">
         create_time,
@@ -93,9 +89,6 @@
       <if test="signIn != null">
         #{signIn,jdbcType=TINYINT},
       </if>
-      <if test="confirm != null">
-        #{confirm,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -125,9 +118,6 @@
       <if test="signIn != null">
         sign_in = #{signIn,jdbcType=TINYINT},
       </if>
-      <if test="confirm != null">
-        confirm = #{confirm,jdbcType=TINYINT},
-      </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -145,7 +135,6 @@
       context = #{context,jdbcType=VARCHAR},
       type = #{type,jdbcType=TINYINT},
       sign_in = #{signIn,jdbcType=TINYINT},
-      confirm = #{confirm,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -153,13 +142,13 @@
   <insert id="batchInsert" parameterType="java.util.List">
     insert into biz_remind_news (id, corpid, examination_id,
       title, context, type,
-      sign_in, confirm, create_time,
+      sign_in, create_time,
       update_time)
     values
         <foreach collection="remindNewsList" item="info" separator=",">
           (#{info.id,jdbcType=BIGINT}, #{info.corpid,jdbcType=VARCHAR}, #{info.examinationId,jdbcType=BIGINT},
             #{info.title,jdbcType=VARCHAR}, #{info.context,jdbcType=VARCHAR}, #{info.type,jdbcType=TINYINT},
-            #{info.signIn,jdbcType=TINYINT}, #{info.confirm,jdbcType=TINYINT}, #{info.createTime,jdbcType=TIMESTAMP},
+            #{info.signIn,jdbcType=TINYINT}, #{info.createTime,jdbcType=TIMESTAMP},
             #{info.updateTime,jdbcType=TIMESTAMP})
         </foreach>
   </insert>
