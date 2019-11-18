@@ -164,4 +164,11 @@
         ORDER BY a.create_time DESC
         limit ${offset},${size}
   </select>
+  <delete id="deleteByBabyId">
+    DELETE
+    FROM
+        biz_remind_news a
+    WHERE
+        EXISTS ( SELECT 1 FROM biz_examination_info b WHERE b.id = a.examination_id AND b.baby_id = #{babyId,jdbcType=BIGINT} )
+  </delete>
 </mapper>
