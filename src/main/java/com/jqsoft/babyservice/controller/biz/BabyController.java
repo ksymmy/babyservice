@@ -1,6 +1,6 @@
 package com.jqsoft.babyservice.controller.biz;
 
-import com.jqsoft.babyservice.Job.RemindNewsJob;
+import com.jqsoft.babyservice.job.RemindNewsJob;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
@@ -12,6 +12,7 @@ import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
 import com.jqsoft.babyservice.service.biz.RemindNewsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +46,10 @@ public class BabyController extends BaseController {
     @Resource
     private RemindNewsService remindNewsService;
 
-    //******************************************* 医生端接口 *************************************************************
+    @Value("${hospitalName}")
+    public String hospitalName;
+
+    //******************************************* 医生端接口 *****************************************************
 
     /**
      * 医生端-首页统计
@@ -187,7 +191,7 @@ public class BabyController extends BaseController {
     }
 
 
-    //******************************************* 医生端接口 *************************************************************
+    //***************************************** 家长端接口 ********************************************************
 
     /**
      * 家长端-获取我的宝宝信息
@@ -279,6 +283,15 @@ public class BabyController extends BaseController {
     @RequestMapping("confirmDelay")
     public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
         return examinationService.confirmDelay(this.getUser(), examinationId, delayDate, delayReason);
+    }
+
+    /**
+     * 家长端-获取医院名称
+     * @return
+     */
+    @RequestMapping("getHospitalName")
+    public RestVo getHospitalName(){
+        return RestVo.SUCCESS(hospitalName);
     }
 
     @RequestMapping("test")
