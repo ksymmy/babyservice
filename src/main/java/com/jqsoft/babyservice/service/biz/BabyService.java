@@ -12,9 +12,11 @@ import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import com.taobao.api.ApiException;
+import com.jqsoft.babyservice.mapper.biz.RemindNewsMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +49,9 @@ public class BabyService {
 
     @Resource
     private LoginService loginService;
+
+    @Resource
+    private RemindNewsMapper remindNewsMapper;
 
     public RestVo overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, String corpid) {
         return RestVo.SUCCESS(babyInfoMapper.overListCount(overdueStart, overdueEnd, dingTimes, corpid));
@@ -134,13 +139,14 @@ public class BabyService {
 
     /**
      * 医生端-获取我的宝宝信息
-     *
-     * @param parentId 必填
-     * @param mobile   可不填
+     * @param userInfo
      * @return
      */
-    public RestVo myBabys(Long parentId, String mobile) {
-        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(parentId, mobile);
+    public RestVo myBabys(UserInfo userInfo) {
+        if (null == userInfo) {
+            return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(userInfo.getId(), userInfo.getMobile());
         if (CollectionUtils.isNotEmpty(babyInfos)) {
             int size = babyInfos.size();
             for (int i = 0; i < size; i++) {
@@ -176,22 +182,28 @@ public class BabyService {
      * @param babyId
      * @return
      */
-    public RestVo delBabyInfo(Long babyId, Long parentId, String mobile) {
-        if (null == babyId) {
+    @Transactional(rollbackFor = Exception.class)
+    public RestVo delBabyInfo(Long babyId, UserInfo userInfo) {
+        if (null == babyId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
         BabyInfo babyInfo = babyInfoMapper.selectByPrimaryKey(babyId);
         if (null == babyInfo) {
-            return RestVo.FAIL(ResultMsg.DATA_NOT_EXISTS);
-        }
-        // 判断删除的宝宝是否为当前操作人的子女
-        if (!(null != babyInfo.getParentId() && parentId == babyInfo.getParentId().longValue())
-                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(mobile) && mobile.equals(babyInfo.getFatherMobile()))
-                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(mobile) && mobile.equals(babyInfo.getMotherMobile()))) {
-            return RestVo.FAIL(ResultMsg.NO_AUTH_DEL_BABY);
+            return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
         }
 
+        // 判断是否为宝宝家长
+        if (!this.isBabyParent(babyInfo, userInfo)) {
+            return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
+        }
+
+        // 删除宝宝信息
         babyInfoMapper.deleteByPrimaryKey(babyId);
+        // 删除体检记录
+        examinationInfoMapper.deleteByBabyId(babyId);
+        // 删除提醒消息
+        remindNewsMapper.deleteByBabyId(babyId);
+
         return RestVo.SUCCESS();
     }
 
@@ -202,27 +214,17 @@ public class BabyService {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public RestVo addBabyInfo(BabyInfo babyInfo, Long parentId, String corpid) {
+    public RestVo addBabyInfo(BabyInfo babyInfo, UserInfo userInfo) {
         if (null == babyInfo || null == babyInfo.getBirthday()) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
-        babyInfo.setParentId(parentId);
-        babyInfo.setCorpid(corpid);
+        babyInfo.setParentId(userInfo.getId());
+        babyInfo.setCorpid(userInfo.getCorpid());
         babyInfo.setState((byte) 1);
         babyInfo.setId(null);
         Date now = new Date();
         babyInfo.setCreateTime(now);
         babyInfo.setUpdateTime(now);
-
-        // 父母手机号如果已填写则需要绑定（用手机号直接关联）
-        /*if (StringUtils.isNotBlank(babyInfo.getFatherMobile())) {
-            UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getFatherMobile());
-            babyInfo.setFatherId(null != userInfo ? userInfo.getId() : null);
-        }
-        if (StringUtils.isNotBlank(babyInfo.getMotherMobile())) {
-            UserInfo userInfo = userInfoMapper.getUserInfoByMobile(babyInfo.getMotherMobile());
-            babyInfo.setMotherId(null != userInfo ? userInfo.getId() : null);
-        }*/
 
         babyInfoMapper.insert(babyInfo);
 
@@ -232,7 +234,7 @@ public class BabyService {
             ExaminationInfo info = new ExaminationInfo();
             info.setBabyId(babyInfo.getId());
             info.setExaminationType(examinationType[j]);
-            info.setExaminationDate(this.getExaminationDate(corpid, DateUtils.addMonths(babyInfo.getBirthday(), examinationType[j])));
+            info.setExaminationDate(this.getExaminationDate(userInfo.getCorpid(), DateUtils.addMonths(babyInfo.getBirthday(), examinationType[j])));
             String item = "健康体检";
             item = examinationType[j] == 1 ? ("满月" + item) : (examinationType[j] + "月龄" + item);
             info.setExaminationItem(item);
@@ -272,6 +274,25 @@ public class BabyService {
     }
 
 
+    /**
+     * 判断是否为宝宝家长
+     * @param babyInfo
+     * @param curUser
+     * @return
+     */
+    public boolean isBabyParent(BabyInfo babyInfo , UserInfo curUser){
+        if (null == babyInfo || null == curUser ||
+                (!(null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
+                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
+                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
+            return false;
+        }
+        return true;
+    }
+
+    public BabyInfo getBabyInfoByExaminationId(Long examinationId){
+        return babyInfoMapper.getBabyInfoByExaminationId(examinationId);
+    }
     public RestVo getUseridByMobile(String mobile) {
         String key = RedisKey.LOGIN_MOBILE_USERID.getKey(mobile);
         if (null != redisUtils.get(key)) {

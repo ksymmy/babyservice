@@ -3,10 +3,11 @@ package com.jqsoft.babyservice.service.biz;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.vo.RestVo;
+import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,15 +29,27 @@ public class ExaminationService {
     @Resource
     private WorkTimeService workTimeService;
 
+    @Resource
+    private BabyService babyService;
+
     /**
      * 家长端-确认可以正常体检
      * @param examinationId
      * @return
      */
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long examinationId){
-        if (null == examinationId) {
+    public RestVo examinationConfirm(Long examinationId, UserInfo userInfo){
+        if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+        BabyInfo babyInfo = babyService.getBabyInfoByExaminationId(examinationId);
+        if (null == babyInfo) {
+            return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
+        }
+
+        // 判断是否为宝宝家长
+        if (!babyService.isBabyParent(babyInfo, userInfo)) {
+            return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
         }
         examinationInfoMapper.examinationConfirm(examinationId);
         return RestVo.SUCCESS();
@@ -47,10 +60,20 @@ public class ExaminationService {
      * @param examinationId
      * @return
      */
-    public RestVo signIn(Long examinationId){
-        if (null == examinationId) {
+    public RestVo signIn(Long examinationId, UserInfo userInfo){
+        if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
+        BabyInfo babyInfo = babyService.getBabyInfoByExaminationId(examinationId);
+        if (null == babyInfo) {
+            return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
+        }
+
+        // 判断是否为宝宝家长
+        if (!babyService.isBabyParent(babyInfo, userInfo)) {
+            return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
+        }
+
         examinationInfoMapper.signIn(examinationId);
         return RestVo.SUCCESS();
     }
@@ -60,14 +83,24 @@ public class ExaminationService {
      * @param examinationId
      * @return
      */
-    public RestVo applyDelay(Long examinationId){
-        if (null == examinationId) {
+    public RestVo applyDelay(Long examinationId, UserInfo userInfo){
+        if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
-        Map<String,String> map = examinationInfoMapper.applyDelay(examinationId);
-        String examinationType = map.get("examinationType");
-        if (StringUtils.isNotBlank(examinationType)){
-            if ("1".equals(examinationType)) {
+        BabyInfo babyInfo = babyService.getBabyInfoByExaminationId(examinationId);
+        if (null == babyInfo) {
+            return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
+        }
+
+        // 判断是否为宝宝家长
+        if (!babyService.isBabyParent(babyInfo, userInfo)) {
+            return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
+        }
+
+        Map map = examinationInfoMapper.applyDelay(examinationId);
+        Object examinationType = map.get("examinationType");
+        if (null != examinationType){
+            if (examinationType.equals(1)) {
                 map.put("examinationType","满月健康体检");
             } else {
                 map.put("examinationType", examinationType + "月龄健康体检");
@@ -83,12 +116,22 @@ public class ExaminationService {
      * @param delayReason
      * @return
      */
-    public RestVo confirmDelay(String corpid, Long examinationId, Date delayDate, String delayReason){
-        if (null == examinationId || null == delayDate) {
+    public RestVo confirmDelay(UserInfo userInfo, Long examinationId, Date delayDate, String delayReason){
+        if (null == examinationId || null == userInfo || null == delayDate) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+        BabyInfo babyInfo = babyService.getBabyInfoByExaminationId(examinationId);
+        if (null == babyInfo) {
+            return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
+        }
+
+        // 判断是否为宝宝家长
+        if (!babyService.isBabyParent(babyInfo, userInfo)) {
+            return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
         }
 
         Date now = new Date();
+        // 不能延期当天及以前时间
         if (DateUtils.isSameDay(delayDate, now) || delayDate.before(now)) {
             return RestVo.FAIL(ResultMsg.BEFORE_TIME);
         }
@@ -111,7 +154,7 @@ public class ExaminationService {
         }
 
         // 是否在医院不上班时间
-        boolean isWorkTime = workTimeService.isWorkTime(corpid,delayDate);
+        boolean isWorkTime = workTimeService.isWorkTime(userInfo.getCorpid(),delayDate);
         if (!isWorkTime) {
             return RestVo.FAIL(ResultMsg.NOT_IN_WORK_TIME);
         }

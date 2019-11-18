@@ -30,9 +30,12 @@ public interface ExaminationInfoMapper {
 
      void examinationConfirm(Long examinationId);
 
-    Map<String,String> applyDelay(Long examinationId);
+    Map applyDelay(Long examinationId);
 
     void confirmDelay(Long examinationId, Date delayDate, String delayReason);
 
     void signIn(Long examinationId);
+
+    void deleteByBabyId(Long babyId);
+
 }
