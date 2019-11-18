@@ -59,4 +59,7 @@ public interface BabyInfoMapper {
                            @Param("mobile") String mobile);
 
     Map getBabyInfo(Long babyid, String corpid);
+
+    BabyInfo getBabyInfoByExaminationId(Long examinationId);
+
 }

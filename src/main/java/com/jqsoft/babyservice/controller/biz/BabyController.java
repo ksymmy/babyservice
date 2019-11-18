@@ -8,7 +8,6 @@ import com.jqsoft.babyservice.commons.utils.DdUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
-import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
 import com.jqsoft.babyservice.service.biz.RemindNewsService;
@@ -198,8 +197,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("myBabys")
     public RestVo myBabys() {
-        UserInfo user = this.getUser();
-        return babyService.myBabys(user.getId(), user.getMobile());
+        return babyService.myBabys(this.getUser());
     }
 
     /**
@@ -211,8 +209,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("delBaby")
     public RestVo delBabyInfo(Long babyId) {
-        UserInfo user = this.getUser();
-        return babyService.delBabyInfo(babyId, user.getId(), user.getMobile());
+        return babyService.delBabyInfo(babyId, this.getUser());
     }
 
     /**
@@ -224,7 +221,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("addBabyInfo")
     public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo) {
-        return babyService.addBabyInfo(babyInfo, this.getUser().getId(), this.getDdCorpid());
+        return babyService.addBabyInfo(babyInfo, this.getUser());
     }
 
 
@@ -247,7 +244,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("examinationConfirm")
     public RestVo examinationConfirm(Long examinationId){
-        return examinationService.examinationConfirm(examinationId);
+        return examinationService.examinationConfirm(examinationId,this.getUser());
     }
 
     /**
@@ -258,7 +255,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("signIn")
     public RestVo signIn(Long examinationId){
-        return examinationService.signIn(examinationId);
+        return examinationService.signIn(examinationId, this.getUser());
     }
 
     /**
@@ -269,7 +266,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("applyDelay")
     public RestVo applyDelay(Long examinationId){
-        return examinationService.applyDelay(examinationId);
+        return examinationService.applyDelay(examinationId, this.getUser());
     }
 
     /**
@@ -281,7 +278,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("confirmDelay")
     public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
-        return examinationService.confirmDelay(this.getDdCorpid(), examinationId, delayDate, delayReason);
+        return examinationService.confirmDelay(this.getUser(), examinationId, delayDate, delayReason);
     }
 
     @RequestMapping("test")

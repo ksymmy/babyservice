@@ -508,4 +508,12 @@ WHERE
     <select id="getBabyInfo" resultType="map">
 
     </select>
+    <select id="getBabyInfoByExaminationId" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            biz_baby_info a
+        WHERE
+            EXISTS ( SELECT 1 FROM biz_examination_info b WHERE b.baby_id = a.id AND b.id = #{examinationId,jdbcType=BIGINT} )
+    </select>
 </mapper>

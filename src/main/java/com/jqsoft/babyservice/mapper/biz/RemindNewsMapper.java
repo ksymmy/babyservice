@@ -23,4 +23,6 @@ public interface RemindNewsMapper {
     void batchInsert(@Param("remindNewsList") List<RemindNews> remindNewsList);
 
     List<RemindNews> remindNewsList(int offset, int size, Long userId);
+
+    void deleteByBabyId(Long babyId);
 }

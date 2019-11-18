@@ -230,19 +230,19 @@
   <update id="examinationConfirm" parameterType="java.lang.Long">
         update biz_examination_info a
         set a.confirm = 1
-        where a.id = #{examinationId,jdbcType=BIGINT})
+        where a.id = #{examinationId,jdbcType=BIGINT}
   </update>
   <select id="applyDelay" resultType="java.util.Map">
     SELECT
-        a.NAME,
-        b.examination_type examinationType，
+        a.name,
+        b.examination_type examinationType,
         b.id examinationId
     FROM
         biz_baby_info a,
         biz_examination_info b
     WHERE
-        b.id = #{examinationId,jdbcType=BIGINT}
-        AND b.baby_id = a.id
+        b.baby_id = a.id
+        and b.id = #{examinationId,jdbcType=BIGINT}
         limit 1
   </select>
   <update id="confirmDelay" >
@@ -257,4 +257,7 @@
     SET a.sign_in = 1
     WHERE a.id = #{examinationId,jdbcType=BIGINT}
   </update>
+  <delete id="deleteByBabyId" >
+    DELETE from biz_examination_info a where a.baby_id = #{babyId,jdbcType=BIGINT}
+  </delete>
 </mapper>
