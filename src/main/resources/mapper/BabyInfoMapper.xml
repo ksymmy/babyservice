@@ -347,7 +347,7 @@
       b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
       from biz_examination_info a,
       (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
-      where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
+      where t.examination_date &lt; CURRENT_DATE group by t.baby_id and t.sign_in = 0) b,
       biz_baby_info c
       where a.baby_id = b.baby_id
       and a.examination_date = b.examinationDate
@@ -377,7 +377,7 @@
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
   </select>
-    <select id="overdueDingExamids" resultType="string">
+    <select id="overdueDingExamids" resultType="long">
         select a.id
         from biz_examination_info a,
         (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t

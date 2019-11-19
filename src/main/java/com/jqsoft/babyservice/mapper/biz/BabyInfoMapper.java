@@ -25,7 +25,7 @@ public interface BabyInfoMapper {
 
     List<String> overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
 
-    List<String> overdueDingExamids(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
+    List<Long> overdueDingExamids(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
 
     List<Map> overdueList(@Param("offset") Integer offset,
                           @Param("size") Integer size,

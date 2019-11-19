@@ -163,8 +163,9 @@ public class BabyController extends BaseController {
      *
      * @param examIds 体检项目id集合
      */
+    @Transactional
     @PostMapping("/updatedingtimes")
-    public RestVo updateDingTimes(List<Long> examIds) {
+    public RestVo updateDingTimes(@RequestParam(value = "examIds") List<Long> examIds) {
         return babyService.updateDingTimes(examIds);
     }
 
