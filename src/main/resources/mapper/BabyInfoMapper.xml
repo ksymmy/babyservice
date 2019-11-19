@@ -232,7 +232,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes != 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -263,7 +263,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes != 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -275,7 +275,34 @@
         </if>
         ) m1 where m1.babyId = m.id )
         ) and u.corpid = #{corpid}
-
+        union
+        select DISTINCT(userid) users from biz_user_info where id in (
+        select DISTINCT(c.parent_id) from biz_examination_info a,
+        (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
+        where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
+        biz_baby_info c
+        where a.baby_id = b.baby_id and a.examination_date = b.examinationDate and b.baby_id = c.id
+        and c.state = 1 and a.sign_in = 0
+        <if test="overdueStart != null and '' != overdueStart">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) > #{overdueStart,jdbcType=INTEGER}
+        </if>
+        <if test="overdueEnd != null and '' != overdueEnd">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{overdueEnd,jdbcType=INTEGER}
+        </if>
+        <if test="age != null">
+            and a.examination_type = #{age,jdbcType=INTEGER}
+        </if>
+        <if test="dingTimes != null and dingTimes != 0">
+            <choose>
+                <when test="dingTimes == 3 ">
+                    and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                </when>
+                <otherwise>
+                    and a.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                </otherwise>
+            </choose>
+        </if>
+        )
     </select>
     <select id="overListCount" resultType="map">
         SELECT
@@ -337,7 +364,7 @@
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
-      <if test="param.dingTimes != null">
+      <if test="param.dingTimes != null and param.dingTimes != 0">
           <choose>
               <when test="param.dingTimes == 3 ">
                   and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
@@ -350,6 +377,38 @@
       order by a.ding_times desc,a.examination_type
       limit #{offset},#{size}
   </select>
+    <select id="overdueDingExamids" resultType="string">
+        select a.id
+        from biz_examination_info a,
+        (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
+        where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
+        biz_baby_info c
+        where a.baby_id = b.baby_id
+        and a.examination_date = b.examinationDate
+        and b.baby_id = c.id
+        and c.state = 1
+        and a.sign_in = 0
+        and c.corpid = #{corpid}
+        <if test="overdueStart != null and '' != overdueStart">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) > #{overdueStart,jdbcType=INTEGER}
+        </if>
+        <if test="overdueEnd != null and '' != overdueEnd">
+            and DATEDIFF(CURRENT_DATE,a.examination_date) &lt;= #{overdueEnd,jdbcType=INTEGER}
+        </if>
+        <if test="age != null">
+            and a.examination_type = #{age,jdbcType=INTEGER}
+        </if>
+        <if test="dingTimes != null and dingTimes != 0">
+            <choose>
+                <when test="dingTimes == 3 ">
+                    and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
+                </when>
+                <otherwise>
+                    and a.ding_times = #{dingTimes,jdbcType=SMALLINT}
+                </otherwise>
+            </choose>
+        </if>
+    </select>
     <select id="tomorrowExaminationBabysList" resultType="map">
     SELECT
 	a.id,

@@ -38,4 +38,5 @@ public interface ExaminationInfoMapper {
 
     void deleteByBabyId(Long babyId);
 
+    int updateDingTimes(List<Long> examId);
 }
