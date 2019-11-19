@@ -212,7 +212,7 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
     <select id="overdueDingUserid" resultType="string">
-        select DISTINCT(u.userid) from biz_user_info u where u.mobile in (
+        select DISTINCT(u.userid) users from biz_user_info u where u.mobile in (
         select m.father_mobile from biz_baby_info m where m.corpid = #{corpid} and m.father_mobile is not null and
         EXISTS (select 1 from
         ( select a.id,c.id babyId,c.sex,c.name,c.birthday,a.examination_type age,

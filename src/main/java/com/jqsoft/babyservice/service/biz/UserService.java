@@ -35,10 +35,9 @@ public class UserService {
     }
 
     public UserInfo selectByCorpIdAndUserid(String corpid, String userid) {
-        UserInfo userInfo;
         String key = RedisKey.LOGIN_CORP_USER.getKey(corpid, userid);
-        if (redisUtils.exists(key)) {
-            userInfo = (UserInfo) redisUtils.get(RedisKey.LOGIN_CORP_USER.getKey(corpid, userid));
+        UserInfo userInfo = (UserInfo) redisUtils.get(key);
+        if (null != userInfo) {
             return userInfo;
         }
         userInfo = userInfoMapper.selectByCorpIdAndUserid(corpid, userid);

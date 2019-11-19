@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/babyservice")
+@RequestMapping("/")
 public class LoginController extends BaseController {
     @Autowired
     private LoginService loginService;

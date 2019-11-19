@@ -39,7 +39,7 @@ public class LoginService {
 
 
     public RestVo login(String authCode, String corpid, String userid) {
-        if (StringUtils.isNotBlank(userid)) {
+        if (StringUtils.isNotBlank(userid) && null != userService.selectByCorpIdAndUserid(corpid, userid)) {
             return RestVo.SUCCESS(userService.selectByCorpIdAndUserid(corpid, userid));
         }
 
@@ -59,13 +59,13 @@ public class LoginService {
         String key = RedisKey.LOGIN_CORP_USER.getKey(corpid, userid);
         Date createDate = new Date();
         if (null == oldUserInfo) {
-            userInfo = new UserInfo(null, userGetResponse.getName(), userGetResponse.getMobile(), userGetResponse.getWorkPlace(),
+            userInfo = new UserInfo(null, userGetResponse.getName(), userGetResponse.getMobile(), null,
                     userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate);
             if (1 == userService.insert(userInfo)) {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
             }
         } else {
-            userInfo = new UserInfo(oldUserInfo.getId(), userGetResponse.getName(), userGetResponse.getMobile(), userGetResponse.getWorkPlace(),
+            userInfo = new UserInfo(oldUserInfo.getId(), userGetResponse.getName(), userGetResponse.getMobile(), null,
                     userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, null, createDate);
             if (1 == userService.updateByPrimaryKeySelective(userInfo)) {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
