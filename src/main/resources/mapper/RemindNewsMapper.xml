@@ -8,6 +8,7 @@
     <result column="context" jdbcType="VARCHAR" property="context" />
     <result column="type" jdbcType="TINYINT" property="type" />
     <result column="sign_in" jdbcType="TINYINT" property="signIn" />
+    <result column="confirm" jdbcType="TINYINT" property="confirm" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
@@ -138,7 +139,8 @@
   <select id="remindNewsList" resultMap="BaseResultMap">
         SELECT
             a.*,
-			b.sign_in
+			b.sign_in,
+			IFNULL(b.confirm,0) confirm
         FROM
             biz_remind_news a,
 			biz_examination_info b

@@ -287,9 +287,9 @@ public class BabyService {
      */
     public boolean isBabyParent(BabyInfo babyInfo, UserInfo curUser) {
         if (null == babyInfo || null == curUser ||
-                (!(null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
-                        || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
-                        || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
+                !((null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
+                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
+                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
             return false;
         }
         return true;
