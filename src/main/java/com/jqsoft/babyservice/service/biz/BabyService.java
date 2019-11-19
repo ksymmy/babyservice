@@ -15,8 +15,8 @@ import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.mapper.biz.BabyInfoMapper;
 import com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper;
-import com.taobao.api.ApiException;
 import com.jqsoft.babyservice.mapper.biz.RemindNewsMapper;
+import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -139,6 +139,7 @@ public class BabyService {
 
     /**
      * 医生端-获取我的宝宝信息
+     *
      * @param userInfo
      * @return
      */
@@ -276,23 +277,25 @@ public class BabyService {
 
     /**
      * 判断是否为宝宝家长
+     *
      * @param babyInfo
      * @param curUser
      * @return
      */
-    public boolean isBabyParent(BabyInfo babyInfo , UserInfo curUser){
+    public boolean isBabyParent(BabyInfo babyInfo, UserInfo curUser) {
         if (null == babyInfo || null == curUser ||
                 (!(null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
-                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
-                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
+                        || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
+                        || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
             return false;
         }
         return true;
     }
 
-    public BabyInfo getBabyInfoByExaminationId(Long examinationId){
+    public BabyInfo getBabyInfoByExaminationId(Long examinationId) {
         return babyInfoMapper.getBabyInfoByExaminationId(examinationId);
     }
+
     public RestVo getUseridByMobile(String mobile) {
         String key = RedisKey.LOGIN_MOBILE_USERID.getKey(mobile);
         if (null != redisUtils.get(key)) {
@@ -311,5 +314,15 @@ public class BabyService {
             e.printStackTrace();
             return RestVo.FAIL();
         }
+    }
+
+    public RestVo updateexam(ExaminationInfo entity) {
+        if (null == entity || null == entity.getId()) return RestVo.FAIL();
+        return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
+    }
+
+
+    public RestVo updateDingTimes(List<Long> examIds) {
+        return RestVo.SUCCESS(examinationInfoMapper.updateDingTimes(examIds));
     }
 }

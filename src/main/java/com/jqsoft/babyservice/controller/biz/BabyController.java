@@ -1,6 +1,5 @@
 package com.jqsoft.babyservice.controller.biz;
 
-import com.jqsoft.babyservice.job.RemindNewsJob;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
@@ -8,6 +7,8 @@ import com.jqsoft.babyservice.commons.utils.DdUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
+import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import com.jqsoft.babyservice.job.RemindNewsJob;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
 import com.jqsoft.babyservice.service.biz.RemindNewsService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -145,6 +147,27 @@ public class BabyController extends BaseController {
     }
 
     /**
+     * 医生端-取消逾期提醒
+     *
+     * @param entity 体检项目
+     */
+    @Transactional
+    @PostMapping("/updateexam")
+    public RestVo cancelRemind(@RequestBody ExaminationInfo entity) {
+        return babyService.updateexam(entity);
+    }
+
+    /**
+     * 更新DING次数
+     *
+     * @param examIds 体检项目id集合
+     */
+    @PostMapping("/updatedingtimes")
+    public RestVo updateDingTimes(List<Long> examIds) {
+        return babyService.updateDingTimes(examIds);
+    }
+
+    /**
      * 医生端-明日体检通知
      *
      * @param pageBo:
@@ -259,8 +282,8 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long examinationId){
-        return examinationService.examinationConfirm(examinationId,this.getUser());
+    public RestVo examinationConfirm(Long examinationId) {
+        return examinationService.examinationConfirm(examinationId, this.getUser());
     }
 
     /**
@@ -271,7 +294,7 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("signIn")
-    public RestVo signIn(Long examinationId){
+    public RestVo signIn(Long examinationId) {
         return examinationService.signIn(examinationId, this.getUser());
     }
 
@@ -283,7 +306,7 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("applyDelay")
-    public RestVo applyDelay(Long examinationId){
+    public RestVo applyDelay(Long examinationId) {
         return examinationService.applyDelay(examinationId, this.getUser());
     }
 
@@ -295,16 +318,17 @@ public class BabyController extends BaseController {
      */
     @ParentCheck
     @RequestMapping("confirmDelay")
-    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern="yyyy-MM-dd") Date delayDate, String delayReason){
+    public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern = "yyyy-MM-dd") Date delayDate, String delayReason) {
         return examinationService.confirmDelay(this.getUser(), examinationId, delayDate, delayReason);
     }
 
     /**
      * 家长端-获取医院名称
+     *
      * @return
      */
     @RequestMapping("getHospitalName")
-    public RestVo getHospitalName(){
+    public RestVo getHospitalName() {
         return RestVo.SUCCESS(hospitalName);
     }
 
