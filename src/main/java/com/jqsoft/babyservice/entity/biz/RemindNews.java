@@ -36,5 +36,7 @@ public class RemindNews implements Serializable {
 
     private String newsTime;// 格式（当天：HH:mm  前一天：昨天 HH:mm  昨天之前： XX月XX日 HH:mm 不是今年：XX年XX月XX日 HH:mm）
 
+    private Byte confirm;
+
 
 }
