@@ -21,6 +21,9 @@ public final class DateUtil {
     public static final String FMT_PATTERN_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String FMT_2 = "yyyy.MM.dd HH:mm:ss";
     public static final String FMT_3 = "yyyy-MM-dd HH:mm:ss";
+    public static final String FMT_4 = "HH:mm";
+    public static final String FMT_5 = "M月d日 HH:mm";
+    public static final String FMT_6 = "yyyy年M月d日 HH:mm";
 
     private DateUtil(){}
 
@@ -616,6 +619,29 @@ public final class DateUtil {
         }
     }
 
+    public static String formatDdNewsDate(Date date){
+        if (null == date) {
+            return null;
+        }
+        // 钉钉消息时间显示规则 1.当天- "HH:mm" 2.昨天-"昨天 HH:mm" 3.昨天之前-"XX月XX日 HH:mm" 4.不是当年-"XXXX年XX月XX日 HH:mm"
+        Date now = new Date();
+        long days = DateUtil.differentDaysByDate(date,now);
+        if (days == 0) {
+            // 当天
+            return DateUtil.formatDate(date,DateUtil.FMT_4);
+        } else if (days == 1) {
+            // 昨天
+            return StringUtils.join("昨天 ",DateUtil.formatDate(date,DateUtil.FMT_4));
+        }
+        if (date.getYear() == now.getYear()) {
+            // 当年
+            return StringUtils.join(DateUtil.formatDate(date,DateUtil.FMT_5));
+        } else {
+            // 不是当年
+            return StringUtils.join(DateUtil.formatDate(date,DateUtil.FMT_6));
+        }
+    }
+
     public static void main(String[] args) throws ParseException {
 //        System.out.println(DateUtil.getYesterdayBeforDate(7, DateUtil.DAY));
 //        System.out.println(TimeConst.Range.getObject("DAY_7").getRange());
@@ -626,9 +652,9 @@ public final class DateUtil {
 //        System.out.println(getLastDayMonthDate());
 ////        System.out.println(formatDate(parseDatePlus("20190409"), "yyyy-MM-dd HH:mm:ss.SSS"));
 //        System.out.println(DateUtil.getDayOfWeek(new Date()));
-        Date date1 = DateUtil.parseDate("2019-03-13 22:22:12",DateUtil.FMT_3);
+        Date date1 = DateUtil.parseDate("2019-11-19 22:22:12",DateUtil.FMT_3);
         Date date2 = DateUtil.parseDate("2019-03-14 09:12:12",DateUtil.FMT_3);
-        System.out.println(DateUtil.differentDaysByDate(date1,date2));
+        System.out.println(DateUtil.formatDdNewsDate(date1));
 
     }
 
