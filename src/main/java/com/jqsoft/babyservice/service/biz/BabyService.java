@@ -58,7 +58,10 @@ public class BabyService {
     }
 
     public RestVo overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid) {
-        return RestVo.SUCCESS(babyInfoMapper.overdueDingUserid(overdueStart, overdueEnd, dingTimes, age, corpid));
+        Map<String, Object> result = new HashMap<>();
+        result.put("users", babyInfoMapper.overdueDingUserid(overdueStart, overdueEnd, dingTimes, age, corpid));
+        result.put("examIds", this.babyInfoMapper.overdueDingExamids(overdueStart, overdueEnd, dingTimes, age, corpid));
+        return RestVo.SUCCESS(result);
     }
 
     public RestVo overdueList(PageBo<Map<String, Object>> pageBo, String corpid) {

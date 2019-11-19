@@ -98,7 +98,7 @@ public class BabyController extends BaseController {
     }
 
     /**
-     * 获取DING 对象的userid
+     * 获取DING 对象的userid / examIds
      *
      * @param overdueStart 逾期时间起
      * @param overdueEnd   逾期时间止
@@ -151,6 +151,7 @@ public class BabyController extends BaseController {
      *
      * @param entity 体检项目
      */
+    @Deprecated
     @Transactional
     @PostMapping("/updateexam")
     public RestVo cancelRemind(@RequestBody ExaminationInfo entity) {
