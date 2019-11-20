@@ -68,12 +68,12 @@ public class RemindNewsJob {
                         // 当天 只记录数据库
                         news.setTitle(StringUtils.join(info.getBabyName()," - ", age,"儿童健康体检签到"));
                         news.setContext(String.format(remindTemplate1, age));
-                        news.setType((byte)1);
+                        news.setNewsType((byte)1);
                     } else if (now.before(info.getExaminationDate())){
                         // 提前 发送钉钉工作通知，并记录数据库
                         news.setTitle(StringUtils.join(info.getBabyName()," - ", age,"儿童健康体检通知"));
                         news.setContext(String.format(remindTemplate0, age, age));
-                        news.setType((byte)0);
+                        news.setNewsType((byte)0);
 
                         String userid0 = age_userid_map0.get(info.getExaminationType());
                         if (StringUtils.isBlank(userid0)) {
@@ -87,7 +87,7 @@ public class RemindNewsJob {
                         addDays = "0".equals(addDays) ? "" : "+" + addDays + "天";
                         news.setTitle(StringUtils.join(info.getBabyName()," - ", age,"儿童健康体检签到"));
                         news.setContext(String.format(remindTemplate2, age + addDays, age));
-                        news.setType((byte)2);
+                        news.setNewsType((byte)2);
 
                         String userid2 = age_userid_map2.get(info.getExaminationType());
                         if (StringUtils.isBlank(userid2)) {
