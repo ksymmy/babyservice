@@ -20,7 +20,7 @@ public class RemindNews implements Serializable {
 
     private String context;
 
-    private Byte type; // 类型（0：提前提醒 1：当天签到  2：逾期提醒）'
+    private Byte newsType; // 类型（0：提前提醒 1：当天签到  2：逾期提醒）'
 
     private Byte signIn; // '是否已签到（0：未签到 1：已签到）'
 
@@ -37,6 +37,7 @@ public class RemindNews implements Serializable {
     private String newsTime;// 格式（当天：HH:mm  前一天：昨天 HH:mm  昨天之前： XX月XX日 HH:mm 不是今年：XX年XX月XX日 HH:mm）
 
     private Byte confirm;
+
 
 
 }
