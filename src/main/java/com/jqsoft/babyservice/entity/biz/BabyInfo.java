@@ -45,7 +45,7 @@ public class BabyInfo implements Serializable {
 
     private Date updateTime;
 
-    private String signIn;
+    private Byte[] signIn;
 
     private List<ExaminationInfo> examinationInfos;
 

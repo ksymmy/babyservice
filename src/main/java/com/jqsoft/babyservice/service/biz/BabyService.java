@@ -156,6 +156,7 @@ public class BabyService {
             for (int i = 0; i < size; i++) {
                 BabyInfo baby = babyInfos.get(i);
                 List<ExaminationInfo> examinationInfos = baby.getExaminationInfos();
+                Byte[] signIn = {0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if (CollectionUtils.isNotEmpty(examinationInfos)) {
                     Map<Byte, Byte> map = new HashMap<>();
                     for (ExaminationInfo examinationInfo : examinationInfos) {
@@ -163,18 +164,15 @@ public class BabyService {
                             map.put(examinationInfo.getExaminationType(), examinationInfo.getSignIn());
                         }
                     }
-                    Object[] signIn = {0, 0, 0, 0, 0, 0, 0, 0, 0};
                     byte[] examinationType = {1, 3, 6, 8, 12, 18, 24, 30, 36};
                     for (int j = 0; j < examinationType.length; j++) {
                         if (map.containsKey(examinationType[j])) {
                             signIn[j] = map.get(examinationType[j]);
                         }
                     }
-                    baby.setSignIn(StringUtils.join(signIn, ","));
-                    baby.setExaminationInfos(null);
-                } else {
-                    baby.setSignIn("0,0,0,0,0,0,0,0,0");
                 }
+                baby.setSignIn(signIn);
+                baby.setExaminationInfos(null);
             }
         }
         return RestVo.SUCCESS(babyInfos);
