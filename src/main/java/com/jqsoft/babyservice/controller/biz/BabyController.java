@@ -236,7 +236,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("myBabys")
     public RestVo myBabys() {
-        return babyService.myBabys(this.getUser());
+        return babyService.myBabys(this.getUserId());
     }
 
     /**
