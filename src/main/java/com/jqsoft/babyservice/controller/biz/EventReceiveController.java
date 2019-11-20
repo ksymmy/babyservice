@@ -46,6 +46,8 @@ public class EventReceiveController {
     private String aes_key;
     @Value("${env.key}")
     private String env_key;
+    @Value("${env.domain}")
+    private String domain;
     @Resource
     private LoginService loginService;
     @Resource
@@ -74,7 +76,7 @@ public class EventReceiveController {
         OapiCallBackRegisterCallBackRequest registerCallBackRequest = new OapiCallBackRegisterCallBackRequest();
         registerCallBackRequest.setToken(token);
         registerCallBackRequest.setAesKey(aes_key);
-        registerCallBackRequest.setUrl("http://ksymmy.vaiwan.com/event/eventreceive_v1");
+        registerCallBackRequest.setUrl(domain + "/event/eventreceive_v1");
         registerCallBackRequest.setCallBackTag(Arrays.asList(AddressListRegister.USER_ADD_ORG, AddressListRegister.USER_MODIFY_ORG, AddressListRegister.USER_LEAVE_ORG,
                 AddressListRegister.USER_ACTIVE_ORG, AddressListRegister.ORG_ADMIN_ADD, AddressListRegister.ORG_ADMIN_REMOVE));
         OapiCallBackRegisterCallBackResponse registerCallBackResponse = null;

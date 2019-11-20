@@ -317,11 +317,12 @@
         FROM
         biz_examination_info a
         WHERE
-        a.examination_date &lt; CURRENT_DATE AND a.sign_in = 0
+        a.examination_date &lt; CURRENT_DATE
         AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 )
         GROUP BY a.baby_id
         ) y ON ( x.baby_id = y.baby_id AND x.examination_date = y.maxdate )
         <where>
+            x.sign_in = 0
             <if test="overdueStart != null and '' != overdueStart">
                 and DATEDIFF(CURRENT_DATE,y.maxdate) > #{overdueStart,jdbcType=INTEGER}
             </if>
@@ -347,7 +348,7 @@
       b.examinationDate textTime,DATEDIFF(CURRENT_DATE,examination_date) overTime,a.ding_times dingNum
       from biz_examination_info a,
       (select t.baby_id,MAX(t.examination_date) examinationDate from biz_examination_info t
-      where t.examination_date &lt; CURRENT_DATE and t.sign_in = 0 group by t.baby_id) b,
+      where t.examination_date &lt; CURRENT_DATE group by t.baby_id) b,
       biz_baby_info c
       where a.baby_id = b.baby_id
       and a.examination_date = b.examinationDate
