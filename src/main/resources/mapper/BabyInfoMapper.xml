@@ -232,7 +232,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null and dingTimes != 0">
+        <if test="dingTimes != null">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -263,7 +263,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null and dingTimes != 0">
+        <if test="dingTimes != null">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -292,7 +292,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null and dingTimes != 0">
+        <if test="dingTimes != null">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -365,7 +365,7 @@
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
-      <if test="param.dingTimes != null and param.dingTimes != 0">
+      <if test="param.dingTimes != null">
           <choose>
               <when test="param.dingTimes == 3 ">
                   and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
@@ -399,7 +399,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null and dingTimes != 0">
+        <if test="dingTimes != null">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
