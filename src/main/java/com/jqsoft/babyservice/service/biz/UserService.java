@@ -41,8 +41,14 @@ public class UserService {
             return userInfo;
         }
         userInfo = userInfoMapper.selectByCorpIdAndUserid(corpid, userid);
-        redisUtils.add(key, userInfo);
+        if (null != userInfo) {
+            redisUtils.add(key, userInfo);
+        }
         return userInfo;
+    }
+
+    public int deleteByUserid(String userid) {
+        return userInfoMapper.deleteByUserid(userid);
     }
 }
 

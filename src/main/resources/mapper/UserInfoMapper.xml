@@ -160,4 +160,8 @@
     where mobile = #{mobile,jdbcType=VARCHAR}
     limit 1
   </select>
+
+    <delete id="deleteByUserid">
+      delete from biz_user_info where userid = #{userid}
+  </delete>
 </mapper>
