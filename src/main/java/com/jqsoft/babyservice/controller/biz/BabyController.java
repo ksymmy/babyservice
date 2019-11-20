@@ -336,7 +336,7 @@ public class BabyController extends BaseController {
 
     @RequestMapping("test")
     public void test(String title, String context, String userid) {
-//        remindNewsJob.remindNewsJob();
+        remindNewsJob.remindNewsJob();
 //        ddUtils.sendDdMessage(title,context,userid);
     }
 }

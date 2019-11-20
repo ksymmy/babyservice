@@ -261,7 +261,7 @@ public class BabyService {
      * @param date:延期的日期
      */
     public Date getExaminationDate(String corpid, Date date) {
-        if (null == date || date.before(new Date())) {
+        if (null == date) {
             return null;
         }
 
