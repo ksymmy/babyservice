@@ -15,7 +15,7 @@ public enum ResultMsg {
     BABY_NOT_EXISTS("0005", "宝宝信息不存在"),
     NOT_BABY_PARENT("0007","不是此宝宝家长"),
     NOT_PARAM("0008", "缺少参数"),
-    DELAYED("0009", "每次体检智能改期一次"),
+    DELAYED("0009", "每次体检只能改期一次"),
 
 
     MAIL_SEND_FAIL("0016","邮件发送失败"),
