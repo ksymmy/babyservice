@@ -70,7 +70,7 @@ public class EventReceiveController {
             log.info("删除事件回调失败:{}", e.getErrMsg());
             e.printStackTrace();
         }
-        log.info("删除事件回调成功:{}", JSON.toJSONString(deleteCallBackResponse));
+        log.info("删除事件回调结果:{}", JSON.toJSONString(deleteCallBackResponse));
         //2.再重新注册的事件回调
         client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/register_call_back");
         OapiCallBackRegisterCallBackRequest registerCallBackRequest = new OapiCallBackRegisterCallBackRequest();
@@ -86,7 +86,7 @@ public class EventReceiveController {
             log.info("注册事件回调失败:{}", e.getErrMsg());
             e.printStackTrace();
         }
-        log.info("注册事件回调成功:{}", JSON.toJSONString(registerCallBackResponse));
+        log.info("注册事件回调结果:{}", JSON.toJSONString(registerCallBackResponse));
         return registerCallBackResponse;
     }
 
