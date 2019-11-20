@@ -120,6 +120,13 @@ public class ExaminationService {
         if (null == examinationId || null == userInfo || null == delayDate) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
+
+        Date now = new Date();
+        // 不能延期当天及以前时间
+        if (DateUtils.isSameDay(delayDate, now) || delayDate.before(now)) {
+            return RestVo.FAIL(ResultMsg.BEFORE_TIME);
+        }
+
         BabyInfo babyInfo = babyService.getBabyInfoByExaminationId(examinationId);
         if (null == babyInfo) {
             return RestVo.FAIL(ResultMsg.BABY_NOT_EXISTS);
@@ -130,15 +137,14 @@ public class ExaminationService {
             return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
         }
 
-        Date now = new Date();
-        // 不能延期当天及以前时间
-        if (DateUtils.isSameDay(delayDate, now) || delayDate.before(now)) {
-            return RestVo.FAIL(ResultMsg.BEFORE_TIME);
-        }
-
         ExaminationInfo examinationInfo = examinationInfoMapper.selectByPrimaryKey(examinationId);
         if (null == examinationInfo) {
             return RestVo.FAIL(ResultMsg.DATA_NOT_EXISTS);
+        }
+
+        // 判断是否已经改期过，每次体检只能改期一次
+        if (null != examinationInfo.getOldExaminationDate()) {
+            return RestVo.FAIL(ResultMsg.DELAYED);
         }
 
         // 判断延期日期是否在一个月以内

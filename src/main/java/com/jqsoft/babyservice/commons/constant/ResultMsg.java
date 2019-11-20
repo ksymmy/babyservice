@@ -15,14 +15,8 @@ public enum ResultMsg {
     BABY_NOT_EXISTS("0005", "宝宝信息不存在"),
     NOT_BABY_PARENT("0007","不是此宝宝家长"),
     NOT_PARAM("0008", "缺少参数"),
-    ILLEGAL_PARAM_FORMAT("0009", "非法参数格式"),
-    FILE_IS_NULL("0010", "空文件"),
-    TEMPLATE_HAD_EXIST("0011","模板名称已存在"),
-    
-    DD_GETUSERID_FAIL("0012","调钉钉接口获取userid失败"),
-	DD_GETUSERINFO_FAIL("0013","调钉钉接口获取用户信息失败"),
-    STANDARDMESS_ONE("0014","当前会员类型已存在"),
-    STANDARDMESS_MORE("0015","当前会员存在多条"),
+    DELAYED("0009", "每次体检智能改期一次"),
+
 
     MAIL_SEND_FAIL("0016","邮件发送失败"),
     OPERATE_FREQUENT("0017","操作太频繁,请稍后再试"),
