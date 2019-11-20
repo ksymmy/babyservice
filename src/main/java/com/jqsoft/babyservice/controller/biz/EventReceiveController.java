@@ -12,6 +12,7 @@ import com.dingtalk.api.response.OapiCallBackRegisterCallBackResponse;
 import com.dingtalk.api.response.OapiUserGetResponse;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptException;
 import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
+import com.jqsoft.babyservice.commons.constant.AddressListRegister;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
@@ -349,7 +350,7 @@ public class EventReceiveController {
     public DingTalkEncryptor createDingTalkEncryptor() {
         DingTalkEncryptor dingTalkEncryptor = null; //加密方法类
         try {
-            dingTalkEncryptor = new DingTalkEncryptor(AddressListRegister.TOKEN, AddressListRegister.AES_KEY, AddressListRegister.CORPID); //创建加解密类
+            dingTalkEncryptor = new DingTalkEncryptor(token, aes_key, env_key); //创建加解密类
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();
