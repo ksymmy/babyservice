@@ -72,6 +72,7 @@ public class BabyController extends BaseController {
      * @param overdueEnd   逾期时间止
      * @param dingTimes    钉次数
      */
+    @AdminCheck
     @GetMapping("/overduelistcount")
     public RestVo overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, @RequestHeader("corpid") String corpid) {
         return babyService.overListCount(overdueStart, overdueEnd, dingTimes, corpid);
@@ -82,6 +83,7 @@ public class BabyController extends BaseController {
      *
      * @param pageBo 查询参数
      */
+    @AdminCheck
     @PostMapping("/overduelist")
     public RestVo overdueList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
         return babyService.overdueList(pageBo, corpid);
@@ -92,6 +94,7 @@ public class BabyController extends BaseController {
      *
      * @param mobile:
      */
+    @AdminCheck
     @GetMapping("/getuseridbbymobile")
     public RestVo getUseridBbyMobile(String mobile) {
         return babyService.getUseridByMobile(mobile);
@@ -106,11 +109,11 @@ public class BabyController extends BaseController {
      * @param age          月龄
      * @param corpid       corpid
      */
+    @AdminCheck
     @GetMapping("/overdueDingUserid")
     public RestVo overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, @RequestHeader("corpid") String corpid) {
         return babyService.overdueDingUserid(overdueStart, overdueEnd, dingTimes, age, corpid);
     }
-
 
     /**
      * 医生端-儿童档案
@@ -119,6 +122,7 @@ public class BabyController extends BaseController {
      * @param corpid corpid
      */
     @Deprecated
+    @AdminCheck
     @GetMapping("/babyinfo")
     public RestVo babyInfo(Long babyid, @RequestHeader("corpid") String corpid) {
         return babyService.getBabyInfo(babyid, corpid);
@@ -129,6 +133,7 @@ public class BabyController extends BaseController {
      *
      * @param babyid babyid
      */
+    @AdminCheck
     @GetMapping("/babyparentinfo")
     public RestVo babyParentInfo(Long babyid) {
         return babyService.getBabyParentInfo(babyid);
@@ -140,6 +145,7 @@ public class BabyController extends BaseController {
      *
      * @param examid 体检项目id
      */
+    @AdminCheck
     @Transactional
     @PostMapping("/cancelremind")
     public RestVo cancelRemind(Long examid) {
@@ -151,6 +157,7 @@ public class BabyController extends BaseController {
      *
      * @param entity 体检项目
      */
+    @AdminCheck
     @Deprecated
     @Transactional
     @PostMapping("/updateexam")
@@ -163,6 +170,7 @@ public class BabyController extends BaseController {
      *
      * @param examIds 体检项目id集合
      */
+    @AdminCheck
     @Transactional
     @PostMapping("/updatedingtimes")
     public RestVo updateDingTimes(@RequestParam(value = "examIds") List<Long> examIds) {
@@ -175,6 +183,7 @@ public class BabyController extends BaseController {
      * @param pageBo:
      * @param corpid:
      */
+    @AdminCheck
     @PostMapping("/tomorrowexaminationbabyslist")
     public RestVo tomorrowExaminationBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
         return babyService.tomorrowExaminationBabysList(pageBo, corpid);
@@ -186,6 +195,7 @@ public class BabyController extends BaseController {
      * @param examId 体检id
      * @param corpid corpid
      */
+    @AdminCheck
     @Transactional
     @PostMapping("/delayoneday")
     public RestVo delayOneDay(Long examId, @RequestHeader("corpid") String corpid) {
@@ -198,6 +208,7 @@ public class BabyController extends BaseController {
      * @param pageBo:
      * @param corpid:
      */
+    @AdminCheck
     @PostMapping("/changedatebabyslist")
     public RestVo changeDateBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
         return babyService.changeDateBabysList(pageBo, corpid);
@@ -209,6 +220,7 @@ public class BabyController extends BaseController {
      * @param pageBo:
      * @param corpid:
      */
+    @AdminCheck
     @PostMapping("/allbabyslist")
     public RestVo allBabysList(@RequestBody PageBo<Map<String, Object>> pageBo, @RequestHeader("corpid") String corpid) {
         return babyService.allBabysList(pageBo, corpid);
@@ -219,6 +231,7 @@ public class BabyController extends BaseController {
      *
      * @param id:
      */
+    @AdminCheck
     @Transactional
     @PostMapping("/cancelbaby")
     public RestVo cancelBaby(Long id) {
