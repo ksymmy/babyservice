@@ -560,10 +560,16 @@ WHERE
     FROM
         biz_baby_info a
     WHERE
-        a.state = 1
-        and (a.parent_id = #{parentId,jdbcType=BIGINT}
-            OR a.father_mobile = #{mobile,jdbcType=VARCHAR}
-            OR a.mother_mobile = #{mobile,jdbcType=VARCHAR})
+        EXISTS (
+            SELECT
+                1
+            FROM
+                biz_user_info b
+            WHERE
+                b.id = #{parentId,jdbcType=BIGINT}
+                AND ( a.parent_id = b.id OR a.father_mobile = b.mobile OR a.mother_mobile = b.mobile )
+                )
+        order by a.create_time desc
   </select>
 
     <select id="getBabyInfo" resultType="map">
