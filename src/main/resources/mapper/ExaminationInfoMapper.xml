@@ -9,7 +9,6 @@
     <result column="examination_item" jdbcType="VARCHAR" property="examinationItem" />
     <result column="old_examination_date" jdbcType="DATE" property="oldExaminationDate" />
     <result column="delay_reason" jdbcType="VARCHAR" property="delayReason" />
-    <result column="overdue_days" jdbcType="SMALLINT" property="overdueDays" />
     <result column="ding_times" jdbcType="SMALLINT" property="dingTimes" />
     <result column="sign_in" jdbcType="TINYINT" property="signIn" />
     <result column="confirm" jdbcType="TINYINT" property="confirm" />
@@ -20,7 +19,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     id, baby_id, examination_date, examination_type, examination_item, old_examination_date,
-    delay_reason, overdue_days, ding_times, sign_in, confirm, create_time,
+    delay_reason, ding_times, sign_in, confirm, create_time,
     update_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -36,12 +35,12 @@
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.ExaminationInfo">
     insert into biz_examination_info (id, baby_id,
       examination_date, examination_type, examination_item,
-      old_examination_date, delay_reason, overdue_days,
+      old_examination_date, delay_reason,
       ding_times, sign_in, confirm,
       create_time, update_time)
     values (#{id,jdbcType=BIGINT}, #{babyId,jdbcType=BIGINT},
       #{examinationDate,jdbcType=DATE}, #{examinationType,jdbcType=TINYINT}, #{examinationItem,jdbcType=VARCHAR},
-      #{oldExaminationDate,jdbcType=DATE}, #{delayReason,jdbcType=VARCHAR}, #{overdueDays,jdbcType=SMALLINT},
+      #{oldExaminationDate,jdbcType=DATE}, #{delayReason,jdbcType=VARCHAR},
       #{dingTimes,jdbcType=SMALLINT}, #{signIn,jdbcType=TINYINT}, #{confirm,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -68,9 +67,6 @@
       </if>
       <if test="delayReason != null">
         delay_reason,
-      </if>
-      <if test="overdueDays != null">
-        overdue_days,
       </if>
       <if test="dingTimes != null">
         ding_times,
@@ -110,9 +106,6 @@
       <if test="delayReason != null">
         #{delayReason,jdbcType=VARCHAR},
       </if>
-      <if test="overdueDays != null">
-        #{overdueDays,jdbcType=SMALLINT},
-      </if>
       <if test="dingTimes != null">
         #{dingTimes,jdbcType=SMALLINT},
       </if>
@@ -151,9 +144,6 @@
       <if test="delayReason != null">
         delay_reason = #{delayReason,jdbcType=VARCHAR},
       </if>
-      <if test="overdueDays != null">
-        overdue_days = #{overdueDays,jdbcType=SMALLINT},
-      </if>
       <if test="dingTimes != null">
         ding_times = #{dingTimes,jdbcType=SMALLINT},
       </if>
@@ -181,7 +171,6 @@
       examination_item = #{examinationItem,jdbcType=VARCHAR},
       old_examination_date = #{oldExaminationDate,jdbcType=DATE},
       delay_reason = #{delayReason,jdbcType=VARCHAR},
-      overdue_days = #{overdueDays,jdbcType=SMALLINT},
       ding_times = #{dingTimes,jdbcType=SMALLINT},
       sign_in = #{signIn,jdbcType=TINYINT},
       confirm = #{confirm,jdbcType=TINYINT},
@@ -199,14 +188,14 @@
   <insert id="batchInsert" parameterType="java.util.List">
     insert into biz_examination_info (id, baby_id,
       examination_date, examination_type, examination_item,
-      old_examination_date, delay_reason, overdue_days,
+      old_examination_date, delay_reason,
       ding_times, sign_in, confirm,
       create_time, update_time)
     values
       <foreach collection="infos" item="item" separator=",">
         (#{item.id,jdbcType=BIGINT}, #{item.babyId,jdbcType=BIGINT},
         #{item.examinationDate,jdbcType=DATE}, #{item.examinationType,jdbcType=TINYINT}, #{item.examinationItem,jdbcType=VARCHAR},
-        #{item.oldExaminationDate,jdbcType=DATE}, #{item.delayReason,jdbcType=VARCHAR}, #{item.overdueDays,jdbcType=SMALLINT},
+        #{item.oldExaminationDate,jdbcType=DATE}, #{item.delayReason,jdbcType=VARCHAR},
         #{item.dingTimes,jdbcType=SMALLINT}, #{item.signIn,jdbcType=TINYINT}, #{item.confirm,jdbcType=TINYINT},
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP})
       </foreach>

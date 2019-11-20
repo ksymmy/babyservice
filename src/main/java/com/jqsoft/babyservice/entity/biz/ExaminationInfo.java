@@ -27,8 +27,6 @@ public class ExaminationInfo implements Serializable {
 
     private String delayReason;
 
-    private Short overdueDays;
-
     private Short dingTimes;
 
     private Byte signIn;
