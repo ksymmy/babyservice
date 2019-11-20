@@ -44,17 +44,15 @@ public class LoginService {
         }
 
         userid = getUserid(authCode);
-        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get");
-        OapiUserGetRequest userGetRequest = new OapiUserGetRequest();
-        userGetRequest.setUserid(userid);
-        userGetRequest.setHttpMethod("GET");
-        OapiUserGetResponse userGetResponse;
-        try {
-            userGetResponse = client.execute(userGetRequest, getAccessToken());
-        } catch (ApiException e) {
-            e.printStackTrace();
-            return RestVo.FAIL("user/get失败");
+        if (StringUtils.isBlank(userid)) {
+            RestVo.FAIL("userid/get失败");
         }
+
+        OapiUserGetResponse userGetResponse = getUserInfo(userid);
+        if (null == userGetResponse) {
+            RestVo.FAIL("user/get失败");
+        }
+
         UserInfo oldUserInfo = userInfoMapper.selectByCorpIdAndUserid(corpid, userid), userInfo;
         String key = RedisKey.LOGIN_CORP_USER.getKey(corpid, userid);
         Date createDate = new Date();
@@ -109,5 +107,20 @@ public class LoginService {
             return null;
         }
         return userGetuserinfoResponse.getUserid();
+    }
+
+    public OapiUserGetResponse getUserInfo(String userid) {
+        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get");
+        OapiUserGetRequest userGetRequest = new OapiUserGetRequest();
+        userGetRequest.setUserid(userid);
+        userGetRequest.setHttpMethod("GET");
+        OapiUserGetResponse userGetResponse = null;
+        try {
+            userGetResponse = client.execute(userGetRequest, getAccessToken());
+        } catch (ApiException e) {
+            e.printStackTrace();
+        }
+
+        return userGetResponse;
     }
 }

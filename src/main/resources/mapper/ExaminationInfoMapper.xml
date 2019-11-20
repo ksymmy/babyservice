@@ -261,7 +261,7 @@
     DELETE from biz_examination_info a where a.baby_id = #{babyId,jdbcType=BIGINT}
   </delete>
     <update id="updateDingTimes" parameterType="list">
-        update biz_examination_info set ding_times = ding_times+1,update_time = CURRENT_DATE where id in
+        update biz_examination_info set ding_times = ding_times+1,update_time = CURRENT_TIMESTAMP where id in
         <foreach collection="list" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -20,4 +20,6 @@ public interface UserInfoMapper {
     UserInfo selectByCorpIdAndUserid(String corpid, String userid);
 
     UserInfo getUserInfoByMobile(String mobile);
+
+    int deleteByUserid(String userid);
 }

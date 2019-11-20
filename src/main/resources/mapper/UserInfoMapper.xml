@@ -29,7 +29,8 @@
     <select id="selectByCorpIdAndUserid" resultMap="BaseResultMap">
         select * from biz_user_info where corpid = #{corpid} and userid = #{userid}
     </select>
-  <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo">
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo" useGeneratedKeys="true"
+            keyProperty="id" keyColumn="id">
     insert into biz_user_info (id, name, mobile, 
       address, active, admin, 
       corpid, userid, create_time, 
@@ -159,4 +160,8 @@
     where mobile = #{mobile,jdbcType=VARCHAR}
     limit 1
   </select>
+
+    <delete id="deleteByUserid">
+      delete from biz_user_info where userid = #{userid}
+  </delete>
 </mapper>
