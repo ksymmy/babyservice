@@ -178,6 +178,7 @@ public class BabyService {
         Map<String,Object> returnMap = new HashMap<>();
         returnMap.put("parentName", userInfo.getName());
         returnMap.put("parentMobile", userInfo.getMobile());
+        returnMap.put("address", userInfo.getAddress());
         returnMap.put("babyList", babyInfos);
         return RestVo.SUCCESS(returnMap);
     }
