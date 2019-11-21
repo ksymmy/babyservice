@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.RemindNews">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="examination_id" jdbcType="BIGINT" property="examinationId" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="context" jdbcType="VARCHAR" property="context" />
     <result column="news_type" jdbcType="TINYINT" property="newsType" />
@@ -14,130 +15,34 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, examination_id, title, context, news_type, create_time,
+    id, examination_id, user_id, title, context, news_type, create_time,
     update_time
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from biz_remind_news
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    delete from biz_remind_news
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
   <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
-    insert into biz_remind_news (id, examination_id,
+    insert into biz_remind_news (id, examination_id, user_id,
       title, context, news_type,
       create_time,
       update_time)
-    values (#{id,jdbcType=BIGINT}, #{examinationId,jdbcType=BIGINT},
+    values (#{id,jdbcType=BIGINT}, #{examinationId,jdbcType=BIGINT}, #{userId,jdbcType=BIGINT},
       #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, #{newsType,jdbcType=TINYINT},
       #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
-    insert into biz_remind_news
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="examinationId != null">
-        examination_id,
-      </if>
-      <if test="title != null">
-        title,
-      </if>
-      <if test="context != null">
-        context,
-      </if>
-      <if test="newsType != null">
-        news_type,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="examinationId != null">
-        #{examinationId,jdbcType=BIGINT},
-      </if>
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="context != null">
-        #{context,jdbcType=VARCHAR},
-      </if>
-      <if test="newsType != null">
-        #{newsType,jdbcType=TINYINT},
-      </if>
-      <if test="signIn != null">
-        #{signIn,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
-    update biz_remind_news
-    <set>
-      <if test="examinationId != null">
-        examination_id = #{examinationId,jdbcType=BIGINT},
-      </if>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="context != null">
-        context = #{context,jdbcType=VARCHAR},
-      </if>
-      <if test="newsType != null">
-        news_type = #{newsType,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.RemindNews">
-    update biz_remind_news
-    set
-      examination_id = #{examinationId,jdbcType=BIGINT},
-      title = #{title,jdbcType=VARCHAR},
-      context = #{context,jdbcType=VARCHAR},
-      news_type = #{newsType,jdbcType=TINYINT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into biz_remind_news (id, examination_id,
+    insert into biz_remind_news (id, examination_id, user_id
       title, context, news_type,
       create_time,
       update_time)
     values
         <foreach collection="remindNewsList" item="info" separator=",">
-          (#{info.id,jdbcType=BIGINT}, #{info.examinationId,jdbcType=BIGINT},
+          (#{info.id,jdbcType=BIGINT}, #{info.examinationId,jdbcType=BIGINT}, #{info.userId,jdbcType=BIGINT},
             #{info.title,jdbcType=VARCHAR}, #{info.context,jdbcType=VARCHAR}, #{info.newsType,jdbcType=TINYINT},
             #{info.createTime,jdbcType=TIMESTAMP},
             #{info.updateTime,jdbcType=TIMESTAMP})
         </foreach>
   </insert>
   <select id="remindNewsList" resultMap="BaseResultMap">
+    select * from (
         SELECT
             a.*,
 			b.sign_in,
@@ -162,7 +67,9 @@
                     AND ( c.parent_id = d.id OR c.father_mobile = d.mobile OR c.mother_mobile = d.mobile )
                     AND d.id = #{userId,jdbcType=BIGINT}
                     )
-        ORDER BY a.create_time DESC
+         union  select e.*,0 sign_in,0 confirm,0 is_delay from biz_remind_news e where e.news_type = -1 and e.user_id = #{userId,jdbcType=BIGINT}
+      ) t
+        ORDER BY t.create_time DESC
         limit ${offset},${size}
   </select>
   <delete id="deleteByBabyId">
@@ -172,4 +79,11 @@
     WHERE
         EXISTS ( SELECT 1 FROM biz_examination_info b WHERE b.id = a.examination_id AND b.baby_id = #{babyId,jdbcType=BIGINT} )
   </delete>
+  <select id="getWelcomeNewsByUserId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from biz_remind_news
+    where user_id = #{userId,jdbcType=BIGINT}
+    limit 1
+  </select>
 </mapper>

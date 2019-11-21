@@ -143,14 +143,14 @@ public class BabyService {
     /**
      * 医生端-获取我的宝宝信息
      *
-     * @param userId
+     * @param userInfo
      * @return
      */
-    public RestVo myBabys(Long userId) {
-        if (null == userId) {
+    public RestVo myBabys(UserInfo userInfo) {
+        if (null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
-        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(userId);
+        List<BabyInfo> babyInfos = babyInfoMapper.myBabys(userInfo.getId());
         if (CollectionUtils.isNotEmpty(babyInfos)) {
             int size = babyInfos.size();
             for (int i = 0; i < size; i++) {
@@ -175,7 +175,11 @@ public class BabyService {
                 baby.setExaminationInfos(null);
             }
         }
-        return RestVo.SUCCESS(babyInfos);
+        Map<String,Object> returnMap = new HashMap<>();
+        returnMap.put("parentName", userInfo.getName());
+        returnMap.put("parentMobile", userInfo.getMobile());
+        returnMap.put("babyList", babyInfos);
+        return RestVo.SUCCESS(returnMap);
     }
 
     /**

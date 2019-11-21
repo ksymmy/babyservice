@@ -36,11 +36,15 @@ public class LoginService {
     private UserInfoMapper userInfoMapper;
     @Resource
     private RedisUtils redisUtils;
-
+    @Resource
+    private RemindNewsService remindNewsService;
 
     public RestVo login(String authCode, String corpid, String userid) {
-        if (StringUtils.isNotBlank(userid) && null != userService.selectByCorpIdAndUserid(corpid, userid)) {
-            return RestVo.SUCCESS(userService.selectByCorpIdAndUserid(corpid, userid));
+        UserInfo userInfo1 = userService.selectByCorpIdAndUserid(corpid, userid);
+        if (StringUtils.isNotBlank(userid) && null != userInfo1) {
+            // 初始化一条欢迎消息
+            remindNewsService.addWelcomeNews(userInfo1);
+            return RestVo.SUCCESS(userInfo1);
         }
 
         userid = getUserid(authCode);
@@ -69,6 +73,10 @@ public class LoginService {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
             }
         }
+
+        // 初始化一条欢迎消息
+        remindNewsService.addWelcomeNews(userInfo);
+
         return RestVo.SUCCESS(userInfo);
     }
 

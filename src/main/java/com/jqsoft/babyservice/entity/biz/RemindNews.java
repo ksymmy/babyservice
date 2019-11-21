@@ -16,11 +16,13 @@ public class RemindNews implements Serializable {
 
     private Long examinationId;
 
+    private Long userId;
+
     private String title;
 
     private String context;
 
-    private Byte newsType; // 类型（0：提前提醒 1：当天签到  2：逾期提醒）'
+    private Byte newsType; // 类型（ -1：欢迎消息 0：提前提醒 1：当天签到  2：逾期提醒）
 
     private Byte signIn; // '是否已签到（0：未签到 1：已签到）'
 
