@@ -265,6 +265,18 @@ public class BabyController extends BaseController {
     }
 
     /**
+     * 家长端-生成体检计划日期
+     * @param birthday
+     * @return
+     */
+    @ParentCheck
+    @RequestMapping("generateExaminationDates")
+    public RestVo generateExaminationDates(@DateTimeFormat(pattern = "yyyy-MM-dd") Date birthday){
+        return babyService.generateExaminationDates(this.getDdCorpid(), birthday);
+    };
+
+
+    /**
      * 家长端-保存宝宝信息
      *
      * @param babyInfo

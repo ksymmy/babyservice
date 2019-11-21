@@ -7,6 +7,7 @@ import com.dingtalk.api.response.OapiUserGetByMobileResponse;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
+import com.jqsoft.babyservice.commons.utils.DateUtil;
 import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
@@ -246,7 +247,7 @@ public class BabyService {
             item = examinationType[j] == 1 ? ("满月" + item) : (examinationType[j] + "月龄" + item);
             info.setExaminationItem(item);
             info.setDingTimes((short) 0);
-            info.setSignIn((byte) 0);
+            info.setSignIn(null != babyInfo.getSignIn() && babyInfo.getSignIn().length > j ? babyInfo.getSignIn()[j] : 0);
             info.setConfirm((byte) 0);
             info.setCreateTime(now);
             info.setUpdateTime(now);
@@ -330,5 +331,27 @@ public class BabyService {
 
     public RestVo updateDingTimes(List<Long> examIds) {
         return RestVo.SUCCESS(examinationInfoMapper.updateDingTimes(examIds));
+    }
+
+    public RestVo generateExaminationDates(String corpid, Date birthday){
+        if (null == corpid && null == birthday) {
+            return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+
+        Date[] examinationDateList = {null,null,null,null,null,null,null,null,null};
+        Byte[] signInList = {0,0,0,0,0,0,0,0,0};
+        byte[] examinationType = {1, 3, 6, 8, 12, 18, 24, 30, 36};
+        Date now = new Date();
+        for (int i = 0; i < examinationType.length; i++) {
+            examinationDateList[i] = this.getExaminationDate(corpid, DateUtils.addMonths(birthday, examinationType[i]));
+            if (DateUtil.differentDaysByDate(now, examinationDateList[i]) <= 0) {
+                signInList[i] = 1;
+            }
+        }
+
+        Map<Object,Object> returnMap = new HashMap<>();
+        returnMap.put("examinationDateList", examinationDateList);
+        returnMap.put("signInList", signInList);
+        return RestVo.SUCCESS(returnMap);
     }
 }
