@@ -29,7 +29,7 @@
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into biz_remind_news (id, examination_id, user_id
+    insert into biz_remind_news (id, examination_id, user_id,
       title, context, news_type,
       create_time,
       update_time)
