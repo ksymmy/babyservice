@@ -232,7 +232,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes gte 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -263,7 +263,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes gte 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -292,7 +292,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes gte 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -329,7 +329,7 @@
             <if test="overdueEnd != null and '' != overdueEnd">
                 and DATEDIFF(CURRENT_DATE,y.maxdate) &lt;= #{overdueEnd,jdbcType=INTEGER}
             </if>
-            <if test="dingTimes != null">
+            <if test="dingTimes != null and dingTimes gte 0">
                 <choose>
                     <when test="dingTimes == 3 ">
                         and x.ding_times >= #{dingTimes,jdbcType=SMALLINT}
@@ -365,7 +365,7 @@
       <if test="param.examinationType != null and '' != param.examinationType">
           and a.examination_type = #{param.examinationType,jdbcType=INTEGER}
       </if>
-      <if test="param.dingTimes != null">
+      <if test="param.dingTimes gte 0">
           <choose>
               <when test="param.dingTimes == 3 ">
                   and a.ding_times >= #{param.dingTimes,jdbcType=SMALLINT}
@@ -399,7 +399,7 @@
         <if test="age != null">
             and a.examination_type = #{age,jdbcType=INTEGER}
         </if>
-        <if test="dingTimes != null">
+        <if test="dingTimes != null and dingTimes gte 0">
             <choose>
                 <when test="dingTimes == 3 ">
                     and a.ding_times >= #{dingTimes,jdbcType=SMALLINT}
