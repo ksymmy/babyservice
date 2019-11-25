@@ -17,7 +17,8 @@
     <result column="state" jdbcType="TINYINT" property="state" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <collection property="examinationInfos" column="id" fetchType="lazy" select="com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper.myExaminationInfo"></collection>
+        <collection property="examinationInfos" column="id" fetchType="lazy"
+                    select="com.jqsoft.babyservice.mapper.biz.ExaminationInfoMapper.myExaminationInfo"/>
   </resultMap>
 
   <sql id="Base_Column_List">
@@ -573,9 +574,6 @@ WHERE
         order by a.create_time desc
   </select>
 
-    <select id="getBabyInfo" resultType="map">
-
-    </select>
     <select id="getBabyInfoByExaminationId" resultMap="BaseResultMap">
         SELECT
             *

@@ -41,7 +41,4 @@ public class RemindNews implements Serializable {
     private Byte confirm;
 
     private Byte isDelay;   // 0:未改期 1：已改期
-
-
-
 }

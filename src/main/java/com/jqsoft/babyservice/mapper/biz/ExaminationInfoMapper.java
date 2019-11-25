@@ -28,9 +28,9 @@ public interface ExaminationInfoMapper {
 
     List<ExaminationInfo> getNeedRemindExaminationInfoList(int offset, int size);
 
-     void examinationConfirm(Long examinationId);
+    void examinationConfirm(Long examinationId);
 
-    Map applyDelay(Long examinationId);
+    Map<String, Object> applyDelay(Long examinationId);
 
     void confirmDelay(Long examinationId, Date delayDate, String delayReason);
 

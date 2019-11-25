@@ -34,11 +34,12 @@ public class ExaminationService {
 
     /**
      * 家长端-确认可以正常体检
+     *
      * @param examinationId
      * @return
      */
     @RequestMapping("examinationConfirm")
-    public RestVo examinationConfirm(Long examinationId, UserInfo userInfo){
+    public RestVo examinationConfirm(Long examinationId, UserInfo userInfo) {
         if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -57,10 +58,11 @@ public class ExaminationService {
 
     /**
      * 家长端-签到
+     *
      * @param examinationId
      * @return
      */
-    public RestVo signIn(Long examinationId, UserInfo userInfo){
+    public RestVo signIn(Long examinationId, UserInfo userInfo) {
         if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -80,10 +82,11 @@ public class ExaminationService {
 
     /**
      * 家长端-申请延期
+     *
      * @param examinationId
      * @return
      */
-    public RestVo applyDelay(Long examinationId, UserInfo userInfo){
+    public RestVo applyDelay(Long examinationId, UserInfo userInfo) {
         if (null == examinationId || null == userInfo) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -97,11 +100,11 @@ public class ExaminationService {
             return RestVo.FAIL(ResultMsg.NOT_BABY_PARENT);
         }
 
-        Map map = examinationInfoMapper.applyDelay(examinationId);
+        Map<String, Object> map = examinationInfoMapper.applyDelay(examinationId);
         Object examinationType = map.get("examinationType");
-        if (null != examinationType){
+        if (null != examinationType) {
             if (examinationType.equals(1)) {
-                map.put("examinationType","满月健康体检");
+                map.put("examinationType", "满月健康体检");
             } else {
                 map.put("examinationType", examinationType + "月龄健康体检");
             }
@@ -111,12 +114,13 @@ public class ExaminationService {
 
     /**
      * 家长端-确定延期
+     *
      * @param examinationId
      * @param delayDate
      * @param delayReason
      * @return
      */
-    public RestVo confirmDelay(UserInfo userInfo, Long examinationId, Date delayDate, String delayReason){
+    public RestVo confirmDelay(UserInfo userInfo, Long examinationId, Date delayDate, String delayReason) {
         if (null == examinationId || null == userInfo || null == delayDate) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
@@ -160,7 +164,7 @@ public class ExaminationService {
         }
 
         // 是否在医院不上班时间
-        boolean isWorkTime = workTimeService.isWorkTime(userInfo.getCorpid(),delayDate);
+        boolean isWorkTime = workTimeService.isWorkTime(userInfo.getCorpid(), delayDate);
         if (!isWorkTime) {
             return RestVo.FAIL(ResultMsg.NOT_IN_WORK_TIME);
         }

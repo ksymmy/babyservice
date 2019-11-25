@@ -3,7 +3,6 @@ package com.jqsoft.babyservice.controller.biz;
 import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.interceptor.AdminCheck;
 import com.jqsoft.babyservice.commons.interceptor.ParentCheck;
-import com.jqsoft.babyservice.commons.utils.DdUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
@@ -15,7 +14,6 @@ import com.jqsoft.babyservice.service.biz.RemindNewsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -32,6 +30,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/baby")
 public class BabyController extends BaseController {
+    @Value("${hospitalName}")
+    public String hospitalName;
 
     @Resource
     public BabyService babyService;
@@ -40,29 +40,20 @@ public class BabyController extends BaseController {
     private RemindNewsJob remindNewsJob;
 
     @Resource
-    private DdUtils ddUtils;
-
-    @Resource
     private ExaminationService examinationService;
 
     @Resource
     private RemindNewsService remindNewsService;
 
-    @Value("${hospitalName}")
-    public String hospitalName;
-
     //******************************************* 医生端接口 *****************************************************
 
     /**
      * 医生端-首页统计
-     *
-     * @return
      */
     @AdminCheck
-    @RequestMapping("indexCount")
+    @RequestMapping("/indexCount")
     public RestVo indexCount() {
-        RestVo restVo = babyService.indexCount(this.getDdCorpid());
-        return restVo;
+        return babyService.indexCount(this.getDdCorpid());
     }
 
     /**
@@ -116,19 +107,6 @@ public class BabyController extends BaseController {
     }
 
     /**
-     * 医生端-儿童档案
-     *
-     * @param babyid babyid
-     * @param corpid corpid
-     */
-    @Deprecated
-    @AdminCheck
-    @GetMapping("/babyinfo")
-    public RestVo babyInfo(Long babyid, @RequestHeader("corpid") String corpid) {
-        return babyService.getBabyInfo(babyid, corpid);
-    }
-
-    /**
      * 医生端-儿童档案-父母信息
      *
      * @param babyid babyid
@@ -146,7 +124,6 @@ public class BabyController extends BaseController {
      * @param examid 体检项目id
      */
     @AdminCheck
-    @Transactional
     @PostMapping("/cancelremind")
     public RestVo cancelRemind(Long examid) {
         return babyService.cancelRemind(examid);
@@ -159,7 +136,6 @@ public class BabyController extends BaseController {
      */
     @AdminCheck
     @Deprecated
-    @Transactional
     @PostMapping("/updateexam")
     public RestVo cancelRemind(@RequestBody ExaminationInfo entity) {
         return babyService.updateexam(entity);
@@ -171,7 +147,6 @@ public class BabyController extends BaseController {
      * @param examIds 体检项目id集合
      */
     @AdminCheck
-    @Transactional
     @PostMapping("/updatedingtimes")
     public RestVo updateDingTimes(@RequestParam(value = "examIds") List<Long> examIds) {
         return babyService.updateDingTimes(examIds);
@@ -196,7 +171,6 @@ public class BabyController extends BaseController {
      * @param corpid corpid
      */
     @AdminCheck
-    @Transactional
     @PostMapping("/delayoneday")
     public RestVo delayOneDay(Long examId, @RequestHeader("corpid") String corpid) {
         return babyService.delayOneDay(examId, corpid);
@@ -232,7 +206,6 @@ public class BabyController extends BaseController {
      * @param id:
      */
     @AdminCheck
-    @Transactional
     @PostMapping("/cancelbaby")
     public RestVo cancelBaby(Long id) {
         return babyService.cancelBaby(id);
@@ -247,7 +220,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("myBabys")
+    @RequestMapping("/myBabys")
     public RestVo myBabys() {
         return babyService.myBabys(this.getUser());
     }
@@ -259,22 +232,22 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("delBaby")
+    @RequestMapping("/delBaby")
     public RestVo delBabyInfo(Long babyId) {
         return babyService.delBabyInfo(babyId, this.getUser());
     }
 
     /**
      * 家长端-生成体检计划日期
+     *
      * @param birthday
      * @return
      */
     @ParentCheck
-    @RequestMapping("generateExaminationDates")
-    public RestVo generateExaminationDates(@DateTimeFormat(pattern = "yyyy-MM-dd") Date birthday){
+    @RequestMapping("/generateExaminationDates")
+    public RestVo generateExaminationDates(@DateTimeFormat(pattern = "yyyy-MM-dd") Date birthday) {
         return babyService.generateExaminationDates(this.getDdCorpid(), birthday);
-    };
-
+    }
 
     /**
      * 家长端-保存宝宝信息
@@ -283,7 +256,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("addBabyInfo")
+    @RequestMapping("/addBabyInfo")
     public RestVo addBabyInfo(@RequestBody BabyInfo babyInfo) {
         return babyService.addBabyInfo(babyInfo, this.getUser());
     }
@@ -296,7 +269,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("remindNewsList")
+    @RequestMapping("/remindNewsList")
     public RestVo remindNewsList(@RequestBody PageBo<Map<String, Object>> pageBo) {
         return remindNewsService.remindNewsList(pageBo, this.getUserId());
     }
@@ -308,7 +281,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("examinationConfirm")
+    @RequestMapping("/examinationConfirm")
     public RestVo examinationConfirm(Long examinationId) {
         return examinationService.examinationConfirm(examinationId, this.getUser());
     }
@@ -320,7 +293,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("signIn")
+    @RequestMapping("/signIn")
     public RestVo signIn(Long examinationId) {
         return examinationService.signIn(examinationId, this.getUser());
     }
@@ -332,7 +305,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("applyDelay")
+    @RequestMapping("/applyDelay")
     public RestVo applyDelay(Long examinationId) {
         return examinationService.applyDelay(examinationId, this.getUser());
     }
@@ -344,7 +317,7 @@ public class BabyController extends BaseController {
      * @return
      */
     @ParentCheck
-    @RequestMapping("confirmDelay")
+    @RequestMapping("/confirmDelay")
     public RestVo confirmDelay(Long examinationId, @DateTimeFormat(pattern = "yyyy-MM-dd") Date delayDate, String delayReason) {
         return examinationService.confirmDelay(this.getUser(), examinationId, delayDate, delayReason);
     }
@@ -354,12 +327,12 @@ public class BabyController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("getHospitalName")
+    @RequestMapping("/getHospitalName")
     public RestVo getHospitalName() {
         return RestVo.SUCCESS(hospitalName);
     }
 
-    @RequestMapping("test")
+    @RequestMapping("/test")
     public void test(String title, String context, String userid) {
         remindNewsJob.remindNewsJob();
 //        ddUtils.sendDdMessage(title,context,userid);

@@ -49,17 +49,15 @@ public interface BabyInfoMapper {
 
     Map getBabyParentInfo(Long id);
 
-    Map overdueCount(@Param("corpid") String corpid);
+    Map<String, String> overdueCount(@Param("corpid") String corpid);
 
-    Map tomorrowExaminationBabysCount(@Param("corpid") String corpid);
+    Map<String, String> tomorrowExaminationBabysCount(@Param("corpid") String corpid);
 
-    Map changeDateBabysCount(@Param("corpid") String corpid);
+    Map<String, String> changeDateBabysCount(@Param("corpid") String corpid);
 
-    Map allBabysCount(@Param("corpid") String corpid);
+    Map<String, String> allBabysCount(@Param("corpid") String corpid);
 
     List<BabyInfo> myBabys(@Param("parentId") Long parentId);
-
-    Map getBabyInfo(Long babyid, String corpid);
 
     BabyInfo getBabyInfoByExaminationId(Long examinationId);
 

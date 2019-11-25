@@ -114,6 +114,7 @@ public class BabyService {
         return RestVo.SUCCESS(dataMap);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public RestVo cancelRemind(Long id) {
         ExaminationInfo entity = new ExaminationInfo();
         entity.setId(id);
@@ -122,6 +123,7 @@ public class BabyService {
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public RestVo delayOneDay(Long id, String corpid) {
         ExaminationInfo entity = examinationInfoMapper.selectByPrimaryKey(id);
         entity.setExaminationDate(this.getExaminationDate(corpid, DateUtils.addDays(entity.getExaminationDate(), 1)));
@@ -129,16 +131,13 @@ public class BabyService {
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public RestVo cancelBaby(Long id) {
         BabyInfo babyInfo = new BabyInfo();
         babyInfo.setId(id);
         babyInfo.setState((byte) 0);
         babyInfo.setUpdateTime(new Date());
         return RestVo.SUCCESS(babyInfoMapper.updateByPrimaryKeySelective(babyInfo));
-    }
-
-    public RestVo getBabyInfo(Long babyid, String corpid) {
-        return RestVo.SUCCESS(babyInfoMapper.getBabyInfo(babyid, corpid));
     }
 
     /**
@@ -153,9 +152,7 @@ public class BabyService {
         }
         List<BabyInfo> babyInfos = babyInfoMapper.myBabys(userInfo.getId());
         if (CollectionUtils.isNotEmpty(babyInfos)) {
-            int size = babyInfos.size();
-            for (int i = 0; i < size; i++) {
-                BabyInfo baby = babyInfos.get(i);
+            for (BabyInfo baby : babyInfos) {
                 List<ExaminationInfo> examinationInfos = baby.getExaminationInfos();
                 Byte[] signIn = {0, 0, 0, 0, 0, 0, 0, 0, 0};
                 if (CollectionUtils.isNotEmpty(examinationInfos)) {
@@ -176,7 +173,7 @@ public class BabyService {
                 baby.setExaminationInfos(null);
             }
         }
-        Map<String,Object> returnMap = new HashMap<>();
+        Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("parentName", userInfo.getName());
         returnMap.put("parentMobile", userInfo.getMobile());
         returnMap.put("address", userInfo.getAddress());
@@ -290,13 +287,10 @@ public class BabyService {
      * @return
      */
     public boolean isBabyParent(BabyInfo babyInfo, UserInfo curUser) {
-        if (null == babyInfo || null == curUser ||
-                !((null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
-                || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
-                || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())))) {
-            return false;
-        }
-        return true;
+        return null != babyInfo && null != curUser &&
+                ((null != babyInfo.getParentId() && curUser.getId().longValue() == babyInfo.getParentId().longValue())
+                        || (StringUtils.isNotBlank(babyInfo.getFatherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getFatherMobile()))
+                        || (StringUtils.isNotBlank(babyInfo.getMotherMobile()) && StringUtils.isNotBlank(curUser.getMobile()) && curUser.getMobile().equals(babyInfo.getMotherMobile())));
     }
 
     public BabyInfo getBabyInfoByExaminationId(Long examinationId) {
@@ -323,23 +317,24 @@ public class BabyService {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public RestVo updateexam(ExaminationInfo entity) {
         if (null == entity || null == entity.getId()) return RestVo.FAIL();
         return RestVo.SUCCESS(examinationInfoMapper.updateByPrimaryKeySelective(entity));
     }
 
-
+    @Transactional(rollbackFor = Exception.class)
     public RestVo updateDingTimes(List<Long> examIds) {
         return RestVo.SUCCESS(examinationInfoMapper.updateDingTimes(examIds));
     }
 
-    public RestVo generateExaminationDates(String corpid, Date birthday){
+    public RestVo generateExaminationDates(String corpid, Date birthday) {
         if (null == corpid && null == birthday) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
 
-        Date[] examinationDateList = {null,null,null,null,null,null,null,null,null};
-        Byte[] signInList = {0,0,0,0,0,0,0,0,0};
+        Date[] examinationDateList = {null, null, null, null, null, null, null, null, null};
+        Byte[] signInList = {0, 0, 0, 0, 0, 0, 0, 0, 0};
         byte[] examinationType = {1, 3, 6, 8, 12, 18, 24, 30, 36};
         Date now = new Date();
         for (int i = 0; i < examinationType.length; i++) {
@@ -349,7 +344,7 @@ public class BabyService {
             }
         }
 
-        Map<Object,Object> returnMap = new HashMap<>();
+        Map<Object, Object> returnMap = new HashMap<>();
         returnMap.put("examinationDateList", examinationDateList);
         returnMap.put("signInList", signInList);
         return RestVo.SUCCESS(returnMap);
