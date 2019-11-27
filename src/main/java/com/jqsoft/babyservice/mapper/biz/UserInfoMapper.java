@@ -2,24 +2,26 @@ package com.jqsoft.babyservice.mapper.biz;
 
 import com.jqsoft.babyservice.entity.biz.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface UserInfoMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(@Param("id") Long id);
 
     int insert(UserInfo record);
 
     int insertSelective(UserInfo record);
 
-    UserInfo selectByPrimaryKey(Long id);
+    UserInfo selectByPrimaryKey(@Param("id") Long id);
 
     int updateByPrimaryKeySelective(UserInfo record);
 
     int updateByPrimaryKey(UserInfo record);
 
-    UserInfo selectByCorpIdAndUserid(String corpid, String userid);
+    UserInfo selectByCorpIdAndUserid(@Param("corpid") String corpid,
+                                     @Param("userid") String userid);
 
-    UserInfo getUserInfoByMobile(String mobile);
+    UserInfo getUserInfoByMobile(@Param("mobile") String mobile);
 
-    int deleteByUserid(String userid);
+    int deleteByUserid(@Param("userid") String userid);
 }

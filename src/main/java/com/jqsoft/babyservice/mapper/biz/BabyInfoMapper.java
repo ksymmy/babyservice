@@ -9,23 +9,34 @@ import java.util.Map;
 
 @Mapper
 public interface BabyInfoMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(@Param("id") Long id);
 
     int insert(BabyInfo record);
 
     int insertSelective(BabyInfo record);
 
-    BabyInfo selectByPrimaryKey(Long id);
+    BabyInfo selectByPrimaryKey(@Param("id") Long id);
 
     int updateByPrimaryKeySelective(BabyInfo record);
 
     int updateByPrimaryKey(BabyInfo record);
 
-    List<Map> overListCount(Integer overdueStart, Integer overdueEnd, Integer dingTimes, String corpid);
+    List<Map> overListCount(@Param("overdueStart") Integer overdueStart,
+                            @Param("overdueEnd") Integer overdueEnd,
+                            @Param("dingTimes") Integer dingTimes,
+                            @Param("corpid") String corpid);
 
-    List<String> overdueDingUserid(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
+    List<String> overdueDingUserid(@Param("overdueStart") Integer overdueStart,
+                                   @Param("overdueEnd") Integer overdueEnd,
+                                   @Param("dingTimes") Integer dingTimes,
+                                   @Param("age") Integer age,
+                                   @Param("corpid") String corpid);
 
-    List<Long> overdueDingExamids(Integer overdueStart, Integer overdueEnd, Integer dingTimes, Integer age, String corpid);
+    List<Long> overdueDingExamids(@Param("overdueStart") Integer overdueStart,
+                                  @Param("overdueEnd") Integer overdueEnd,
+                                  @Param("dingTimes") Integer dingTimes,
+                                  @Param("age") Integer age,
+                                  @Param("corpid") String corpid);
 
     List<Map> overdueList(@Param("offset") Integer offset,
                           @Param("size") Integer size,
@@ -47,7 +58,7 @@ public interface BabyInfoMapper {
                            @Param("param") Map param,
                            @Param("corpid") String corpid);
 
-    Map getBabyParentInfo(Long id);
+    Map getBabyParentInfo(@Param("id") Long id);
 
     Map<String, String> overdueCount(@Param("corpid") String corpid);
 
@@ -59,6 +70,6 @@ public interface BabyInfoMapper {
 
     List<BabyInfo> myBabys(@Param("parentId") Long parentId);
 
-    BabyInfo getBabyInfoByExaminationId(Long examinationId);
+    BabyInfo getBabyInfoByExaminationId(@Param("examinationId") Long examinationId);
 
 }

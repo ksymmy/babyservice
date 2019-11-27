@@ -10,13 +10,13 @@ import java.util.Map;
 
 @Mapper
 public interface ExaminationInfoMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(@Param("id") Long id);
 
     int insert(ExaminationInfo record);
 
     int insertSelective(ExaminationInfo record);
 
-    ExaminationInfo selectByPrimaryKey(Long id);
+    ExaminationInfo selectByPrimaryKey(@Param("id") Long id);
 
     int updateByPrimaryKeySelective(ExaminationInfo record);
 
@@ -26,17 +26,20 @@ public interface ExaminationInfoMapper {
 
     void batchInsert(List<ExaminationInfo> infos);
 
-    List<ExaminationInfo> getNeedRemindExaminationInfoList(int offset, int size);
+    List<ExaminationInfo> getNeedRemindExaminationInfoList(@Param("offset") int offset,
+                                                           @Param("size") int size);
 
-    void examinationConfirm(Long examinationId);
+    void examinationConfirm(@Param("examinationId") Long examinationId);
 
-    Map<String, Object> applyDelay(Long examinationId);
+    Map<String, Object> applyDelay(@Param("examinationId") Long examinationId);
 
-    void confirmDelay(Long examinationId, Date delayDate, String delayReason);
+    void confirmDelay(@Param("examinationId") Long examinationId,
+                      @Param("delayDate") Date delayDate,
+                      @Param("delayReason") String delayReason);
 
-    void signIn(Long examinationId);
+    void signIn(@Param("examinationId") Long examinationId);
 
-    void deleteByBabyId(Long babyId);
+    void deleteByBabyId(@Param("babyId") Long babyId);
 
-    int updateDingTimes(List<Long> examId);
+    int updateDingTimes(@Param("examId") List<Long> examId);
 }

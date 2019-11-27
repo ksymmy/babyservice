@@ -6,13 +6,13 @@ import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface WorkTimeMapper {
-    int deleteByPrimaryKey(Long id);
+    int deleteByPrimaryKey(@Param("id") Long id);
 
     int insert(WorkTime record);
 
     int insertSelective(WorkTime record);
 
-    WorkTime selectByPrimaryKey(Long id);
+    WorkTime selectByPrimaryKey(@Param("id") Long id);
 
     int updateByPrimaryKeySelective(WorkTime record);
 
