@@ -8,6 +8,7 @@ import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.utils.DateUtil;
+import com.jqsoft.babyservice.commons.utils.ExcelUtil;
 import com.jqsoft.babyservice.commons.utils.LunarSolarConverter;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
@@ -26,10 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -235,6 +233,7 @@ public class BabyService {
 
         // 生成体检计划
         byte[] examinationType = {1, 3, 6, 8, 12, 18, 24, 30, 36};
+        List<ExaminationInfo> records = new ArrayList<>();
         for (int j = 0; j < examinationType.length; j++) {
             ExaminationInfo info = new ExaminationInfo();
             info.setBabyId(babyInfo.getId());
@@ -248,9 +247,10 @@ public class BabyService {
             info.setConfirm((byte) 0);
             info.setCreateTime(now);
             info.setUpdateTime(now);
-            examinationInfoMapper.insert(info);
+            records.add(info);
+//            examinationInfoMapper.insert(info);
         }
-
+        examinationInfoMapper.batchInsert(records);
         return RestVo.SUCCESS();
     }
 
@@ -348,5 +348,33 @@ public class BabyService {
         returnMap.put("examinationDateList", examinationDateList);
         returnMap.put("signInList", signInList);
         return RestVo.SUCCESS(returnMap);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public RestVo importData(String filePath, String corpid) {
+        if (StringUtils.isBlank(filePath) || StringUtils.isBlank(corpid)) {
+            return RestVo.FAIL(ResultMsg.NOT_PARAM);
+        }
+        List<List<Object>> babyList = ExcelUtil.ExcelToList(filePath);
+        if (CollectionUtils.isNotEmpty(babyList)) {
+            BabyInfo baby;
+            UserInfo userInfo;
+            for (List<Object> bb : babyList) {
+                baby = new BabyInfo();
+                userInfo = new UserInfo();
+                baby.setName((String) bb.get(0));
+                baby.setSex(Byte.valueOf((String) bb.get(1)));
+                baby.setBirthday((Date) bb.get(2));
+                baby.setFatherName((String) bb.get(3));
+                baby.setFatherMobile((String) bb.get(4));
+                baby.setMotherName((String) bb.get(5));
+                baby.setMotherMobile((String) bb.get(6));
+                baby.setAddress((String) bb.get(7));
+
+                userInfo.setCorpid(corpid);
+                this.addBabyInfo(baby, userInfo);
+            }
+        }
+        return RestVo.SUCCESS();
     }
 }

@@ -45,6 +45,20 @@ public class BabyController extends BaseController {
     @Resource
     private RemindNewsService remindNewsService;
 
+
+    /**
+     * 导入数据:(初始化baby表和体检计划表)
+     *
+     * @param filePath
+     * @param corpid
+     * @return
+     */
+    @RequestMapping("/importdata")
+    @ResponseBody
+    public RestVo importData(String filePath, String corpid) {
+        return babyService.importData(filePath, corpid);
+    }
+
     //******************************************* 医生端接口 *****************************************************
 
     /**

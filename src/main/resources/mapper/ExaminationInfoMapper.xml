@@ -192,7 +192,7 @@
       ding_times, sign_in, confirm,
       create_time, update_time)
     values
-      <foreach collection="infos" item="item" separator=",">
+      <foreach collection="list" item="item" separator=",">
         (#{item.id,jdbcType=BIGINT}, #{item.babyId,jdbcType=BIGINT},
         #{item.examinationDate,jdbcType=DATE}, #{item.examinationType,jdbcType=TINYINT}, #{item.examinationItem,jdbcType=VARCHAR},
         #{item.oldExaminationDate,jdbcType=DATE}, #{item.delayReason,jdbcType=VARCHAR},
