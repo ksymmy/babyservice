@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>12345678</title>
+    <link rel="stylesheet" href="/static/css/app.css">
+    <link rel="stylesheet" href="/static/css/font-awesome.css">
+
+</head>
+<body>
+
+
+</body>
+<script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
+
+<script>
+    dd.ready(function() {
+        // dd.runtime.permission.requestAuthCode({
+        //     corpId: '${corpId}', // 企业id
+        //     onSuccess: function (info) {
+        //         code = info.code // 通过该免登授权码可以获取用户身份
+        //     }
+        // });
+
+        dd.config({
+            agentId: '${agentId}', // 必填，微应用ID
+            corpId: '${corpId}',//必填，企业ID
+            timeStamp: '${timeStamp}', // 必填，生成签名的时间戳
+            nonceStr: '${nonceStr}', // 必填，生成签名的随机串
+            signature: '${signature}', // 必填，签名
+            type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi；不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
+            jsApiList : [
+                'biz.ding.create'
+            ] // 必填，需要使用的jsapi列表，注意：不要带dd。
+        });
+
+        dd.biz.ding.create({
+            users : ['manager9778', '1332470518783280', '294118325321603293'],// 用户列表，工号
+            corpId: '${corpId}', // 企业id
+            type: 1, // 附件类型 1：image  2：link
+            alertType: 2, // 钉发送方式 0:电话, 1:短信, 2:应用内
+            //alertDate: {"format":"yyyy-MM-dd HH:mm","value":"2015-05-09 08:00"},
+            attachment: {
+                images: ['']
+            }, // 附件信息
+            text: 'asdjsfhdsjfk',  // 正文
+            bizType :0, // 业务类型 0：通知DING；1：任务；2：会议；
+            // confInfo:{
+            //     bizSubType:0, // 子业务类型如会议：0：预约会议；1：预约电话会议；2：预约视频会议；（注：目前只有会议才有子业务类型）
+            //     location:'某某会议室' , //会议地点；（非必填）
+            //     startTime:{"format":"yyyy-MM-dd HH:mm","value":"2015-05-09 08:00"},// 会议开始时间
+            //     endTime:{"format":"yyyy-MM-dd HH:mm","value":"2015-05-09 08:00"}, // 会议结束时间
+            //     remindMinutes:30, // 会前提醒。单位分钟-1：不提醒；0：事件发生时提醒；5：提前5分钟；15：提前15分钟；30：提前30分钟；60：提前1个小时；1440：提前一天；
+            //     remindType:2 // 会议提前提醒方式。0:电话, 1:短信, 2:应用内
+            // },
+
+            // taskInfo:{
+            //     ccUsers: ['100', '101'], // 抄送用户列表，工号
+            //     deadlineTime:{"format":"yyyy-MM-dd HH:mm","value":"2015-05-09 08:00"} , // 任务截止时间
+            //     taskRemind:30// 任务提醒时间，单位分钟0：不提醒；15：提前15分钟；60：提前1个小时；180：提前3个小时；1440：提前一天；
+            // },
+
+            onSuccess : function() {
+                //onSuccess将在点击发送之后调用
+
+            },
+            onFail : function() {}
+        })
+    });
+
+    dd.error(function(error){
+        /**
+         {
+           errorMessage:"错误信息",// errorMessage 信息会展示出钉钉服务端生成签名使用的参数，请和您生成签名的参数作对比，找出错误的参数
+           errorCode: "错误码"
+        }
+         **/
+        alert('dd error: ' + JSON.stringify(error));
+    });
+
+
+
+
+
+</script>
+</html>

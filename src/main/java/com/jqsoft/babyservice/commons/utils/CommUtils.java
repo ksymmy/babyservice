@@ -1,7 +1,8 @@
 package com.jqsoft.babyservice.commons.utils;
 
+import com.dingtalk.oapi.lib.aes.DingTalkJsApiSingnature;
+import com.jqsoft.babyservice.commons.exception.OApiException;
 import org.apache.commons.lang3.StringUtils;
-
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -347,6 +348,14 @@ public class CommUtils {
 			return ((BigDecimal)val).toPlainString();
 		}
 		return val.toString();
+	}
+
+	public static String sign(String ticket, String nonceStr, long timeStamp, String url) throws OApiException {
+		try {
+			return DingTalkJsApiSingnature.getJsApiSingnature(url, nonceStr, timeStamp, ticket);
+		} catch (Exception ex) {
+			throw new OApiException(0, ex.getMessage());
+		}
 	}
 
 	public static void main(String[] args) {
