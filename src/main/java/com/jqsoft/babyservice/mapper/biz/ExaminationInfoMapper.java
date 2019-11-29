@@ -41,5 +41,5 @@ public interface ExaminationInfoMapper {
 
     void deleteByBabyId(@Param("babyId") Long babyId);
 
-    int updateDingTimes(@Param("examId") List<Long> examId);
+    int updateDingTimes(List<Long> examId);
 }
