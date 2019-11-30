@@ -43,5 +43,7 @@ public class ExaminationInfo implements Serializable {
 
     private Date birthday;
 
+    private String corpid;
+
 
 }

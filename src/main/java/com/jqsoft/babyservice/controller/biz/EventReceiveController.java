@@ -15,7 +15,9 @@ import com.dingtalk.oapi.lib.aes.DingTalkEncryptor;
 import com.jqsoft.babyservice.commons.constant.AddressListRegister;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
+import com.jqsoft.babyservice.entity.biz.HospitalInfo;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
+import com.jqsoft.babyservice.service.biz.HospitalService;
 import com.jqsoft.babyservice.service.biz.LoginService;
 import com.jqsoft.babyservice.service.biz.UserService;
 import com.taobao.api.ApiException;
@@ -29,6 +31,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -54,40 +57,47 @@ public class EventReceiveController {
     private UserService userService;
     @Resource
     private RedisUtils redisUtils;
+    @Resource
+    private HospitalService hospitalService;
 
     /**
      * 注册业务事件回调接口
      */
-    public OapiCallBackRegisterCallBackResponse registerCallBack() {
-        //1.先删除已注册的事件回调
-        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/delete_call_back");
-        OapiCallBackDeleteCallBackRequest deleteCallBackRequest = new OapiCallBackDeleteCallBackRequest();
-        deleteCallBackRequest.setHttpMethod("GET");
-        OapiCallBackDeleteCallBackResponse deleteCallBackResponse = null;
-        try {
-            deleteCallBackResponse = client.execute(deleteCallBackRequest, loginService.getAccessToken());
-        } catch (ApiException e) {
-            log.info("删除事件回调失败:{}", e.getErrMsg());
-            e.printStackTrace();
-        }
-        log.info("删除事件回调结果:{}", JSON.toJSONString(deleteCallBackResponse));
-        //2.再重新注册的事件回调
-        client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/register_call_back");
-        OapiCallBackRegisterCallBackRequest registerCallBackRequest = new OapiCallBackRegisterCallBackRequest();
-        registerCallBackRequest.setToken(token);
-        registerCallBackRequest.setAesKey(aes_key);
-        registerCallBackRequest.setUrl(domain + "/event/eventreceive_v1");
-        registerCallBackRequest.setCallBackTag(Arrays.asList(AddressListRegister.USER_ADD_ORG, AddressListRegister.USER_MODIFY_ORG, AddressListRegister.USER_LEAVE_ORG,
-                AddressListRegister.USER_ACTIVE_ORG, AddressListRegister.ORG_ADMIN_ADD, AddressListRegister.ORG_ADMIN_REMOVE));
-        OapiCallBackRegisterCallBackResponse registerCallBackResponse = null;
-        try {
-            registerCallBackResponse = client.execute(registerCallBackRequest, loginService.getAccessToken());
-        } catch (ApiException e) {
-            log.info("注册事件回调失败:{}", e.getErrMsg());
-            e.printStackTrace();
-        }
-        log.info("注册事件回调结果:{}", JSON.toJSONString(registerCallBackResponse));
-        return registerCallBackResponse;
+    public void registerCallBack() {
+        //取出所有企业,一一删除原注册事件,再重新注册
+        List<HospitalInfo> hospitalInfos = hospitalService.selectAll();
+        hospitalInfos.forEach(hospitalInfo -> {
+            String corpid = hospitalInfo.getCorpid();
+            //1.先删除已注册的事件回调
+            DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/delete_call_back");
+            OapiCallBackDeleteCallBackRequest deleteCallBackRequest = new OapiCallBackDeleteCallBackRequest();
+            deleteCallBackRequest.setHttpMethod("GET");
+            OapiCallBackDeleteCallBackResponse deleteCallBackResponse;
+            try {
+                deleteCallBackResponse = client.execute(deleteCallBackRequest, loginService.getAccessToken(corpid));
+                log.info("删除事件回调,corpid:{},结果:{}", corpid, JSON.toJSONString(deleteCallBackResponse));
+            } catch (ApiException e) {
+                log.info("删除事件回调失败,corpid:{},error:{}", corpid, e.getErrMsg());
+                e.printStackTrace();
+            }
+
+            //2.再重新注册的事件回调
+            client = new DefaultDingTalkClient("https://oapi.dingtalk.com/call_back/register_call_back");
+            OapiCallBackRegisterCallBackRequest registerCallBackRequest = new OapiCallBackRegisterCallBackRequest();
+            registerCallBackRequest.setToken(token);
+            registerCallBackRequest.setAesKey(aes_key);
+            registerCallBackRequest.setUrl(domain + "/event/eventreceive_v1");
+            registerCallBackRequest.setCallBackTag(Arrays.asList(AddressListRegister.USER_ADD_ORG, AddressListRegister.USER_MODIFY_ORG, AddressListRegister.USER_LEAVE_ORG,
+                    AddressListRegister.USER_ACTIVE_ORG, AddressListRegister.ORG_ADMIN_ADD, AddressListRegister.ORG_ADMIN_REMOVE));
+            OapiCallBackRegisterCallBackResponse registerCallBackResponse;
+            try {
+                registerCallBackResponse = client.execute(registerCallBackRequest, loginService.getAccessToken(corpid));
+                log.info("注册事件回调,corpid:{},结果:{}", corpid, JSON.toJSONString(registerCallBackResponse));
+            } catch (ApiException e) {
+                log.info("注册事件回调失败,corpid:{},error:{}", corpid, e.getErrMsg());
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -117,14 +127,14 @@ public class EventReceiveController {
                 String userid;
                 switch (decodeEncryptJson.getEventType()) {
                     case AddressListRegister.CHECK_URL:
-                        log.info("服务注册成功```");
+                        log.info("服务注册成功```{}", corpid);
                         break;
                     case AddressListRegister.USER_ADD_ORG:
                         log.info("通讯录用户增加```{}", JSON.toJSONString(decodeEncryptJson));
                         for (int i = 0; i < userids.size(); i++) {
                             userid = userids.getString(i);
                             Date createDate = new Date();
-                            OapiUserGetResponse userGetResponse = loginService.getUserInfo(userid);
+                            OapiUserGetResponse userGetResponse = loginService.getUserInfo(userid, corpid);
                             UserInfo userInfo = new UserInfo(null, userGetResponse.getName(), userGetResponse.getMobile(), null,
                                     userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate);
                             if (1 == userService.insert(userInfo)) {
@@ -180,7 +190,7 @@ public class EventReceiveController {
                         }
                         break;
                     default:
-                        log.info("EventType:{},暂未处理```", decodeEncryptJson.getEventType());
+                        log.info("EventType:{} of {}暂未处理```", decodeEncryptJson.getEventType(), corpid);
                         break;
                 }
                 result = codeEncrypt(res, timeStamp, nonce).toString();
@@ -310,7 +320,7 @@ public class EventReceiveController {
      * 更新钉钉用户信息到企业数据库 biz_user_info表
      */
     private void updateUserInfo(String corpid, String userid) {
-        OapiUserGetResponse userGetResponse = loginService.getUserInfo(userid);
+        OapiUserGetResponse userGetResponse = loginService.getUserInfo(userid, corpid);
         UserInfo oldUserInfo = userService.selectByCorpIdAndUserid(corpid, userid), userInfo;
         if (null == oldUserInfo) {
             return;
@@ -387,6 +397,6 @@ public class EventReceiveController {
         private String EventType;
         private String CorpId;
         private Long TimeStamp;
-        private JSONArray userId;
+        private JSONArray UserId;
     }
 }

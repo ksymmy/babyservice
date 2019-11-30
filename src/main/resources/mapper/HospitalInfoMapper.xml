@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.HospitalInfoMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.HospitalInfo">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="corpid" property="corpid" jdbcType="VARCHAR"/>
+        <result column="app_key" property="appKey" jdbcType="VARCHAR"/>
+        <result column="app_secret" property="appSecret" jdbcType="VARCHAR"/>
+        <result column="agent_id" property="agentId" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_hospital_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.HospitalInfo">
+    insert into biz_hospital_info (id, name, mobile,
+      address, corpid, app_key,
+      app_secret, agent_id, create_time,
+      update_time)
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR},
+      #{address,jdbcType=VARCHAR}, #{corpid,jdbcType=VARCHAR}, #{appKey,jdbcType=VARCHAR},
+      #{appSecret,jdbcType=VARCHAR}, #{agentId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.HospitalInfo">
+    update biz_hospital_info
+    set name = #{name,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      corpid = #{corpid,jdbcType=VARCHAR},
+      app_key = #{appKey,jdbcType=VARCHAR},
+      app_secret = #{appSecret,jdbcType=VARCHAR},
+      agent_id = #{agentId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select id, name, mobile, address, corpid, app_key, app_secret, agent_id, create_time,
+    update_time
+    from biz_hospital_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, name, mobile, address, corpid, app_key, app_secret, agent_id, create_time,
+    update_time
+    from biz_hospital_info
+  </select>
+    <select id="selectBycorpid" resultMap="BaseResultMap">
+        select * from biz_hospital_info where corpid = #{corpid} limit 1
+    </select>
+</mapper>

@@ -4,6 +4,7 @@ import com.jqsoft.babyservice.commons.bo.PageBo;
 import com.jqsoft.babyservice.commons.constant.ResultMsg;
 import com.jqsoft.babyservice.commons.utils.DateUtil;
 import com.jqsoft.babyservice.commons.vo.RestVo;
+import com.jqsoft.babyservice.entity.biz.HospitalInfo;
 import com.jqsoft.babyservice.entity.biz.RemindNews;
 import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.mapper.biz.RemindNewsMapper;
@@ -27,8 +28,8 @@ public class RemindNewsService {
     @Resource
     private RemindNewsMapper remindNewsMapper;
 
-    @Value("${hospitalName}")
-    public String hospitalName;
+    @Resource
+    private HospitalService hospitalService;
 
     @Value("${welcomeNewsTitle}")
     public String welcomeNewsTitle;
@@ -38,16 +39,20 @@ public class RemindNewsService {
 
     /**
      * 家长端-获取我的消息列表
+     *
      * @param pageBo
      * @param userId
+     * @param corpid
      * @return
      */
-    public RestVo remindNewsList(PageBo<Map<String, Object>> pageBo, Long userId){
+    public RestVo remindNewsList(PageBo<Map<String, Object>> pageBo, Long userId, String corpid) {
         if (null == pageBo || null == userId) {
             return RestVo.FAIL(ResultMsg.NOT_PARAM);
         }
         List<RemindNews> remindNewsList = remindNewsMapper.remindNewsList(pageBo.getOffset(), pageBo.getSize(), userId);
         if (CollectionUtils.isNotEmpty(remindNewsList)) {
+            HospitalInfo hospitalInfo = hospitalService.selectBycorpid(corpid);
+            String hospitalName = null == hospitalInfo ? "" : hospitalInfo.getName();
             for (RemindNews news : remindNewsList) {
                 news.setHospitalName(hospitalName);
                 // 格式化消息日期
@@ -59,9 +64,10 @@ public class RemindNewsService {
 
     /**
      * 初始化家长端欢迎信息
+     *
      * @param userInfo
      */
-    public void addWelcomeNews(UserInfo userInfo){
+    public void addWelcomeNews(UserInfo userInfo) {
         if (null != userInfo && 0 == userInfo.getAdmin()) {
             RemindNews news = remindNewsMapper.getWelcomeNewsByUserId(userInfo.getId());
             if (null == news) {
@@ -72,7 +78,7 @@ public class RemindNewsService {
                 news.setUpdateTime(now);
                 news.setTitle(welcomeNewsTitle);
                 news.setContext(welcomeNewsContext);
-                news.setNewsType((byte)-1);
+                news.setNewsType((byte) -1);
                 remindNewsMapper.insert(news);
             }
         }

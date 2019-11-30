@@ -37,7 +37,7 @@ logging.level.org.springframework.web: INFO
 logging.level.com.jqsoft.babyservice: INFO
 #logging.pattern.console: %d{yyyy-MM-dd HH:mm:ss} - %msg%n
 #logging.pattern.file: %d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
-logging.file: /Users/admin/logs/babyservice.log
+logging.file: /data/logs/babyservice/babyservice.log
 logging.level.com.jqsoft.babyservice.mapper.biz: debug
 
 #************************************* mybatis config ************************************************
@@ -58,8 +58,8 @@ env.domain: http://zuowhat.vaiwan.com
 #************************************* job cron config ************************************************
 # 每天下午3点定时发送钉钉提醒消息
 job.cron.remindNewsJob: 0 0 15 * * ?
-
-dd.app.agentId: 316969988
+# 整点更新accesstoken
+job.cron.accessTokenJob: 0 0 * * * ?
 
 #************************************* remind template config ************************************************
 remind.template0: 家长您好！宝宝已到%s了，请您明天带上宝宝，到社区服务中心进行%s体检，祝宝宝健康成长。
@@ -67,6 +67,5 @@ remind.template1: 家长您好！请在宝宝%s体检完成后，在系统中即
 remind.template2: 家长您好！宝宝已到%s啦。如果%s已体检完成，请您点击下方按钮进行体检签到。如果还未体检，请您明天带上宝宝到社区服务中心进行体检，祝宝宝健康成长。
 
 #************************************ system config *********************************************
-hospitalName: 闻堰社区卫生服务中心
 welcomeNewsTitle: 欢迎使用宝宝健康体检
 welcomeNewsContext: 家长您好！欢迎使用宝宝健康体检！您可以点击左下角“宝宝管理”，查看您的宝宝信息。快去试一试吧！

@@ -1,8 +1,7 @@
 package com.jqsoft.babyservice.commons.config;
 
-import com.alibaba.fastjson.JSON;
-import com.dingtalk.api.response.OapiCallBackRegisterCallBackResponse;
 import com.jqsoft.babyservice.controller.biz.EventReceiveController;
+import com.jqsoft.babyservice.service.biz.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -19,10 +18,15 @@ import javax.annotation.Resource;
 public class AppCommandLineRunner implements CommandLineRunner {
     @Resource
     private EventReceiveController eventReceiveController;
+    @Resource
+    private LoginService loginService;
 
     @Override
     public void run(String... args) {
-        OapiCallBackRegisterCallBackResponse response = eventReceiveController.registerCallBack();
-        log.info("注册业务事件回调接口结果:{}", JSON.toJSONString(response));
+        log.info("开始初始化各企业访问凭证");
+        loginService.setAccessTokens();
+        log.info("初始化各企业访问凭证成功");
+        eventReceiveController.registerCallBack();
+        log.info("注册各企业业务事件回调接口结束");
     }
 }

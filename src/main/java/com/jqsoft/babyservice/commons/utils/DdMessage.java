@@ -13,5 +13,6 @@ public class DdMessage implements Serializable {
     private String title;
     private String context;
     private String userid;
+    private String corpid;
 
 }

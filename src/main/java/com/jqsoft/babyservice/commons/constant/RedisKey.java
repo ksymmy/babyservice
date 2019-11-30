@@ -8,9 +8,10 @@ package com.jqsoft.babyservice.commons.constant;
 public enum RedisKey {
 
     LOGIN_TOKEN("LOGIN:TOKEN:%s"),
+    LOGIN_CORP("LOGIN:CORP:%s"),//corpid:HospitalInfo
     LOGIN_USERID("LOGIN:USERID:%s"),
     LOGIN_CORP_USER("LOGIN:%s:%s"),
-    LOGIN_ACCESS_TOKEN("LOGIN:ACCESS-TOKEN"),
+    LOGIN_ACCESS_TOKEN("LOGIN:ACCESS-TOKEN:%s"),//corpid:AccessToken
     LOGIN_MOBILE_USERID("LOGIN:MOBILE-USERID:%s"),
 
     WORK_TIME("WORKTIME:%s"),

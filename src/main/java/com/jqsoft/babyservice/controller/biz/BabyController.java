@@ -7,12 +7,13 @@ import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
 import com.jqsoft.babyservice.entity.biz.BabyInfo;
 import com.jqsoft.babyservice.entity.biz.ExaminationInfo;
+import com.jqsoft.babyservice.entity.biz.HospitalInfo;
 import com.jqsoft.babyservice.job.RemindNewsJob;
 import com.jqsoft.babyservice.service.biz.BabyService;
 import com.jqsoft.babyservice.service.biz.ExaminationService;
+import com.jqsoft.babyservice.service.biz.HospitalService;
 import com.jqsoft.babyservice.service.biz.RemindNewsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/baby")
 public class BabyController extends BaseController {
-    @Value("${hospitalName}")
-    public String hospitalName;
 
     @Resource
     public BabyService babyService;
@@ -44,6 +43,9 @@ public class BabyController extends BaseController {
 
     @Resource
     private RemindNewsService remindNewsService;
+
+    @Resource
+    private HospitalService hospitalService;
 
 
     /**
@@ -102,7 +104,7 @@ public class BabyController extends BaseController {
     @AdminCheck
     @GetMapping("/getuseridbbymobile")
     public RestVo getUseridBbyMobile(String mobile) {
-        return babyService.getUseridByMobile(mobile);
+        return babyService.getUseridByMobile(mobile, this.getDdCorpid());
     }
 
     /**
@@ -285,7 +287,7 @@ public class BabyController extends BaseController {
     @ParentCheck
     @RequestMapping("/remindNewsList")
     public RestVo remindNewsList(@RequestBody PageBo<Map<String, Object>> pageBo) {
-        return remindNewsService.remindNewsList(pageBo, this.getUserId());
+        return remindNewsService.remindNewsList(pageBo, this.getUserId(), this.getDdCorpid());
     }
 
     /**
@@ -343,7 +345,8 @@ public class BabyController extends BaseController {
      */
     @RequestMapping("/getHospitalName")
     public RestVo getHospitalName() {
-        return RestVo.SUCCESS(hospitalName);
+        HospitalInfo hospitalInfo = hospitalService.selectBycorpid(this.getDdCorpid());
+        return RestVo.SUCCESS(null == hospitalInfo ? "" : hospitalInfo.getName());
     }
 
     @RequestMapping("/test")

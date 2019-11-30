@@ -5,15 +5,16 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.jqsoft.babyservice.service.biz.HospitalService;
 import com.jqsoft.babyservice.service.biz.LoginService;
 import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,36 +23,42 @@ import java.util.List;
 @Component
 public class DdUtils {
 
-    @Value("${dd.app.agentId}")
-    private Long agentId;
+//    @Value("${dd.app.agentId}")
+//    private Long agentId;
 
     @Autowired
     public LoginService loginService;
 
+    @Resource
+    private HospitalService hospitalService;
+
 
     /**
      * 批量发送钉钉通知消息
+     *
      * @param ddMessageList
      */
-    public void batchSendDdMessage(List<DdMessage> ddMessageList){
+    public void batchSendDdMessage(List<DdMessage> ddMessageList) {
         if (CollectionUtils.isNotEmpty(ddMessageList)) {
             for (DdMessage message : ddMessageList) {
-                this.sendDdMessage(message.getTitle(),message.getContext(),message.getUserid());
+                this.sendDdMessage(message.getTitle(), message.getContext(), message.getUserid(), message.getCorpid());
             }
         }
     }
 
     /**
      * 发送钉钉通知消息
+     *
      * @param title
      * @param context
      * @param userid
+     * @param corpid
      */
-    public void sendDdMessage(String title, String context,String userid){
+    public void sendDdMessage(String title, String context, String userid, String corpid) {
         if (StringUtils.isBlank(userid)) {
             return;
         }
-        List<String> useridList= new ArrayList<>(Arrays.asList(userid.split(",")));
+        List<String> useridList = new ArrayList<>(Arrays.asList(userid.split(",")));
         List<String> batchUseridList = new ArrayList<>();
         int useridSize = useridList.size();
         if (useridSize <= 100) {
@@ -65,7 +72,7 @@ public class DdUtils {
                 if (i == (batch - 1)) {
                     end = useridSize;
                 }
-                batchUseridList.add(StringUtils.join(useridList.subList(start, end).toArray(),","));
+                batchUseridList.add(StringUtils.join(useridList.subList(start, end).toArray(), ","));
             }
         }
 
@@ -74,7 +81,7 @@ public class DdUtils {
 
             OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
             request.setUseridList(batchUserid);
-            request.setAgentId(agentId);
+            request.setAgentId(Long.parseLong(hospitalService.selectBycorpid(corpid).getAgentId()));
             request.setToAllUser(false);
 
             OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
@@ -95,13 +102,12 @@ public class DdUtils {
             request.setMsg(msg);
 
             try {
-                OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,loginService.getAccessToken());
+                OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request, loginService.getAccessToken(corpid));
                 log.info("发送钉钉工作通知消息-结束 {}", JSONObject.toJSONString(response));
             } catch (ApiException e) {
                 log.error("发送钉钉工作通知消息-失败", e);
             }
         }
-
     }
 
 

@@ -297,7 +297,7 @@ public class BabyService {
         return babyInfoMapper.getBabyInfoByExaminationId(examinationId);
     }
 
-    public RestVo getUseridByMobile(String mobile) {
+    public RestVo getUseridByMobile(String mobile, String corpid) {
         String key = RedisKey.LOGIN_MOBILE_USERID.getKey(mobile);
         if (null != redisUtils.get(key)) {
             return RestVo.SUCCESS(redisUtils.get(key));
@@ -307,7 +307,7 @@ public class BabyService {
         request.setMobile(mobile);
         OapiUserGetByMobileResponse execute;
         try {
-            execute = client.execute(request, loginService.getAccessToken());
+            execute = client.execute(request, loginService.getAccessToken(corpid));
             String userid = execute.getUserid();
             if (StringUtils.isNotBlank(userid)) redisUtils.add(key, userid, 30, TimeUnit.DAYS);
             return RestVo.SUCCESS(userid);
