@@ -248,7 +248,7 @@
     WHERE a.id = #{examinationId,jdbcType=BIGINT}
   </update>
   <delete id="deleteByBabyId" >
-    DELETE from biz_examination_info a where a.baby_id = #{babyId,jdbcType=BIGINT}
+    DELETE from biz_examination_info where baby_id = #{babyId,jdbcType=BIGINT}
   </delete>
     <update id="updateDingTimes" parameterType="list">
       update biz_examination_info set ding_times = IFNULL(ding_times,0)+1,update_time = CURRENT_TIMESTAMP where id in
