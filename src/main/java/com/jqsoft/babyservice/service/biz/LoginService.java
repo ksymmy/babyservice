@@ -53,12 +53,12 @@ public class LoginService {
 
         userid = getUserid(authCode, corpid);
         if (StringUtils.isBlank(userid)) {
-            RestVo.FAIL("userid/get失败");
+            return RestVo.FAIL("userid/get失败");
         }
 
         OapiUserGetResponse userGetResponse = getUserInfo(userid, corpid);
         if (null == userGetResponse) {
-            RestVo.FAIL("user/get失败");
+            return RestVo.FAIL("user/get失败");
         }
 
         UserInfo oldUserInfo = userInfoMapper.selectByCorpIdAndUserid(corpid, userid), userInfo;
@@ -126,7 +126,8 @@ public class LoginService {
             try {
                 response = client.execute(request);
                 String accessToken = response.getAccessToken();
-                redisUtils.add(RedisKey.LOGIN_ACCESS_TOKEN.getKey(hospitalInfo.getCorpid()), accessToken, 7140, TimeUnit.SECONDS);
+                if (StringUtils.isNotBlank(accessToken))
+                    redisUtils.add(RedisKey.LOGIN_ACCESS_TOKEN.getKey(hospitalInfo.getCorpid()), accessToken, 7140, TimeUnit.SECONDS);
             } catch (ApiException e) {
                 log.error("获取accessToken失败:corpid:{},{}", hospitalInfo.getCorpid(), e.getErrMsg());
                 e.printStackTrace();
