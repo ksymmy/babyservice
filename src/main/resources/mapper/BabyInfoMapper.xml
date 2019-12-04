@@ -319,7 +319,7 @@
         biz_examination_info a
         WHERE
         a.examination_date &lt; CURRENT_DATE
-        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 )
+        AND EXISTS ( SELECT id FROM biz_baby_info WHERE id = a.baby_id AND state = 1 AND corpid = #{corpid} )
         GROUP BY a.baby_id
         ) y ON ( x.baby_id = y.baby_id AND x.examination_date = y.maxdate )
         <where>
