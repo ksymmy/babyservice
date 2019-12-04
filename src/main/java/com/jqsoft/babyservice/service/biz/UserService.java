@@ -50,5 +50,9 @@ public class UserService {
     public int deleteByUserid(String userid) {
         return userInfoMapper.deleteByUserid(userid);
     }
+
+    public UserInfo selectByCorpIdAndMobile(String mobile, String corpid) {
+        return userInfoMapper.selectByCorpIdAndMobile(mobile, corpid);
+    }
 }
 

@@ -47,8 +47,6 @@ public class EventReceiveController {
     private String token;
     @Value("${env.aes_key}")
     private String aes_key;
-    @Value("${env.key}")
-    private String env_key;
     @Value("${env.domain}")
     private String domain;
     @Resource
@@ -86,7 +84,7 @@ public class EventReceiveController {
             OapiCallBackRegisterCallBackRequest registerCallBackRequest = new OapiCallBackRegisterCallBackRequest();
             registerCallBackRequest.setToken(token);
             registerCallBackRequest.setAesKey(aes_key);
-            registerCallBackRequest.setUrl(domain + "/event/eventreceive_v1");
+            registerCallBackRequest.setUrl(domain + "/event/eventreceive_v1?regCorpId=" + corpid);
             registerCallBackRequest.setCallBackTag(Arrays.asList(AddressListRegister.USER_ADD_ORG, AddressListRegister.USER_MODIFY_ORG, AddressListRegister.USER_LEAVE_ORG,
                     AddressListRegister.USER_ACTIVE_ORG, AddressListRegister.ORG_ADMIN_ADD, AddressListRegister.ORG_ADMIN_REMOVE));
             OapiCallBackRegisterCallBackResponse registerCallBackResponse;
@@ -106,6 +104,7 @@ public class EventReceiveController {
      * @param msgSignature url中的签名
      * @param timeStamp    url中的时间戳
      * @param nonce        url中的随机字符串
+     * @param regCorpId    自定义的corpid
      * @param jsonEncrypt  加密的JSON字符串
      */
     @RequestMapping(value = "/eventreceive_v1", produces = "application/json;charset=UTF-8")
@@ -113,13 +112,17 @@ public class EventReceiveController {
     public String eventreceive_v1(@RequestParam(value = "signature") String msgSignature,
                                   @RequestParam(value = "timestamp") String timeStamp,
                                   @RequestParam(value = "nonce") String nonce,
+                                  @RequestParam(value = "regCorpId") String regCorpId,
                                   @RequestBody JSONObject jsonEncrypt) {
+
         String result = "false";
         try {
-            String res = "success"; //res是需要返回给钉钉服务器的字符串，一般为success;
+            //res是需要返回给钉钉服务器的字符串，一般为success;
+            String res = "success";
             if (jsonEncrypt != null && jsonEncrypt.size() > 0 && jsonEncrypt.containsKey("encrypt")) {
                 String encrypt = jsonEncrypt.getString("encrypt");
-                String decodeEncrypt = decodeEncrypt(msgSignature, timeStamp, nonce, encrypt); //密文解密
+                //密文解密
+                String decodeEncrypt = decodeEncrypt(msgSignature, timeStamp, nonce, encrypt, regCorpId);
                 DecodeEncryptEntity decodeEncryptJson = JSONObject.parseObject(decodeEncrypt, DecodeEncryptEntity.class);
                 //根据不同的回调类型，进行相应的操作
                 String corpid = decodeEncryptJson.getCorpId();
@@ -193,7 +196,7 @@ public class EventReceiveController {
                         log.info("EventType:{} of {}暂未处理```", decodeEncryptJson.getEventType(), corpid);
                         break;
                 }
-                result = codeEncrypt(res, timeStamp, nonce).toString();
+                result = codeEncrypt(res, timeStamp, nonce, regCorpId).toString();
             }
         } catch (Exception e) {
             log.error("回调事件错误:{}", e.getMessage());
@@ -341,12 +344,15 @@ public class EventReceiveController {
      * @param timeStamp
      * @param nonce
      * @param encrypt      密文
+     * @param corpid
      * @return decodeEncrypt 解密后的明文
      */
-    public String decodeEncrypt(String msgSignature, String timeStamp, String nonce, String encrypt) {
+    public String decodeEncrypt(String msgSignature, String timeStamp, String nonce, String encrypt, String corpid) {
         String decodeEncrypt = null;
         try {
-            decodeEncrypt = createDingTalkEncryptor().getDecryptMsg(msgSignature, timeStamp, nonce, encrypt); //encrypt解密
+            String customKey = hospitalService.selectBycorpid(corpid).getAppKey();
+            //encrypt解密
+            decodeEncrypt = createDingTalkEncryptor(customKey).getDecryptMsg(msgSignature, timeStamp, nonce, encrypt);
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -359,10 +365,12 @@ public class EventReceiveController {
      *
      * @return
      */
-    public DingTalkEncryptor createDingTalkEncryptor() {
-        DingTalkEncryptor dingTalkEncryptor = null; //加密方法类
+    public DingTalkEncryptor createDingTalkEncryptor(String customKey) {
+        //加密方法类
+        DingTalkEncryptor dingTalkEncryptor = null;
         try {
-            dingTalkEncryptor = new DingTalkEncryptor(token, aes_key, env_key); //创建加解密类
+            //创建加解密类
+            dingTalkEncryptor = new DingTalkEncryptor(token, aes_key, customKey);
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -376,13 +384,16 @@ public class EventReceiveController {
      * @param res
      * @param timeStamp
      * @param nonce
+     * @param corpid
      * @return
      */
-    public JSONObject codeEncrypt(String res, String timeStamp, String nonce) {
+    public JSONObject codeEncrypt(String res, String timeStamp, String nonce, String corpid) {
         long timeStampLong = Long.parseLong(timeStamp);
         Map<String, String> jsonMap = null;
         try {
-            jsonMap = createDingTalkEncryptor().getEncryptedMap(res, timeStampLong, nonce); //jsonMap是需要返回给钉钉服务器的加密数据包
+            String customKey = hospitalService.selectBycorpid(corpid).getAppKey();
+            //jsonMap是需要返回给钉钉服务器的加密数据包
+            jsonMap = createDingTalkEncryptor(customKey).getEncryptedMap(res, timeStampLong, nonce);
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();

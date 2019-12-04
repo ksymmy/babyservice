@@ -1,10 +1,14 @@
 package com.jqsoft.babyservice.service.biz;
 
+import com.alipay.api.internal.util.codec.Base64;
 import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiServiceGetAuthInfoRequest;
+import com.dingtalk.api.request.OapiServiceGetCorpTokenRequest;
 import com.dingtalk.api.request.OapiUserGetRequest;
 import com.dingtalk.api.request.OapiUserGetuserinfoRequest;
-import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.response.OapiServiceGetAuthInfoResponse;
+import com.dingtalk.api.response.OapiServiceGetCorpTokenResponse;
 import com.dingtalk.api.response.OapiUserGetResponse;
 import com.dingtalk.api.response.OapiUserGetuserinfoResponse;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
@@ -20,6 +24,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,11 +37,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 public class LoginService {
-//    @Value("${app.key}")
-//    private String appKey;
-//    @Value("${app.secret}")
-//    private String appSecret;
-
     @Resource
     private UserService userService;
     @Resource
@@ -90,20 +95,25 @@ public class LoginService {
             return (String) redisUtils.get(key);
         }
         HospitalInfo hospitalInfo = hospitalService.selectBycorpid(corpid);
-        DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
-        OapiGettokenRequest request = new OapiGettokenRequest();
-        request.setAppkey(hospitalInfo.getAppKey());
-        request.setAppsecret(hospitalInfo.getAppSecret());
-        request.setHttpMethod("GET");
-        OapiGettokenResponse response;
+        long timestamp = System.currentTimeMillis();
+        String accessKey = hospitalInfo.getAppKey();
+        String customSecret = hospitalInfo.getAppSecret();
+        String suiteTicket = "suiteTicket";
+        String signature = this.urlEncode(this.signature(timestamp, suiteTicket, customSecret), "UTF-8");
+        String url = "https://oapi.dingtalk.com/service/get_corp_token?signature=" + signature + "&timestamp=" + timestamp + "&suiteTicket=" + suiteTicket + "&accessKey=" + accessKey;
+        DefaultDingTalkClient client = new DefaultDingTalkClient(url);
+        OapiServiceGetCorpTokenRequest req = new OapiServiceGetCorpTokenRequest();
+        req.setAuthCorpid(hospitalInfo.getCorpid());
+        String accessToken = null;
         try {
-            response = client.execute(request);
+            OapiServiceGetCorpTokenResponse response = client.execute(req);
+            accessToken = response.getAccessToken();
+            if (StringUtils.isNotBlank(accessToken))
+                redisUtils.add(key, accessToken, 7140, TimeUnit.SECONDS);
         } catch (ApiException e) {
+            log.error("获取accessToken失败:corpid:{},{}", hospitalInfo.getCorpid(), e.getErrMsg());
             e.printStackTrace();
-            return null;
         }
-        String accessToken = response.getAccessToken();
-        redisUtils.add(key, accessToken, 7140, TimeUnit.SECONDS);
         return accessToken;
     }
 
@@ -117,14 +127,18 @@ public class LoginService {
         List<HospitalInfo> hospitalInfos = hospitalService.selectAll();
         if (CollectionUtils.isEmpty(hospitalInfos)) return;
         hospitalInfos.forEach(hospitalInfo -> {
-            DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/gettoken");
-            OapiGettokenRequest request = new OapiGettokenRequest();
-            request.setAppkey(hospitalInfo.getAppKey());
-            request.setAppsecret(hospitalInfo.getAppSecret());
-            request.setHttpMethod("GET");
-            OapiGettokenResponse response;
+            long timestamp = System.currentTimeMillis();
+            String accessKey = hospitalInfo.getAppKey();
+            String customSecret = hospitalInfo.getAppSecret();
+            String suiteTicket = "suiteTicket";
+            String signature = this.urlEncode(this.signature(timestamp, suiteTicket, customSecret), "UTF-8");
+            String url = "https://oapi.dingtalk.com/service/get_corp_token?signature=" + signature + "&timestamp=" + timestamp + "&suiteTicket=" + suiteTicket + "&accessKey=" + accessKey;
+            DefaultDingTalkClient client = new DefaultDingTalkClient(url);
+            OapiServiceGetCorpTokenRequest req = new OapiServiceGetCorpTokenRequest();
+            req.setAuthCorpid(hospitalInfo.getCorpid());
+            OapiServiceGetCorpTokenResponse response;
             try {
-                response = client.execute(request);
+                response = client.execute(req);
                 String accessToken = response.getAccessToken();
                 if (StringUtils.isNotBlank(accessToken))
                     redisUtils.add(RedisKey.LOGIN_ACCESS_TOKEN.getKey(hospitalInfo.getCorpid()), accessToken, 7140, TimeUnit.SECONDS);
@@ -133,6 +147,56 @@ public class LoginService {
                 e.printStackTrace();
             }
         });
+    }
+
+    /**
+     * 签名
+     *
+     * @param timestamp
+     * @param suiteTicket
+     * @param suiteSecret
+     * @return
+     */
+    public String signature(long timestamp, String suiteTicket, String suiteSecret) {
+        String stringToSign = timestamp + "\n" + suiteTicket;
+        Mac mac = null;
+        try {
+            mac = Mac.getInstance("HmacSHA256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        try {
+            mac.init(new SecretKeySpec(suiteSecret.getBytes("UTF-8"), "HmacSHA256"));
+        } catch (InvalidKeyException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        byte[] signData = new byte[0];
+        try {
+            signData = mac.doFinal(stringToSign.getBytes("UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return new String(Base64.encodeBase64(signData));
+    }
+
+    /**
+     * encoding参数使用utf-8
+     *
+     * @param value
+     * @param encoding
+     * @return
+     */
+    public String urlEncode(String value, String encoding) {
+        if (value == null) {
+            return "";
+        }
+        try {
+            String encoded = URLEncoder.encode(value, encoding);
+            return encoded.replace("+", "%20").replace("*", "%2A")
+                    .replace("~", "%7E").replace("/", "%2F");
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException("FailedToEncodeUri", e);
+        }
     }
 
     public String getUserid(String authCode, String corpid) {
@@ -144,6 +208,7 @@ public class LoginService {
         try {
             userGetuserinfoResponse = client.execute(userGetuserinfoRequest, getAccessToken(corpid));
         } catch (ApiException e) {
+            log.error("user/getuserinfo错误:{}", e.getErrMsg());
             e.printStackTrace();
             return null;
         }
@@ -159,9 +224,30 @@ public class LoginService {
         try {
             userGetResponse = client.execute(userGetRequest, getAccessToken(corpid));
         } catch (ApiException e) {
+            log.error("user/get错误:{}", e.getErrMsg());
             e.printStackTrace();
         }
-
         return userGetResponse;
+    }
+
+    public OapiServiceGetAuthInfoResponse getAuthInfo(String corpid) {
+        HospitalInfo hospitalInfo = hospitalService.selectBycorpid(corpid);
+        long timestamp = System.currentTimeMillis();
+        String accessKey = hospitalInfo.getAppKey();
+        String customSecret = hospitalInfo.getAppSecret();
+        String suiteTicket = "suiteTicket";
+        String signature = this.urlEncode(this.signature(timestamp, suiteTicket, customSecret), "UTF-8");
+        String url = "https://oapi.dingtalk.com/service/get_auth_info?signature=" + signature + "&timestamp=" + timestamp + "&suiteTicket=" + suiteTicket + "&accessKey=" + accessKey;
+        DingTalkClient client = new DefaultDingTalkClient(url);
+        OapiServiceGetAuthInfoRequest req = new OapiServiceGetAuthInfoRequest();
+        req.setAuthCorpid(corpid);
+        OapiServiceGetAuthInfoResponse response = null;
+        try {
+            response = client.execute(req, "suiteKey", "suiteSecrect", "suiteTicket");
+        } catch (ApiException e) {
+            log.error("service/get_auth_info错误:{}", e.getErrMsg());
+            e.printStackTrace();
+        }
+        return response;
     }
 }

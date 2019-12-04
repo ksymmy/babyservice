@@ -14,6 +14,9 @@ public interface UserInfoMapper {
 
     UserInfo selectByPrimaryKey(@Param("id") Long id);
 
+    UserInfo selectByCorpIdAndMobile(@Param("mobile") String mobile,
+                                     @Param("corpid") String corpid);
+
     int updateByPrimaryKeySelective(UserInfo record);
 
     int updateByPrimaryKey(UserInfo record);

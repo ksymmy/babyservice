@@ -52,8 +52,7 @@ value-expire: 1440
 #业务事件回调需要的参数
 env.token: 123456
 env.aes_key: xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx
-env.key: dinge3e211ad45c983df35c2f4657eb6378f
-env.domain: http://zuowhat.vaiwan.com
+env.domain: http://ksymmy.vaiwan.com
 
 #************************************* job cron config ************************************************
 # 每天下午3点定时发送钉钉提醒消息

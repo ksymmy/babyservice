@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 @Slf4j
 @Controller
@@ -37,7 +36,7 @@ public class FamilyDoctorController extends BaseController {
         try {
             OapiGetJsapiTicketResponse execute = client.execute(req, accessToken);
             System.out.println("getTicket=" + execute.getTicket());
-            long timeStamp = new Date().getTime();
+            long timeStamp = System.currentTimeMillis();
             System.out.println("timeStamp==" + timeStamp);
             String nonceStr = CommUtils.getRandomNumber(10);
             model.put("agentId", hospitalService.selectBycorpid(this.getDdCorpid()).getAgentId());
