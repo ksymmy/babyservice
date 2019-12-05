@@ -57,6 +57,10 @@ public class EventReceiveController {
     private RedisUtils redisUtils;
     @Resource
     private HospitalService hospitalService;
+    /**
+     * 线程安全的变量customKey
+     */
+    private ThreadLocal<String> corpCustomKey = new ThreadLocal<>();
 
     /**
      * 注册业务事件回调接口
@@ -350,9 +354,8 @@ public class EventReceiveController {
     public String decodeEncrypt(String msgSignature, String timeStamp, String nonce, String encrypt, String corpid) {
         String decodeEncrypt = null;
         try {
-            String customKey = hospitalService.selectBycorpid(corpid).getAppKey();
             //encrypt解密
-            decodeEncrypt = createDingTalkEncryptor(customKey).getDecryptMsg(msgSignature, timeStamp, nonce, encrypt);
+            decodeEncrypt = createDingTalkEncryptor(corpid).getDecryptMsg(msgSignature, timeStamp, nonce, encrypt);
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();
@@ -365,15 +368,20 @@ public class EventReceiveController {
      *
      * @return
      */
-    public DingTalkEncryptor createDingTalkEncryptor(String customKey) {
+    public DingTalkEncryptor createDingTalkEncryptor(String corpid) {
         //加密方法类
         DingTalkEncryptor dingTalkEncryptor = null;
         try {
+            String customKey = hospitalService.selectBycorpid(corpid).getAppKey();
+            corpCustomKey.set(customKey);
+            log.info("获取corpid:{}的customKey:{}", corpid, corpCustomKey.get());
             //创建加解密类
-            dingTalkEncryptor = new DingTalkEncryptor(token, aes_key, customKey);
+            dingTalkEncryptor = new DingTalkEncryptor(token, aes_key, corpCustomKey.get());
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();
+        } finally {
+            corpCustomKey.remove();
         }
         return dingTalkEncryptor;
     }
@@ -391,9 +399,8 @@ public class EventReceiveController {
         long timeStampLong = Long.parseLong(timeStamp);
         Map<String, String> jsonMap = null;
         try {
-            String customKey = hospitalService.selectBycorpid(corpid).getAppKey();
             //jsonMap是需要返回给钉钉服务器的加密数据包
-            jsonMap = createDingTalkEncryptor(customKey).getEncryptedMap(res, timeStampLong, nonce);
+            jsonMap = createDingTalkEncryptor(corpid).getEncryptedMap(res, timeStampLong, nonce);
         } catch (DingTalkEncryptException e) {
             log.error(e.getMessage());
             e.printStackTrace();

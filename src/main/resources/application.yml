@@ -37,6 +37,3 @@ spring:
     static-path-pattern: /static/**
   resources:
     static-locations: classpath:/static/
-app:
-  key: dingrd4sjd5px5sewf65
-  secret: 5G8pjSWoTRgKSbYpbNd2Tvl3VM_TefWheCoaNjTkfc5ZPGeWFTkm51koHIXFvftE
