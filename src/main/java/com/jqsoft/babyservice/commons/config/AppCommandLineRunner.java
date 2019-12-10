@@ -3,6 +3,7 @@ package com.jqsoft.babyservice.commons.config;
 import com.jqsoft.babyservice.controller.biz.EventReceiveController;
 import com.jqsoft.babyservice.service.biz.LoginService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ import javax.annotation.Resource;
 @Slf4j
 @Component
 public class AppCommandLineRunner implements CommandLineRunner {
+    @Value("${env.allowReg}")
+    private boolean allowReg;
     @Resource
     private EventReceiveController eventReceiveController;
     @Resource
@@ -26,6 +29,8 @@ public class AppCommandLineRunner implements CommandLineRunner {
         log.info("开始初始化各企业访问凭证");
         loginService.setAccessTokens();
         log.info("初始化各企业访问凭证成功");
+        //开发模式不注册企业回调事件
+        if (!allowReg) return;
         eventReceiveController.registerCallBack();
         log.info("注册各企业业务事件回调接口结束");
     }

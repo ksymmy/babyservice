@@ -562,6 +562,7 @@ WHERE
     FROM
         biz_baby_info a
     WHERE
+        a.state = 1 AND
         EXISTS (
             SELECT
                 1
@@ -579,7 +580,7 @@ WHERE
             *
         FROM
             biz_baby_info a
-        WHERE
+        WHERE a.state = 1 AND
             EXISTS ( SELECT 1 FROM biz_examination_info b WHERE b.baby_id = a.id AND b.id = #{examinationId,jdbcType=BIGINT} )
     </select>
 </mapper>

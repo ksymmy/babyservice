@@ -51,6 +51,7 @@ value-expire: 1440
 env.token: 123456
 env.aes_key: xxxxxxxxlvdhntotr3x9qhlbytb18zyz5zxxxxxxxxx
 env.domain: http://baby.vaiwan.com
+env.allowReg: true
 
 #************************************* job cron config ************************************************
 # 每天下午3点定时发送钉钉提醒消息

@@ -61,6 +61,7 @@ public class LoginService {
             return RestVo.FAIL("userid/get失败");
         }
 
+        //定制应用获取不到手机号mobile
         OapiUserGetResponse userGetResponse = getUserInfo(userid, corpid);
         if (null == userGetResponse) {
             return RestVo.FAIL("user/get失败");
@@ -76,8 +77,14 @@ public class LoginService {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
             }
         } else {
-            userInfo = new UserInfo(oldUserInfo.getId(), userGetResponse.getName(), userGetResponse.getMobile(), null,
-                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, null, createDate);
+//            oldUserInfo.setMobile(userGetResponse.getMobile());
+            oldUserInfo.setName(userGetResponse.getName());
+            oldUserInfo.setAdmin(userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0);
+            oldUserInfo.setActive(userGetResponse.getActive() ? (byte) 1 : (byte) 0);
+            oldUserInfo.setUpdateTime(createDate);
+//            userInfo = new UserInfo(oldUserInfo.getId(), userGetResponse.getName(), userGetResponse.getMobile(), null,
+//                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, null, createDate);
+            userInfo = oldUserInfo;
             if (1 == userService.updateByPrimaryKeySelective(userInfo)) {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
             }
