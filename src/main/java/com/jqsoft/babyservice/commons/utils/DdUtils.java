@@ -89,7 +89,7 @@ public class DdUtils {
             msg.setMsgtype("action_card");
             msg.setActionCard(new OapiMessageCorpconversationAsyncsendV2Request.ActionCard());
             msg.getActionCard().setTitle(title);
-            String markdownContext = "##### <font size=3 font color=#2673CC font face='黑体'>" + StringUtils.substring(title, 0, 20) + "</font> \n " + context;
+            String markdownContext = "##### <font size=3 font color=#2673CC font face='黑体'>" + StringUtils.substring(title, 0, 20) + "</font><input type=\"hidden\" id=\"" + System.currentTimeMillis() + "\"/> \n " + context;
             msg.getActionCard().setMarkdown(markdownContext);
             msg.getActionCard().setBtnOrientation("1");
             List<OapiMessageCorpconversationAsyncsendV2Request.BtnJsonList> btnJsonList = new ArrayList<>();
