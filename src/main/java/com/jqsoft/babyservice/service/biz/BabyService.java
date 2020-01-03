@@ -175,6 +175,7 @@ public class BabyService {
         returnMap.put("parentName", userInfo.getName());
         returnMap.put("parentMobile", userInfo.getMobile());
         returnMap.put("address", userInfo.getAddress());
+        returnMap.put("sex", userInfo.getSex());
         returnMap.put("babyList", babyInfos);
         return RestVo.SUCCESS(returnMap);
     }

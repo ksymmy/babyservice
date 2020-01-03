@@ -7,6 +7,7 @@
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="active" jdbcType="TINYINT" property="active" />
+    <result column="sex" jdbcType="TINYINT" property="sex" />
     <result column="admin" jdbcType="TINYINT" property="admin" />
     <result column="corpid" jdbcType="VARCHAR" property="corpid" />
     <result column="userid" jdbcType="VARCHAR" property="userid" />
@@ -14,7 +15,7 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, name, mobile, address, active, admin, corpid, userid, create_time, update_time
+    id, name, mobile, address, active, admin, corpid, userid, create_time, update_time, sex
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -38,11 +39,11 @@
     <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.UserInfo" useGeneratedKeys="true"
             keyProperty="id" keyColumn="id">
     insert into biz_user_info (id, name, mobile, 
-      address, active, admin, 
+      address, active, sex, admin,
       corpid, userid, create_time, 
       update_time)
     values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{address,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT}, #{admin,jdbcType=TINYINT}, 
+      #{address,jdbcType=VARCHAR}, #{active,jdbcType=TINYINT}, #{sex,jdbcType=TINYINT}, #{admin,jdbcType=TINYINT},
       #{corpid,jdbcType=VARCHAR}, #{userid,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
@@ -63,6 +64,9 @@
       </if>
       <if test="active != null">
         active,
+      </if>
+      <if test="sex != null">
+        sex,
       </if>
       <if test="admin != null">
         admin,
@@ -96,6 +100,9 @@
       <if test="active != null">
         #{active,jdbcType=TINYINT},
       </if>
+      <if test="sex != null">
+        #{sex,jdbcType=TINYINT},
+      </if>
       <if test="admin != null">
         #{admin,jdbcType=TINYINT},
       </if>
@@ -128,6 +135,9 @@
       <if test="active != null">
         active = #{active,jdbcType=TINYINT},
       </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=TINYINT},
+      </if>
       <if test="admin != null">
         admin = #{admin,jdbcType=TINYINT},
       </if>
@@ -152,6 +162,7 @@
       mobile = #{mobile,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       active = #{active,jdbcType=TINYINT},
+      sex = #{sex,jdbcType=TINYINT},
       admin = #{admin,jdbcType=TINYINT},
       corpid = #{corpid,jdbcType=VARCHAR},
       userid = #{userid,jdbcType=VARCHAR},

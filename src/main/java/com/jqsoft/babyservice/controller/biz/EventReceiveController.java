@@ -143,7 +143,7 @@ public class EventReceiveController {
                             Date createDate = new Date();
                             OapiUserGetResponse userGetResponse = loginService.getUserInfo(userid, corpid);
                             UserInfo userInfo = new UserInfo(null, userGetResponse.getName(), userGetResponse.getMobile(), null,
-                                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate);
+                                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate, null);
                             if (1 == userService.insert(userInfo)) {
                                 String key = RedisKey.LOGIN_CORP_USER.getKey(corpid, userid);
                                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
@@ -334,7 +334,7 @@ public class EventReceiveController {
         }
         Date createDate = new Date();
         userInfo = new UserInfo(oldUserInfo.getId(), userGetResponse.getName(), userGetResponse.getMobile(), null,
-                userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, null, createDate);
+                userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, null, createDate, null);
         if (1 == userService.updateByPrimaryKeySelective(userInfo)) {
             String key = RedisKey.LOGIN_CORP_USER.getKey(corpid, userid);
             redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);

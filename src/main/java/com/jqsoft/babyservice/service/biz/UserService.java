@@ -27,6 +27,9 @@ public class UserService {
     }
 
     public int updateByPrimaryKeySelective(UserInfo userInfo) {
+        String key = RedisKey.LOGIN_CORP_USER.getKey(userInfo.getCorpid(), userInfo.getUserid());
+        redisUtils.remove(key);
+        redisUtils.add(key, userInfo);
         return userInfoMapper.updateByPrimaryKeySelective(userInfo);
     }
 

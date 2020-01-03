@@ -37,24 +37,24 @@ public class LoginController extends BaseController {
         return loginService.login(authCode, corpid, userid);
     }
 
-    /**
-     * 根据手机号获取userid
-     */
-    @RequestMapping("/mobile")
-    public RestVo getUserIdByMobile() {
-        return loginService.getUserIdByMobile();
-    }
+//    /**
+//     * 根据手机号获取userid
+//     */
+//    @RequestMapping("/mobile")
+//    public RestVo getUserIdByMobile() {
+//        return loginService.getUserIdByMobile();
+//    }
 
     /**
      * 查询当前用户是否绑定了手机号码
      */
-    @RequestMapping("/vaild-mobile")
+    @RequestMapping("/vaildMobile")
     public RestVo vaildMobile() {
         UserInfo userInfo = this.getUser();
         if (StringUtils.isNotBlank(userInfo.getMobile())) {
-            return RestVo.SUCCESS();
+            return RestVo.SUCCESS("ok");
         } else {
-            return RestVo.FAIL();
+            return RestVo.SUCCESS("fail");
         }
     }
 

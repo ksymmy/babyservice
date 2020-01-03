@@ -19,6 +19,8 @@ public class UserInfo implements Serializable {
 
     private Byte admin;
 
+    private Byte sex;
+
     private String corpid;
 
     private String userid;
@@ -30,7 +32,7 @@ public class UserInfo implements Serializable {
     public UserInfo() {
     }
 
-    public UserInfo(Long id, String name, String mobile, String address, Byte active, Byte admin, String corpid, String userid, Date createTime, Date updateTime) {
+    public UserInfo(Long id, String name, String mobile, String address, Byte active, Byte admin, String corpid, String userid, Date createTime, Date updateTime, Byte sex) {
         this.id = id;
         this.name = name;
         this.mobile = mobile;
@@ -41,5 +43,6 @@ public class UserInfo implements Serializable {
         this.userid = userid;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.sex = sex;
     }
 }

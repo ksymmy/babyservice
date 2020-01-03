@@ -42,18 +42,18 @@ public class LoginService {
     @Resource
     private HospitalService hospitalService;
 
-    public RestVo getUserIdByMobile() {
+    public String getUserIdByMobile(String mobile, String corpid) {
         DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get_by_mobile");
         OapiUserGetByMobileRequest request = new OapiUserGetByMobileRequest();
-        request.setMobile("18056006654");
+        request.setMobile(mobile);
         OapiUserGetByMobileResponse execute;
         try {
-            execute = client.execute(request, getAccessToken("dinge3e211ad45c983df35c2f4657eb6378f"));
-            return RestVo.SUCCESS(execute);
+            execute = client.execute(request, getAccessToken(corpid));
+            return execute.getUserid();
         } catch (ApiException e) {
             log.error("user/get错误:{}", e.getErrMsg());
             e.printStackTrace();
-            return RestVo.FAIL();
+            return "FAIL";
         }
     }
 
@@ -81,7 +81,7 @@ public class LoginService {
         Date createDate = new Date();
         if (null == oldUserInfo) {
             userInfo = new UserInfo(null, userGetResponse.getName(), userGetResponse.getMobile(), null,
-                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate);
+                    userGetResponse.getActive() ? (byte) 1 : (byte) 0, userGetResponse.getIsAdmin() ? (byte) 1 : (byte) 0, corpid, userid, createDate, createDate, null);
             if (1 == userService.insert(userInfo)) {
                 redisUtils.add(key, userInfo, 7, TimeUnit.DAYS);
             }
