@@ -4,6 +4,7 @@ import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
 import com.jqsoft.babyservice.controller.system.BaseController;
+import com.jqsoft.babyservice.entity.biz.UserInfo;
 import com.jqsoft.babyservice.service.biz.LoginService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,27 @@ public class LoginController extends BaseController {
                         @RequestParam(value = "corpid") String corpid,
                         @RequestParam(value = "userid", required = false) String userid) {
         return loginService.login(authCode, corpid, userid);
+    }
+
+    /**
+     * 根据手机号获取userid
+     */
+    @RequestMapping("/mobile")
+    public RestVo getUserIdByMobile() {
+        return loginService.getUserIdByMobile();
+    }
+
+    /**
+     * 查询当前用户是否绑定了手机号码
+     */
+    @RequestMapping("/vaild-mobile")
+    public RestVo vaildMobile() {
+        UserInfo userInfo = this.getUser();
+        if (StringUtils.isNotBlank(userInfo.getMobile())) {
+            return RestVo.SUCCESS();
+        } else {
+            return RestVo.FAIL();
+        }
     }
 
     public void removeUserOrToken(String userId, String token) {

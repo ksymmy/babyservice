@@ -3,14 +3,8 @@ package com.jqsoft.babyservice.service.biz;
 import com.alipay.api.internal.util.codec.Base64;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiServiceGetAuthInfoRequest;
-import com.dingtalk.api.request.OapiServiceGetCorpTokenRequest;
-import com.dingtalk.api.request.OapiUserGetRequest;
-import com.dingtalk.api.request.OapiUserGetuserinfoRequest;
-import com.dingtalk.api.response.OapiServiceGetAuthInfoResponse;
-import com.dingtalk.api.response.OapiServiceGetCorpTokenResponse;
-import com.dingtalk.api.response.OapiUserGetResponse;
-import com.dingtalk.api.response.OapiUserGetuserinfoResponse;
+import com.dingtalk.api.request.*;
+import com.dingtalk.api.response.*;
 import com.jqsoft.babyservice.commons.constant.RedisKey;
 import com.jqsoft.babyservice.commons.utils.RedisUtils;
 import com.jqsoft.babyservice.commons.vo.RestVo;
@@ -47,6 +41,21 @@ public class LoginService {
     private RemindNewsService remindNewsService;
     @Resource
     private HospitalService hospitalService;
+
+    public RestVo getUserIdByMobile() {
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get_by_mobile");
+        OapiUserGetByMobileRequest request = new OapiUserGetByMobileRequest();
+        request.setMobile("18056006654");
+        OapiUserGetByMobileResponse execute;
+        try {
+            execute = client.execute(request, getAccessToken("dinge3e211ad45c983df35c2f4657eb6378f"));
+            return RestVo.SUCCESS(execute);
+        } catch (ApiException e) {
+            log.error("user/get错误:{}", e.getErrMsg());
+            e.printStackTrace();
+            return RestVo.FAIL();
+        }
+    }
 
     public RestVo login(String authCode, String corpid, String userid) {
         UserInfo userInfo1 = userService.selectByCorpIdAndUserid(corpid, userid);
@@ -222,7 +231,7 @@ public class LoginService {
         return userGetuserinfoResponse.getUserid();
     }
 
-    public OapiUserGetResponse getUserInfo(String userid, String corpid) {
+    public OapiUserGetResponse  getUserInfo(String userid, String corpid) {
         DefaultDingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/user/get");
         OapiUserGetRequest userGetRequest = new OapiUserGetRequest();
         userGetRequest.setUserid(userid);
