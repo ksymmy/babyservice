@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jqsoft.babyservice.mapper.biz.HospitalNoticeTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.jqsoft.babyservice.entity.biz.HospitalNoticeTemplate">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="corpid" property="corpid" jdbcType="VARCHAR"/>
+        <result column="extra" property="extra" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="et1" property="et1" jdbcType="LONGVARCHAR"/>
+        <result column="et3" property="et3" jdbcType="LONGVARCHAR"/>
+        <result column="et6" property="et6" jdbcType="LONGVARCHAR"/>
+        <result column="et8" property="et8" jdbcType="LONGVARCHAR"/>
+        <result column="et12" property="et12" jdbcType="LONGVARCHAR"/>
+        <result column="et18" property="et18" jdbcType="LONGVARCHAR"/>
+        <result column="et24" property="et24" jdbcType="LONGVARCHAR"/>
+        <result column="et30" property="et30" jdbcType="LONGVARCHAR"/>
+        <result column="et36" property="et36" jdbcType="LONGVARCHAR"/>
+        <result column="etall" property="etall" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from biz_hospital_notice_template
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+    <insert id="insert" parameterType="com.jqsoft.babyservice.entity.biz.HospitalNoticeTemplate">
+    insert into biz_hospital_notice_template (id, corpid, extra, 
+      create_time, update_time, et1, 
+      et3, et6, et8, 
+      et12, et18, et24, 
+      et30, et36, etall)
+    values (#{id,jdbcType=BIGINT}, #{corpid,jdbcType=VARCHAR}, #{extra,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{et1,jdbcType=LONGVARCHAR}, 
+      #{et3,jdbcType=LONGVARCHAR}, #{et6,jdbcType=LONGVARCHAR}, #{et8,jdbcType=LONGVARCHAR}, 
+      #{et12,jdbcType=LONGVARCHAR}, #{et18,jdbcType=LONGVARCHAR}, #{et24,jdbcType=LONGVARCHAR}, 
+      #{et30,jdbcType=LONGVARCHAR}, #{et36,jdbcType=LONGVARCHAR}, #{etall,jdbcType=LONGVARCHAR})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.jqsoft.babyservice.entity.biz.HospitalNoticeTemplate">
+    update biz_hospital_notice_template
+    set corpid = #{corpid,jdbcType=VARCHAR},
+      extra = #{extra,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      et1 = #{et1,jdbcType=LONGVARCHAR},
+      et3 = #{et3,jdbcType=LONGVARCHAR},
+      et6 = #{et6,jdbcType=LONGVARCHAR},
+      et8 = #{et8,jdbcType=LONGVARCHAR},
+      et12 = #{et12,jdbcType=LONGVARCHAR},
+      et18 = #{et18,jdbcType=LONGVARCHAR},
+      et24 = #{et24,jdbcType=LONGVARCHAR},
+      et30 = #{et30,jdbcType=LONGVARCHAR},
+      et36 = #{et36,jdbcType=LONGVARCHAR},
+      etall = #{etall,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select id, corpid, extra, create_time, update_time, et1, et3, et6, et8, et12, et18, 
+    et24, et30, et36, etall
+    from biz_hospital_notice_template
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+    <select id="selectByCorpid" resultMap="BaseResultMap" parameterType="string">
+        select id, corpid, extra, create_time, update_time, et1, et3, et6, et8, et12, et18,
+    et24, et30, et36, etall
+    from biz_hospital_notice_template
+    where corpid = #{corpid} limit 1
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select id, corpid, extra, create_time, update_time, et1, et3, et6, et8, et12, et18, 
+    et24, et30, et36, etall
+    from biz_hospital_notice_template
+  </select>
+    <update id="updateByCorpid">
+        update biz_hospital_notice_template
+        <set>
+            update_time = CURRENT_TIMESTAMP,
+            <choose>
+                <when test="et == '1'">
+                    et1 = #{text}
+                </when>
+                <when test="et == '3'">
+                    et3 = #{text}
+                </when>
+                <when test="et == '6'">
+                    et6 = #{text}
+                </when>
+                <when test="et == '8'">
+                    et8 = #{text}
+                </when>
+                <when test="et == '12'">
+                    et12 = #{text}
+                </when>
+                <when test="et == '18'">
+                    et18 = #{text}
+                </when>
+                <when test="et == '24'">
+                    et24 = #{text}
+                </when>
+                <when test="et == '30'">
+                    et30 = #{text}
+                </when>
+                <when test="et == '36'">
+                    et36 = #{text}
+                </when>
+                <when test="et == 'all'">
+                    etall = #{text}
+                </when>
+                <otherwise>
+                </otherwise>
+            </choose>
+        </set>
+        where corpid = #{corpid}
+    </update>
+</mapper>

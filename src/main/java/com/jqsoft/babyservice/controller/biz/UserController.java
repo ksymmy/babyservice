@@ -49,9 +49,7 @@ public class UserController extends BaseController {
             userService.updateByPrimaryKeySelective(userInfo);
             return RestVo.SUCCESS("ok");
         } else {
-            return RestVo.SUCCESS("您的填写的手机号不是钉钉登陆用户手机号，请重新填写！");
+            return RestVo.SUCCESS("您填写的手机号不是钉钉登陆用户手机号，请重新填写！");
         }
     }
-
-
 }

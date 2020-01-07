@@ -9,6 +9,7 @@ public enum RedisKey {
 
     LOGIN_TOKEN("LOGIN:TOKEN:%s"),
     LOGIN_CORP("LOGIN:CORP:%s"),//corpid:HospitalInfo
+    LOGIN_CORP_NOTICE_TEMP("LOGIN:CORP_NOTICE_TEMP:%s"),//corpid:HospitalNoticeTemplate
     LOGIN_USERID("LOGIN:USERID:%s"),
     LOGIN_CORP_USER("LOGIN:%s:%s"),
     LOGIN_ACCESS_TOKEN("LOGIN:ACCESS-TOKEN:%s"),//corpid:AccessToken
